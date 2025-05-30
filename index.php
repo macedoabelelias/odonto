@@ -10,7 +10,7 @@ if($linhas == 0){
 }
 
  ?>
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html>
 <head>
 	<title><?php echo $nome_sistema ?></title>
@@ -29,7 +29,7 @@ if($linhas == 0){
 				<input type="email" id="email" name="usuario" placeholder="Seu Email" required>
 				<input type="password" name="senha" placeholder="Senha" required>
 				<button>Login</button>
-				<div style="margin-top: 15px; font-size: 13px; "><a href="#" onclick="recuperar()" style="color:#666565" title="Recuperar Senha">Recuperar Senha?</a></div>
+				<div style="margin-top: 15px; font-size: 15px; "><a href="#" onclick="recuperar()" style="color:#02486d3" title="Recuperar Senha">Recuperar Senha?</a></div>
 			</form>	
 		</div>
 	</div>

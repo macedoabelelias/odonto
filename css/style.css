@@ -1,5 +1,8 @@
 body{
-	background: #289ac7;
+	background-image: url(../img/constodonto.png);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .login{
@@ -11,17 +14,19 @@ body{
 .form {
   position: relative;
   z-index: 1;
-  background: #FFFFFF;
+  background: #8f8469;
+  opacity: 80%;
   max-width: 360px;
-  margin: 0 auto 80px;
-  padding: 20px 45px 45px 45px;
+  margin: 0 auto 100px;
+  padding: 45px;
   text-align: center;
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 8px;
+  box-shadow: 0 0 20px 0 rgba(105, 94, 55, 1.8), 0 5px 5px 0 rgba(105, 94, 55, 1.8);
 }
 
 
 .form input {
-  font-family: "Verdana", sans-serif;
+   font-family: "Numans", sans-serif;
   outline: 0;
   background: #f2f2f2;
   width: 100%;
@@ -30,30 +35,35 @@ body{
   padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
+  border-radius: 8px;
 }
 
 
 .form button {
-  font-family: "Verdana", sans-serif;
+   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #289ac7;
+  background: #b6b8b5;
   width: 100%;
   border: 0;
   padding: 15px;
-  color: #FFFFFF;
+  color: #101920;
   font-size: 14px;
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 
 .form button:hover,.form button:active,.form button:focus {
-  background: #105c7a;
+  background: #787e75;
+  color: #05f77a;
 }
 
 .imagem{
-	margin-bottom:15px;
-	width:150px;
+	margin-bottom: 12px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solidrgba(20, 90, 63, 0.8);
 }
