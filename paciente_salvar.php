@@ -3,46 +3,90 @@ require 'config/autenticarpainel.php';
 require 'config/conexao.php';
 
 $id = $_POST['id'] ?? null;
-$nome = $_POST['nome'] ?? '';
-$cpf = $_POST['cpf'] ?? '';
-$data_nascimento = $_POST['data_nascimento'] ?? null;
-$telefone = $_POST['telefone'] ?? '';
-$email = $_POST['email'] ?? '';
-$cep = $_POST['cep'] ?? '';
-$endereco = $_POST['endereco'] ?? '';
-$bairro = $_POST['bairro'] ?? '';
-$cidade = $_POST['cidade'] ?? '';
-$estado = $_POST['estado'] ?? '';
-$observacoes = $_POST['observacoes'] ?? '';
 
-if($id){
+// ================= FOTO =================
+$foto = null;
 
-    $sql = $pdo->prepare("
-        UPDATE pacientes SET
-        nome=?, cpf=?, data_nascimento=?, telefone=?, email=?,
-        cep=?, endereco=?, bairro=?, cidade=?, estado=?, observacoes=?
-        WHERE id=?
-    ");
+if(!empty($_FILES['foto']['name'])){
 
-    $sql->execute([
-        $nome, $cpf, $data_nascimento, $telefone, $email,
-        $cep, $endereco, $bairro, $cidade, $estado, $observacoes,
-        $id
-    ]);
+    $extensao = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+    $nomeFoto = uniqid().".".$extensao;
 
-} else {
+    move_uploaded_file(
+        $_FILES['foto']['tmp_name'],
+        "uploads/".$nomeFoto
+    );
 
-    $sql = $pdo->prepare("
-        INSERT INTO pacientes
-        (nome, cpf, data_nascimento, telefone, email, cep, endereco, bairro, cidade, estado, observacoes)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?)
-    ");
-
-    $sql->execute([
-        $nome, $cpf, $data_nascimento, $telefone, $email,
-        $cep, $endereco, $bairro, $cidade, $estado, $observacoes
-    ]);
+    $foto = $nomeFoto;
 }
+
+// ================= DADOS =================
+
+$nome = $_POST['nome'] ?? null;
+$telefone = $_POST['telefone'] ?? null;
+$email = $_POST['email'] ?? null;
+$cpf = $_POST['cpf'] ?? null;
+$data_nascimento = $_POST['data_nascimento'] ?? null;
+$tipo_sanguineo = $_POST['tipo_sanguineo'] ?? null;
+$estado_civil = $_POST['estado_civil'] ?? null;
+$genero = $_POST['genero'] ?? null;
+$profissao = $_POST['profissao'] ?? null;
+
+$cep = $_POST['cep'] ?? null;
+$endereco = $_POST['endereco'] ?? null;
+$bairro = $_POST['bairro'] ?? null;
+$cidade = $_POST['cidade'] ?? null;
+$estado = $_POST['estado'] ?? null;
+
+$convenio = $_POST['convenio'] ?? null;
+$instagram = $_POST['instagram'] ?? null;
+$whatsapp = $_POST['whatsapp'] ?? null;
+
+$responsavel_nome = $_POST['responsavel_nome'] ?? null;
+$responsavel_telefone = $_POST['responsavel_telefone'] ?? null;
+$responsavel_email = $_POST['responsavel_email'] ?? null;
+$responsavel_cpf = $_POST['responsavel_cpf'] ?? null;
+
+$observacoes = $_POST['observacoes'] ?? null;
+
+// ================= INSERT =================
+
+$sql = $pdo->prepare("
+INSERT INTO pacientes (
+foto, nome, telefone, email, cpf, data_nascimento,
+tipo_sanguineo, estado_civil, genero, profissao,
+cep, endereco, bairro, cidade, estado,
+convenio, instagram, whatsapp,
+responsavel_nome, responsavel_telefone, responsavel_email, responsavel_cpf,
+observacoes
+) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+");
+
+$sql->execute([
+$foto,
+$nome,
+$telefone,
+$email,
+$cpf,
+$data_nascimento,
+$tipo_sanguineo,
+$estado_civil,
+$genero,
+$profissao,
+$cep,
+$endereco,
+$bairro,
+$cidade,
+$estado,
+$convenio,
+$instagram,
+$whatsapp,
+$responsavel_nome,
+$responsavel_telefone,
+$responsavel_email,
+$responsavel_cpf,
+$observacoes
+]);
 
 header("Location: pacientes.php");
 exit;

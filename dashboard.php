@@ -111,7 +111,13 @@ body{
 
     <!-- SIDEBAR -->
     <div class="sidebar">
-        <h4>Clínica Odonto</h4>
+        <div class="logo-area text-center mb-4">
+        <img src="/odonto/assets/img/logo9.png" 
+         style="max-width:190px; border-radius:10px;">
+    </div>
+
+    <hr>
+       
 
         <a href="dashboard.php">Dashboard</a>
         <a href="pacientes.php">Pacientes</a>

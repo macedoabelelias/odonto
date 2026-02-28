@@ -65,3 +65,44 @@ body {
 .content {
     padding: 25px;
 }
+
+.user-area {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-config {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.menu-config {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    display: none;
+    flex-direction: column;
+    min-width: 180px;
+    padding: 10px 0;
+    z-index: 999;
+}
+
+.menu-config a {
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.menu-config a:hover {
+    background: #f1f1f1;
+}
+
+

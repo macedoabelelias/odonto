@@ -1,10 +1,15 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+session_start();
 
-// Se não estiver logado, volta para login
-if (!isset($_SESSION['usuario_id'])) {
+if(!isset($_SESSION['usuario_id'])){
     header("Location: login.php");
     exit;
 }
+
+function somenteAdmin(){
+    if(!isset($_SESSION['usuario_nivel']) || $_SESSION['usuario_nivel'] !== 'admin'){
+        echo "<h3 style='padding:20px'>Acesso restrito ao administrador.</h3>";
+        exit;
+    }
+}
+?>
