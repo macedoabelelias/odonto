@@ -1,46 +1,55 @@
 <?php
 require_once 'config/conexao.php';
-$configSistema = $pdo->query("SELECT * FROM configuracoes LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$nivel = $_SESSION['usuario_nivel'] ?? '';
+
+$configSistema = $pdo->query("SELECT * FROM configuracoes LIMIT 1")
+                     ->fetch(PDO::FETCH_ASSOC);
 ?>
-
-
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-
 
 <div class="sidebar">
 
-   <div class="logo-area text-center mb-4">
+    <div class="logo-area">
+        <?php if(!empty($configSistema['logo'])): ?>
+            <img src="/odonto/uploads/<?= $configSistema['logo'] ?>" class="logo-sidebar">
+        <?php else: ?>
+            <h4><?= $configSistema['nome_clinica'] ?></h4>
+        <?php endif; ?>
+    </div>
 
-<?php if(!empty($configSistema['logo'])): ?>
-    <img src="/odonto/uploads/<?= $configSistema['logo'] ?>" 
-         class="logo-sidebar">
-<?php else: ?>
-    <h4><?= $configSistema['nome_clinica'] ?></h4>
-<?php endif; ?>
-
-</div>
-    <hr>
-
+    <!-- DASHBOARD (Todos logados) -->
     <a href="dashboard.php">Dashboard</a>
-    <a href="pacientes.php">Pacientes</a>
-    <a href="agendamentos.php">Agendamentos</a>
-    <a href="consultas.php">Consultas</a>
-    <a href="financeiro.php">Financeiro</a>
-    <a href="relatorios.php">Relatórios</a>
 
-    <hr style="border-color:rgba(255,255,255,0.3);">
+    <!-- RECEPÇÃO E ADMIN -->
+    <?php if($nivel == 'admin' || $nivel == 'recepcao'): ?>
+        <a href="pacientes.php">Pacientes</a>
+        <a href="agendamentos.php">Agendamentos</a>
+    <?php endif; ?>
+
+    <!-- DENTISTA -->
+    <?php if($nivel == 'admin' || $nivel == 'dentista'): ?>
+        <a href="consultas.php">Consultas</a>
+    <?php endif; ?>
+
+    <!-- FINANCEIRO (Admin + Auxiliar) -->
+    <?php if($nivel == 'admin' || $nivel == 'auxiliar'): ?>
+        <a href="financeiro.php">Financeiro</a>
+        <a href="relatorios.php">Relatórios</a>
+    <?php endif; ?>
+
+    <!-- ESTOQUE (Somente Admin) -->
+    <?php if($nivel == 'admin'): ?>
+        <div class="menu-section">ESTOQUE</div>
+
+        <a href="fornecedores.php">Fornecedores</a>
+        <a href="produtos.php">Produtos</a>
+        <a href="compras.php">Compras</a>
+    <?php endif; ?>
 
     <a href="logout.php">Sair</a>
 
 </div>
-
-</body>
-</html>

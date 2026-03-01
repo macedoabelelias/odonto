@@ -8,23 +8,34 @@ $nome = $_POST['nome_clinica'];
 $email = $_POST['email'];
 $telefone = $_POST['telefone'];
 
-$config = $pdo->query("SELECT * FROM configuracoes LIMIT 1")->fetch(PDO::FETCH_ASSOC);
-$logoAtual = $config['logo'];
+$config = $pdo->query("SELECT * FROM configuracoes LIMIT 1")
+              ->fetch(PDO::FETCH_ASSOC);
 
-if(isset($_FILES['logo']) && $_FILES['logo']['error'] == 0){
+$logoNome = $config['logo'];
 
-    $pasta = "uploads/";
-    $nomeArquivo = uniqid() . "_" . $_FILES['logo']['name'];
-    move_uploaded_file($_FILES['logo']['tmp_name'], $pasta.$nomeArquivo);
+// UPLOAD LOGO
+if(!empty($_FILES['logo']['name'])){
 
-    $logoAtual = $nomeArquivo;
+    $ext = pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION);
+    $logoNome = uniqid().".".$ext;
+
+    move_uploaded_file($_FILES['logo']['tmp_name'], "uploads/".$logoNome);
 }
 
-$stmt = $pdo->prepare("UPDATE configuracoes 
-SET nome_clinica=?, email=?, telefone=?, logo=? 
-WHERE id=1");
-
-$stmt->execute([$nome,$email,$telefone,$logoAtual]);
+$pdo->prepare("
+    UPDATE configuracoes 
+    SET nome_clinica=:nome,
+        email=:email,
+        telefone=:telefone,
+        logo=:logo
+    WHERE id=:id
+")->execute([
+    ':nome'=>$nome,
+    ':email'=>$email,
+    ':telefone'=>$telefone,
+    ':logo'=>$logoNome,
+    ':id'=>$config['id']
+]);
 
 header("Location: configuracoes.php");
 exit;

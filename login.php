@@ -1,10 +1,31 @@
 <?php
-session_start();
+require_once("config/conexao.php");
 
-// Se já estiver logado, vai para dashboard
-if(isset($_SESSION['usuario_id'])){
-    header("Location: dashboard.php");
-    exit;
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+
+    $sql = $pdo->prepare("SELECT * FROM usuarios WHERE email = :email");
+    $sql->execute([':email' => $email]);
+
+    $usuario = $sql->fetch(PDO::FETCH_ASSOC);
+
+    if($usuario && password_verify($senha, $usuario['senha'])){
+
+        $_SESSION['usuario_id'] = $usuario['id'];
+        $_SESSION['nome'] = $usuario['nome'];
+
+        header("Location: dashboard.php");
+        exit;
+
+    } else {
+        echo "Login inválido";
+    }
 }
 ?>
 
@@ -52,6 +73,12 @@ body{
 </head>
 
 <body>
+
+<?php if(isset($_GET['erro'])): ?>
+    <div class="alert alert-danger text-center position-absolute top-0 start-50 translate-middle-x mt-3">
+        Email ou senha inválidos
+    </div>
+<?php endif; ?>
 
 <div class="login-card row">
     <div class="col-md-6 p-4 form-bg">
