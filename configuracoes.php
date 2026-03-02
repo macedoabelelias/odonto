@@ -42,7 +42,7 @@ value="<?= htmlspecialchars($config['telefone']) ?>">
 
 <?php if($config['logo']): ?>
 <br>
-<img src="/odonto/uploads/<?= $config['logo'] ?>" width="150">
+<img src="/odonto/uploads/<?= $config['logo'] ?>" width="150" style="border-radius:10px;">
 <?php endif; ?>
 </div>
 
