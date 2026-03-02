@@ -8,24 +8,32 @@ class Router {
             ? explode('/', $_GET['url'])
             : ['dashboard'];
 
-        $controllerName = ucfirst($url[0]) . 'Controller';
-        $method = isset($url[1]) ? $url[1] : 'index';
+        $controller = ucfirst($url[0]) . "Controller";
+        $action     = $url[1] ?? 'index';
+        $param      = $url[2] ?? null;
 
-        $controllerFile = BASE_PATH . "/app/controllers/" . $controllerName . ".php";
+        $controllerFile = BASE_PATH . "/app/controllers/" . $controller . ".php";
 
         if (file_exists($controllerFile)) {
 
             require_once $controllerFile;
-            $controller = new $controllerName;
 
-            if (method_exists($controller, $method)) {
-                $controller->$method();
+            $obj = new $controller();
+
+            if (method_exists($obj, $action)) {
+
+                if ($param !== null) {
+                    $obj->$action($param);
+                } else {
+                    $obj->$action();
+                }
+
             } else {
-                echo "Método não encontrado.";
+                echo "Método não encontrado";
             }
 
         } else {
-            echo "Controller não encontrado.";
+            echo "Controller não encontrado";
         }
     }
 }

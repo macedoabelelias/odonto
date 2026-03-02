@@ -1,12 +1,14 @@
 <div class="sidebar">
+    
 
     <div class="logo-area">
         <?php if(!empty($configSistema['logo'])): ?>
             <img src="<?= BASE_URL ?>/uploads/<?= $configSistema['logo'] ?>"
-                 class="logo-sidebar"
-                 style="border-radius:10px;">
+            class="logo-sidebar"
+             style="border-radius:10px;">
         <?php else: ?>
             <h4><?= $configSistema['nome_clinica'] ?? 'Clínica' ?></h4>
+            <?php echo $configSistema['logo']; ?>
         <?php endif; ?>
     </div>
 
