@@ -1,11 +1,12 @@
 <?php
 
-class Model {
-
+class Model
+{
     protected $pdo;
 
-    public function __construct() {
-        require_once BASE_PATH . "/config/conexao.php";
+    public function __construct()
+    {
+        require BASE_PATH . "/config/conexao.php";
         $this->pdo = $pdo;
     }
 }

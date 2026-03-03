@@ -1,3 +1,11 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$nivel = $_SESSION['usuario_nivel'] ?? '';
+?>
+
 <div class="sidebar">
     
 

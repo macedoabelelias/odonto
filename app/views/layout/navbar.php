@@ -1,11 +1,10 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 $nomeUsuario = $_SESSION['usuario_nome'] ?? '';
 $nivel = $_SESSION['usuario_nivel'] ?? '';
 ?>
+
+<!-- Bootstrap Icons (garanta que está carregando) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 <div class="topbar">
 
@@ -16,14 +15,14 @@ $nivel = $_SESSION['usuario_nivel'] ?? '';
     <div class="d-flex align-items-center gap-4">
 
         <?php if($nomeUsuario): ?>
-            <div class="user-info">
+            <div class="user-info d-flex align-items-center">
 
                 <!-- Avatar com inicial -->
                 <div class="user-avatar">
                     <?= strtoupper(substr($nomeUsuario, 0, 1)) ?>
                 </div>
 
-                <div class="user-text">
+                <div class="user-text ms-2">
                     <div class="user-name">
                         <?= htmlspecialchars($nomeUsuario) ?>
                     </div>
@@ -42,29 +41,28 @@ $nivel = $_SESSION['usuario_nivel'] ?? '';
                 <i class="bi bi-gear-fill"></i>
             </button>
 
-            <div id="menuConfig" class="config-menu">
+            <div id="menuConfig" class="config-menu shadow">
 
-                <!-- ADMIN -->
+                <!-- Meu Perfil (todos os usuários) -->
+                <a href="<?= BASE_URL ?>/usuarios/perfil">
+                    <i class="bi bi-person me-2"></i> Meu Perfil
+                </a>
+
                 <?php if($nivel === 'admin'): ?>
 
-                    <a href="usuarios.php">
+                    <a href="<?= BASE_URL ?>/usuarios">
                         <i class="bi bi-people me-2"></i> Gerenciar Usuários
                     </a>
 
-                    <a href="configuracoes.php">
+                    <a href="<?= BASE_URL ?>/configuracoes">
                         <i class="bi bi-sliders me-2"></i> Personalização
-                    </a>
-
-                <!-- OUTROS USUÁRIOS -->
-                <?php else: ?>
-
-                    <a href="meu_perfil.php">
-                        <i class="bi bi-person me-2"></i> Meu Perfil
                     </a>
 
                 <?php endif; ?>
 
-                <a href="logout.php">
+                <div class="dropdown-divider"></div>
+
+                <a href="<?= BASE_URL ?>/login/logout" class="text-danger">
                     <i class="bi bi-box-arrow-right me-2"></i> Sair
                 </a>
 
@@ -75,8 +73,6 @@ $nivel = $_SESSION['usuario_nivel'] ?? '';
     </div>
 
 </div>
-
-<div class="page-wrapper">
 
 <script>
 document.addEventListener("DOMContentLoaded", function(){

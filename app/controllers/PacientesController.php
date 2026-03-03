@@ -2,58 +2,187 @@
 
 require_once BASE_PATH . "/app/models/Paciente.php";
 
-class PacientesController extends Controller {
+class PacientesController extends Controller
+{
+    private $pacienteModel;
 
-    public function index() {
+    public function __construct()
+    {
+        $this->pacienteModel = new Paciente();
+    }
 
-        require_once BASE_PATH . "/config/autenticarpainel.php";
-
-        $pacienteModel = new Paciente();
-        $pacientes = $pacienteModel->listar();
+    /* ==========================
+       LISTAR + BUSCA
+    ========================== */
+    public function index()
+    {
+        if (!empty($_GET['busca'])) {
+            $pacientes = $this->pacienteModel->buscar($_GET['busca']);
+        } else {
+            $pacientes = $this->pacienteModel->listar();
+        }
 
         $this->view("pacientes/index", [
-            'pacientes' => $pacientes,
-            'nivel' => $_SESSION['usuario_nivel'] ?? ''
+            "pacientes" => $pacientes
         ]);
     }
 
-    public function criar() {
-        require_once BASE_PATH . "/config/autenticarpainel.php";
+    /* ==========================
+       CRIAR
+    ========================== */
+    public function criar()
+    {
         $this->view("pacientes/criar");
     }
 
-    public function salvar() {
+    /* ==========================
+       SALVAR
+    ========================== */
+    public function salvar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: " . BASE_URL . "/pacientes");
+            exit;
+        }
 
-        $pacienteModel = new Paciente();
-        $pacienteModel->salvar($_POST);
+        $cpf = $_POST["cpf"] ?? null;
+
+        if (!empty($cpf) && $this->pacienteModel->cpfExiste($cpf)) {
+            $_SESSION['erro'] = "Já existe um paciente com este CPF.";
+            header("Location: " . BASE_URL . "/pacientes/criar");
+            exit;
+        }
+
+        /* ========= UPLOAD FOTO ========= */
+        $fotoNome = null;
+
+        if (isset($_FILES['foto']) && !empty($_FILES['foto']['name'])) {
+
+            $pasta = BASE_PATH . "/public/uploads/";
+
+            if (!is_dir($pasta)) {
+                mkdir($pasta, 0755, true);
+            }
+
+            $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+            $fotoNome = uniqid() . "_paciente." . $ext;
+
+            move_uploaded_file($_FILES['foto']['tmp_name'], $pasta . $fotoNome);
+        }
+
+        $dados = [
+            "foto" => $fotoNome,
+            "nome" => $_POST["nome"] ?? null,
+            "telefone" => $_POST["telefone"] ?? null,
+            "email" => $_POST["email"] ?? null,
+            "cpf" => $cpf,
+            "data_nascimento" => $_POST["data_nascimento"] ?? null,
+            "tipo_sanguineo" => $_POST["tipo_sanguineo"] ?? null,
+            "estado_civil" => $_POST["estado_civil"] ?? null,
+            "genero" => $_POST["genero"] ?? null,
+            "profissao" => $_POST["profissao"] ?? null,
+            "cep" => $_POST["cep"] ?? null,
+            "endereco" => $_POST["endereco"] ?? null,
+            "bairro" => $_POST["bairro"] ?? null,
+            "cidade" => $_POST["cidade"] ?? null,
+            "estado" => $_POST["estado"] ?? null,
+            "convenio" => $_POST["convenio"] ?? null,
+            "instagram" => $_POST["instagram"] ?? null,
+            "whatsapp" => $_POST["whatsapp"] ?? null,
+            "responsavel_nome" => $_POST["responsavel_nome"] ?? null,
+            "responsavel_telefone" => $_POST["responsavel_telefone"] ?? null,
+            "responsavel_email" => $_POST["responsavel_email"] ?? null,
+            "responsavel_cpf" => $_POST["responsavel_cpf"] ?? null,
+            "observacoes" => $_POST["observacoes"] ?? null
+        ];
+
+        $this->pacienteModel->salvar($dados);
 
         header("Location: " . BASE_URL . "/pacientes");
         exit;
     }
 
-    public function excluir($id) {
-
-        $pacienteModel = new Paciente();
-        $pacienteModel->excluir($id);
-
-        header("Location: " . BASE_URL . "/pacientes");
-        exit;
-    }
-
+    /* ==========================
+       EDITAR
+    ========================== */
     public function editar($id)
     {
-        $pacienteModel = new Paciente();
-        $paciente = $pacienteModel->buscarPorId($id);
+        $paciente = $this->pacienteModel->buscarPorId($id);
 
         $this->view("pacientes/editar", [
-            'paciente' => $paciente
+            "paciente" => $paciente
         ]);
     }
 
+    /* ==========================
+       ATUALIZAR
+    ========================== */
     public function atualizar($id)
     {
-        $pacienteModel = new Paciente();
-        $pacienteModel->atualizar($id, $_POST);
+        $cpf = $_POST["cpf"] ?? null;
+
+        if (!empty($cpf) && $this->pacienteModel->cpfExiste($cpf, $id)) {
+            $_SESSION['erro'] = "Já existe outro paciente com este CPF.";
+            header("Location: " . BASE_URL . "/pacientes/editar/" . $id);
+            exit;
+        }
+
+        $pacienteAtual = $this->pacienteModel->buscarPorId($id);
+        $fotoNome = $pacienteAtual['foto'] ?? null;
+
+        /* ========= NOVA FOTO? ========= */
+        if (isset($_FILES['foto']) && !empty($_FILES['foto']['name'])) {
+
+            $pasta = BASE_PATH . "/public/uploads/";
+
+            if (!is_dir($pasta)) {
+                mkdir($pasta, 0755, true);
+            }
+
+            $ext = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+            $fotoNome = uniqid() . "_paciente." . $ext;
+
+            move_uploaded_file($_FILES['foto']['tmp_name'], $pasta . $fotoNome);
+        }
+
+        $dados = [
+            "foto" => $fotoNome,
+            "nome" => $_POST["nome"] ?? null,
+            "telefone" => $_POST["telefone"] ?? null,
+            "email" => $_POST["email"] ?? null,
+            "cpf" => $cpf,
+            "data_nascimento" => $_POST["data_nascimento"] ?? null,
+            "tipo_sanguineo" => $_POST["tipo_sanguineo"] ?? null,
+            "estado_civil" => $_POST["estado_civil"] ?? null,
+            "genero" => $_POST["genero"] ?? null,
+            "profissao" => $_POST["profissao"] ?? null,
+            "cep" => $_POST["cep"] ?? null,
+            "endereco" => $_POST["endereco"] ?? null,
+            "bairro" => $_POST["bairro"] ?? null,
+            "cidade" => $_POST["cidade"] ?? null,
+            "estado" => $_POST["estado"] ?? null,
+            "convenio" => $_POST["convenio"] ?? null,
+            "instagram" => $_POST["instagram"] ?? null,
+            "whatsapp" => $_POST["whatsapp"] ?? null,
+            "responsavel_nome" => $_POST["responsavel_nome"] ?? null,
+            "responsavel_telefone" => $_POST["responsavel_telefone"] ?? null,
+            "responsavel_email" => $_POST["responsavel_email"] ?? null,
+            "responsavel_cpf" => $_POST["responsavel_cpf"] ?? null,
+            "observacoes" => $_POST["observacoes"] ?? null
+        ];
+
+        $this->pacienteModel->atualizar($id, $dados);
+
+        header("Location: " . BASE_URL . "/pacientes");
+        exit;
+    }
+
+    /* ==========================
+       EXCLUIR
+    ========================== */
+    public function excluir($id)
+    {
+        $this->pacienteModel->excluir($id);
 
         header("Location: " . BASE_URL . "/pacientes");
         exit;

@@ -43,19 +43,61 @@ body {
 
 /* TOPBAR */
 .topbar {
-    position: fixed;
-    top: 0;
-    left: 240px;
-    width: calc(100% - 240px);
-    height: 60px;
+    height: 70px;
     background: #ffffff;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 0 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    z-index: 900; /* MENOR que sidebar */
+    align-items: center;
+    padding: 0 25px;
+    border-bottom: 1px solid #e5e7eb;
 }
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #6366f1;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.config-btn {
+    border: none;
+    background: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.config-menu {
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background: #fff;
+    border-radius: 8px;
+    min-width: 220px;
+    display: none;
+    flex-direction: column;
+    padding: 8px 0;
+}
+
+.config-menu a {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.config-menu a:hover {
+    background: #f3f4f6;
+}
+
+.config-menu.show {
+    display: block;
+}
+
 
 /* CONTEÚDO */
 .page-wrapper {
@@ -205,3 +247,40 @@ body {
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+.odontograma {
+    position: relative;
+    max-width: 1000px; /* maior */
+    width: 100%;
+}
+
+.odontograma img {
+    width: 100%;
+    max-height: 550px;
+    object-fit: contain;
+}
+
+.tooth {
+    position: absolute;
+    width: 60px;
+    height: 110px;
+}
+
+.face {
+    transition: 0.2s ease;
+}
+
+.face.ativo {
+    box-shadow: 0 0 6px rgba(255,0,0,0.6);
+}
+
+.vestibular { top: 0; left: 0; width: 100%; height: 30%; }
+.lingual { bottom: 0; left: 0; width: 100%; height: 30%; }
+.mesial { top: 30%; left: 0; width: 25%; height: 40%; }
+.distal { top: 30%; right: 0; width: 25%; height: 40%; }
+.oclusal { top: 30%; left: 25%; width: 50%; height: 40%; }
+
+.face:hover {
+    background: rgba(0, 123, 255, 0.3);
+}
+

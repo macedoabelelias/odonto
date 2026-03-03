@@ -1,5 +1,7 @@
 RewriteEngine On
 
+RewriteBase /odonto/public/
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 

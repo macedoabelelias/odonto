@@ -1,194 +1,217 @@
-<h4 class="mb-3">
-    Prontuário de <?= htmlspecialchars($paciente['nome']) ?>
-</h4>
+<h4 class="mb-4">Prontuário do Paciente</h4>
 
-<hr>
+<input type="hidden" id="paciente_id" value="<?= $paciente['id'] ?>">
 
-<!-- ========================= -->
-<!-- OBSERVAÇÕES CLÍNICAS -->
-<!-- ========================= -->
+<div class="row">
 
-<form method="POST" action="<?= BASE_URL ?>/prontuarios/salvar">
+    <!-- ================= ODONTOGRAMA ================= -->
+    <div class="col-md-8">
 
-    <input type="hidden" name="paciente_id" value="<?= $paciente['id'] ?>">
+        <div class="mb-3">
+            <label><strong>Tipo de Dentição:</strong></label>
+            <select id="tipoDenticao" class="form-select" style="max-width:250px;">
+                <option value="permanente">Permanente</option>
+                <option value="deciduo">Decíduo</option>
+            </select>
+        </div>
 
-    <div class="mb-3">
-        <label><strong>Observações Clínicas</strong></label>
-        <textarea name="observacoes" class="form-control" rows="4" required></textarea>
+        <!-- PERMANENTE -->
+        <div id="odontograma-permanente" class="odontograma">
+
+            <img src="<?= BASE_URL ?>/assets/img/dentesperm.png" class="img-fluid">
+
+            <!-- EXEMPLO DENTE 11 -->
+            <div class="tooth" data-dente="11" style="top:50px; left:600px;">
+
+                <div class="face vestibular" data-face="V"></div>
+                <div class="face lingual" data-face="L"></div>
+                <div class="face mesial" data-face="M"></div>
+                <div class="face distal" data-face="D"></div>
+                <div class="face oclusal" data-face="O"></div>
+
+            </div>
+
+        </div>
+
+        <!-- DECÍDUO -->
+        <div id="odontograma-deciduo" class="odontograma d-none">
+            <img src="<?= BASE_URL ?>/assets/img/dentesdec.png" class="img-fluid">
+        </div>
+
     </div>
 
-    <button type="submit" class="btn btn-success">
-        Adicionar Registro
-    </button>
+    <!-- ================= PAINEL LATERAL ================= -->
+    <div class="col-md-4">
 
-</form>
-
-<hr>
-
-<!-- ========================= -->
-<!-- ODONTOGRAMA DECÍDUO -->
-<!-- ========================= -->
-
-<h5>Odontograma – Dentes Decíduos</h5>
-
-<style>
-.face {
-    fill: white;
-    stroke: #333;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.face:hover {
-    fill: #b3e5fc;
-}
-
-.tooth-number {
-    font-size: 10px;
-    text-anchor: middle;
-}
-</style>
-
-<svg width="1000" height="300">
-
-<?php
-
-$arcadaSuperior = [55,54,53,52,51,61,62,63,64,65];
-$arcadaInferior = [85,84,83,82,81,71,72,73,74,75];
-
-function desenharDente($numero, $x, $y) {
-
-    $size = 20;
-
-    echo "
-    <!-- Dente $numero -->
-
-    <!-- Vestibular -->
-    <rect x='".($x+$size)."'
-          y='$y'
-          width='$size'
-          height='$size'
-          class='face'
-          data-dente='$numero'
-          data-face='V' />
-
-    <!-- Mesial -->
-    <rect x='$x'
-          y='".($y+$size)."'
-          width='$size'
-          height='$size'
-          class='face'
-          data-dente='$numero'
-          data-face='M' />
-
-    <!-- Oclusal -->
-    <rect x='".($x+$size)."'
-          y='".($y+$size)."'
-          width='$size'
-          height='$size'
-          class='face'
-          data-dente='$numero'
-          data-face='O' />
-
-    <!-- Distal -->
-    <rect x='".($x+($size*2))."'
-          y='".($y+$size)."'
-          width='$size'
-          height='$size'
-          class='face'
-          data-dente='$numero'
-          data-face='D' />
-
-    <!-- Lingual -->
-    <rect x='".($x+$size)."'
-          y='".($y+($size*2))."'
-          width='$size'
-          height='$size'
-          class='face'
-          data-dente='$numero'
-          data-face='L' />
-
-    <text x='".($x+$size*1.5)."'
-          y='".($y-5)."'
-          class='tooth-number'>$numero</text>
-    ";
-}
-
-// Desenha arcada superior
-$x = 50;
-foreach($arcadaSuperior as $d){
-    desenharDente($d, $x, 50);
-    $x += 80;
-}
-
-// Desenha arcada inferior
-$x = 50;
-foreach($arcadaInferior as $d){
-    desenharDente($d, $x, 180);
-    $x += 80;
-}
-
-?>
-
-</svg>
-
-<hr>
-
-<!-- ========================= -->
-<!-- HISTÓRICO TEXTUAL -->
-<!-- ========================= -->
-
-<h5>Histórico Clínico</h5>
-
-<?php if(!empty($prontuarios)): ?>
-    <?php foreach($prontuarios as $p): ?>
-        <div class="card mb-2">
+        <div class="card mb-4">
             <div class="card-body">
-                <small>
-                    <?= date('d/m/Y H:i', strtotime($p['created_at'])) ?>
-                </small>
-                <p><?= nl2br(htmlspecialchars($p['observacoes'])) ?></p>
+                <h5>🦷 Dente Selecionado</h5>
+                <p id="infoDente">Nenhum selecionado</p>
+
+                <label>Procedimento:</label>
+                <select id="procedimento" class="form-control mb-2">
+                    <option value="">Selecione</option>
+                    <option value="carie">Cárie</option>
+                    <option value="restauracao">Restauração</option>
+                    <option value="extracao">Extração</option>
+                    <option value="canal">Tratamento de Canal</option>
+                </select>
+
+                <label>Observações:</label>
+                <textarea id="observacoes" class="form-control" rows="3"></textarea>
+
+                <button id="salvarRegistro" class="btn btn-success mt-2 w-100">
+                    Salvar
+                </button>
             </div>
         </div>
-    <?php endforeach; ?>
-<?php else: ?>
-    <p>Nenhum registro encontrado.</p>
-<?php endif; ?>
+
+        <div class="card">
+            <div class="card-body">
+                <h5>📸 Imagens / Radiografias</h5>
+                <input type="file" class="form-control mb-2">
+                <div style="height:120px; background:#f3f4f6; border-radius:8px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= ÁREA INFERIOR ================= -->
+
+<hr class="my-5">
+
+<div class="row">
+
+    <!-- EVOLUÇÃO CLÍNICA -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5>📅 Evolução Clínica</h5>
+
+                <textarea class="form-control mb-3" rows="4"
+                          placeholder="Registrar evolução do atendimento..."></textarea>
+
+                <button class="btn btn-primary w-100">
+                    Adicionar Evolução
+                </button>
+
+                <div class="mt-3" style="max-height:200px; overflow:auto;">
+                    <small class="text-muted">
+                        Nenhuma evolução registrada.
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- PLANO DE TRATAMENTO -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5>📋 Plano de Tratamento</h5>
+
+                <textarea class="form-control mb-3" rows="4"
+                          placeholder="Descrever plano odontológico do paciente..."></textarea>
+
+                <button class="btn btn-success w-100">
+                    Salvar Plano
+                </button>
+
+                <div class="mt-3">
+                    <small class="text-muted">
+                        Nenhum plano cadastrado.
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
 
 
 
-<!-- ========================= -->
-<!-- SCRIPT SALVAR FACE -->
-<!-- ========================= -->
+<!-- ================= JAVASCRIPT ================= -->
 
 <script>
-document.querySelectorAll('.face').forEach(face => {
-    face.addEventListener('click', function() {
 
-        const dente = this.dataset.dente;
-        const faceSelecionada = this.dataset.face;
+document.addEventListener("DOMContentLoaded", function(){
 
-        let status = prompt("Status: Cárie, Restauração, Extraído...");
+    let denteSelecionado = null;
+    let faceSelecionada = null;
 
-        if(status){
+    const tipoDenticao = document.getElementById("tipoDenticao");
+    const odontogramaPerm = document.getElementById("odontograma-permanente");
+    const odontogramaDec = document.getElementById("odontograma-deciduo");
+    const infoDente = document.getElementById("infoDente");
+    const btnSalvar = document.getElementById("salvarRegistro");
 
-            fetch("<?= BASE_URL ?>/odontograma/salvar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    paciente_id: <?= $paciente['id'] ?>,
-                    dente: dente,
-                    face: faceSelecionada,
-                    status: status
-                })
-            })
-            .then(res => res.text())
-            .then(() => {
-                face.style.fill = "#ef5350";
-                alert("Registro salvo!");
-            });
+    /* ================= ALTERAR DENTIÇÃO ================= */
+    if(tipoDenticao){
+        tipoDenticao.addEventListener("change", function(){
 
-        }
+            const tipo = this.value;
+
+            odontogramaPerm.classList.add("d-none");
+            odontogramaDec.classList.add("d-none");
+
+            if(tipo === "permanente"){
+                odontogramaPerm.classList.remove("d-none");
+            } else {
+                odontogramaDec.classList.remove("d-none");
+            }
+
+        });
+    }
+
+    /* ================= CLIQUE NAS FACES ================= */
+    document.querySelectorAll(".face").forEach(function(face){
+
+        face.addEventListener("click", function(e){
+
+            e.stopPropagation();
+
+            document.querySelectorAll(".face").forEach(f => f.classList.remove("ativo"));
+
+            this.classList.add("ativo");
+
+            const tooth = this.closest(".tooth");
+
+            denteSelecionado = tooth.dataset.dente;
+            faceSelecionada = this.dataset.face;
+
+            infoDente.innerText =
+                "Dente: " + denteSelecionado + " | Face: " + faceSelecionada;
+
+        });
+
     });
+
+    /* ================= SALVAR ================= */
+    if(btnSalvar){
+        btnSalvar.addEventListener("click", function(){
+
+            if(!denteSelecionado){
+                alert("Selecione uma face primeiro");
+                return;
+            }
+
+            const procedimento = document.getElementById("procedimento").value;
+            const obs = document.getElementById("observacoes").value;
+
+            alert(
+                "Salvar:\nDente: " + denteSelecionado +
+                "\nFace: " + faceSelecionada +
+                "\nProcedimento: " + procedimento +
+                "\nObs: " + obs
+            );
+
+        });
+    }
+
 });
 </script>

@@ -1,38 +1,32 @@
 <?php
 
-require_once BASE_PATH . "/core/Database.php";
+require_once BASE_PATH . "/core/Model.php";
 
-class Prontuario {
+class Prontuario extends Model
+{
+    public function salvarRegistro($dados)
+    {
+        $sql = $this->pdo->prepare("
+            INSERT INTO prontuarios_registros
+            (paciente_id, dente, face, procedimento, observacoes)
+            VALUES
+            (:paciente_id, :dente, :face, :procedimento, :observacoes)
+        ");
 
-    private $pdo;
-
-    public function __construct() {
-        $this->pdo = Database::getConnection();
+        return $sql->execute($dados);
     }
 
     public function listarPorPaciente($paciente_id)
     {
         $sql = $this->pdo->prepare("
-            SELECT * FROM prontuarios
+            SELECT * FROM prontuarios_registros
             WHERE paciente_id = :paciente_id
-            ORDER BY id DESC
+            ORDER BY data_registro DESC
         ");
-        $sql->bindValue(':paciente_id', $paciente_id);
+
+        $sql->bindValue(":paciente_id", $paciente_id);
         $sql->execute();
 
         return $sql->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function salvar($dados)
-    {
-        $sql = $this->pdo->prepare("
-            INSERT INTO prontuarios (paciente_id, observacoes)
-            VALUES (:paciente_id, :observacoes)
-        ");
-
-        $sql->bindValue(':paciente_id', $dados['paciente_id']);
-        $sql->bindValue(':observacoes', $dados['observacoes']);
-
-        $sql->execute();
     }
 }
