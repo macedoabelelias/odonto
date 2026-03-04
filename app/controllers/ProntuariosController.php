@@ -36,4 +36,21 @@ class ProntuariosController extends Controller
         echo json_encode(["status" => "ok"]);
         exit;
     }
+
+    public function registros($paciente_id)
+    {
+        $model = new Prontuario();
+
+        $dados = $model->listarPorPaciente($paciente_id);
+
+        echo json_encode($dados);
+        exit;
+    }
+
+    public function historico($paciente_id, $dente)
+    {
+        $dados = $this->model->historicoPorDente($paciente_id, $dente);
+
+        echo json_encode($dados);
+    }
 }

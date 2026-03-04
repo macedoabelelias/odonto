@@ -29,4 +29,24 @@ class Prontuario extends Model
 
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function historicoPorDente($paciente_id, $dente)
+    {
+
+        $sql = $this->db->prepare("
+        SELECT procedimento, face, observacoes, data_registro
+        FROM prontuarios
+        WHERE paciente_id = :paciente_id
+        AND dente = :dente
+        ORDER BY data_registro DESC
+        ");
+
+        $sql->bindValue(":paciente_id",$paciente_id);
+        $sql->bindValue(":dente",$dente);
+
+        $sql->execute();
+
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+
+    }
 }
