@@ -139,12 +139,12 @@ Recupere o brilho do seu sorriso com clareamento profissional.
 </p>
 </div>
 
-<div class="mb-2">
+<!-- <div class="mb-2">
 <strong>🦷 Implantes Dentários</strong>
 <p style="font-size:13px">
 Substitua dentes perdidos com segurança e estética.
 </p>
-</div>
+</div> -->
 
 <div>
 <strong>📅 Lembrete</strong>
@@ -222,10 +222,9 @@ Salvar Plano
 /* ================= VARIÁVEIS ================= */
 
 let denteSelecionado = null
-let faceSelecionada = null
 
 
-/* ================= FUNÇÃO GERAR ODONTOGRAMA ================= */
+/* ================= GERAR ODONTOGRAMA ================= */
 
 function gerarOdontograma(mapa){
 
@@ -245,13 +244,7 @@ tooth.dataset.dente = dente
 tooth.style.left = pos.x + "px"
 tooth.style.top = pos.y + "px"
 
-tooth.innerHTML = `
-<div class="face vestibular" data-face="V"></div>
-<div class="face lingual" data-face="L"></div>
-<div class="face mesial" data-face="M"></div>
-<div class="face distal" data-face="D"></div>
-<div class="face oclusal" data-face="O"></div>
-`
+tooth.innerHTML = `<div class="procedimentos"></div>`
 
 container.appendChild(tooth)
 
@@ -264,109 +257,102 @@ carregarOdontograma()
 }
 
 
-
-/* ================= ATIVAR CLIQUES ================= */
+/* ================= CLIQUE NO DENTE ================= */
 
 function ativarCliques(){
 
-document.querySelectorAll(".face").forEach(function(face){
+document.querySelectorAll(".tooth").forEach(function(tooth){
 
-face.addEventListener("click",function(){
+tooth.addEventListener("click",function(){
 
-document.querySelectorAll(".face").forEach(f=>f.classList.remove("ativo"))
+document.querySelectorAll(".tooth").forEach(t=>t.classList.remove("tooth-ativo"))
 
-this.classList.add("ativo")
+this.classList.add("tooth-ativo")
 
-const tooth = this.closest(".tooth")
-
-denteSelecionado = tooth.dataset.dente
-faceSelecionada = this.dataset.face
+denteSelecionado = this.dataset.dente
 
 document.getElementById("infoDente").innerText =
-"Dente: " + denteSelecionado + " | Face: " + faceSelecionada
+"Dente selecionado: " + denteSelecionado
 
 })
 
 })
 
 }
-
 
 
 /* ================= MAPA PERMANENTE ================= */
 
 const mapaPermanente = {
 
-18:{x:22,y:110},
-17:{x:82,y:110},
-16:{x:148,y:110},
-15:{x:207,y:110},
-14:{x:258,y:110},
-13:{x:309,y:110},
-12:{x:359,y:110},
-11:{x:412,y:110},
+18:{x:14,y:78},
+17:{x:70,y:76},
+16:{x:128,y:76},
+15:{x:178,y:76},
+14:{x:226,y:76},
+13:{x:274,y:76},
+12:{x:309,y:76},
+11:{x:364,y:76},
 
-21:{x:496,y:110},
-22:{x:549,y:110},
-23:{x:598,y:110},
-24:{x:650,y:110},
-25:{x:701,y:110},
-26:{x:762,y:110},
-27:{x:825,y:110},
-28:{x:884,y:110},
+21:{x:432,y:76},
+22:{x:479,y:76},
+23:{x:528,y:76},
+24:{x:576,y:76},
+25:{x:612,y:76},
+26:{x:668,y:76},
+27:{x:725,y:76},
+28:{x:780,y:78},
 
-48:{x:32,y:205},
-47:{x:98,y:205},
-46:{x:170,y:205},
-45:{x:232,y:205},
-44:{x:286,y:205},
-43:{x:336,y:205},
-42:{x:378,y:205},
-41:{x:428,y:205},
+48:{x:22,y:186},
+47:{x:82,y:188},
+46:{x:148,y:188},
+45:{x:198,y:188},
+44:{x:246,y:188},
+43:{x:290,y:188},
+42:{x:328,y:188},
+41:{x:368,y:188},
 
-31:{x:482,y:205},
-32:{x:525,y:205},
-33:{x:570,y:205},
-34:{x:622,y:205},
-35:{x:675,y:205},
-36:{x:738,y:205},
-37:{x:810,y:205},
-38:{x:878,y:205}
+31:{x:420,y:188},
+32:{x:458,y:188},
+33:{x:498,y:188},
+34:{x:542,y:188},
+35:{x:592,y:188},
+36:{x:648,y:188},
+37:{x:714,y:188},
+38:{x:768,y:186}
 
 }
-
 
 
 /* ================= MAPA DECÍDUO ================= */
 
 const mapaDeciduo = {
 
-55:{x:175,y:92},
-54:{x:247,y:92},
-53:{x:305,y:92},
-52:{x:358,y:92},
-51:{x:410,y:92},
+55:{x:155,y:52},
+54:{x:217,y:52},
+53:{x:270,y:52},
+52:{x:313,y:52},
+51:{x:366,y:52},
 
-61:{x:492,y:92},
-62:{x:545,y:92},
-63:{x:597,y:92},
-64:{x:658,y:92},
-65:{x:728,y:92},
+61:{x:430,y:52},
+62:{x:478,y:52},
+63:{x:521,y:52},
+64:{x:574,y:52},
+65:{x:634,y:52},
 
-85:{x:180,y:190},
-84:{x:262,y:190},
-83:{x:320,y:190},
-82:{x:370,y:190},
-81:{x:418,y:190},
+85:{x:166,y:170},
+84:{x:232,y:170},
+83:{x:286,y:170},
+82:{x:328,y:170},
+81:{x:368,y:170},
 
-71:{x:481,y:190},
-72:{x:530,y:190},
-73:{x:580,y:190},
-74:{x:644,y:190},
-75:{x:725,y:190}
+71:{x:421,y:170},
+72:{x:470,y:170},
+73:{x:512,y:170},
+74:{x:560,y:170},
+75:{x:628,y:170}
 
 }
-
 
 
 /* ================= TROCAR DENTIÇÃO ================= */
@@ -379,7 +365,6 @@ const img = document.getElementById("imgOdontograma")
 if(tipo==="permanente"){
 
 img.src = "<?= BASE_URL ?>/assets/img/dentesperm.png"
-
 img.classList.remove("deciduo")
 img.classList.add("permanente")
 
@@ -388,7 +373,6 @@ gerarOdontograma(mapaPermanente)
 }else{
 
 img.src = "<?= BASE_URL ?>/assets/img/dentesdec.png"
-
 img.classList.remove("permanente")
 img.classList.add("deciduo")
 
@@ -399,14 +383,13 @@ gerarOdontograma(mapaDeciduo)
 })
 
 
-/* ================= SALVAR REGISTRO ================= */
+/* ================= SALVAR PROCEDIMENTO ================= */
 
 document.getElementById("salvarRegistro").addEventListener("click",function(){
 
 if(!denteSelecionado){
 
-alert("Selecione uma face primeiro")
-
+alert("Selecione um dente primeiro")
 return
 
 }
@@ -426,7 +409,6 @@ body:new URLSearchParams({
 
 paciente_id:document.getElementById("paciente_id").value,
 dente:denteSelecionado,
-face:faceSelecionada,
 procedimento:procedimento,
 observacoes:obs
 
@@ -438,13 +420,13 @@ observacoes:obs
 
 if(ret.status==="ok"){
 
-const face = document.querySelector(
-`.tooth[data-dente="${denteSelecionado}"] .face[data-face="${faceSelecionada}"]`
+const tooth = document.querySelector(
+`.tooth[data-dente="${denteSelecionado}"]`
 )
 
 if(procedimento){
 
-face.classList.add(procedimento)
+tooth.classList.add(procedimento)
 
 }
 
@@ -455,7 +437,6 @@ alert("Registro salvo")
 })
 
 })
-
 
 
 /* ================= CARREGAR REGISTROS ================= */
@@ -472,13 +453,13 @@ fetch("<?= BASE_URL ?>/prontuarios/registros/"+paciente_id)
 
 dados.forEach(reg=>{
 
-const face = document.querySelector(
-`.tooth[data-dente="${reg.dente}"] .face[data-face="${reg.face}"]`
+const tooth = document.querySelector(
+`.tooth[data-dente="${reg.dente}"]`
 )
 
-if(face){
+if(tooth){
 
-face.classList.add(reg.procedimento)
+tooth.classList.add(reg.procedimento)
 
 }
 
@@ -487,7 +468,6 @@ face.classList.add(reg.procedimento)
 })
 
 }
-
 
 
 /* ================= INICIAR ================= */
