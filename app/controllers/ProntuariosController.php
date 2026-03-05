@@ -26,8 +26,8 @@ class ProntuariosController extends Controller
         $dados = [
             "paciente_id" => $_POST["paciente_id"],
             "dente" => $_POST["dente"],
-            "face" => $_POST["face"],
             "procedimento" => $_POST["procedimento"],
+            "status" => $_POST["status"],
             "observacoes" => $_POST["observacoes"]
         ];
 
@@ -47,10 +47,30 @@ class ProntuariosController extends Controller
         exit;
     }
 
-    public function historico($paciente_id, $dente)
+    public function historico($paciente_id,$dente)
     {
-        $dados = $this->model->historicoPorDente($paciente_id, $dente);
+
+        $model = new Prontuario();
+
+        $dados = $model->getHistoricoDente($paciente_id,$dente);
 
         echo json_encode($dados);
+        exit;
+
+    }
+
+    public function removerRegistro()
+    {
+
+        $model = new Prontuario();
+
+        $paciente = $_POST["paciente_id"];
+        $dente = $_POST["dente"];
+
+        $model->removerPorDente($paciente,$dente);
+
+        echo json_encode(["status"=>"ok"]);
+        exit;
+
     }
 }

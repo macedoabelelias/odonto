@@ -5,7 +5,7 @@
 <div class="row">
 
 <!-- ODONTOGRAMA -->
-<div class="col-lg-8" style="margin-top: 40px;">
+<div class="col-lg-8" style="margin-top: 80px;">
 
 <div class="card mb-3">
 <div class="card-body" >
@@ -64,11 +64,31 @@ Nenhum selecionado
 
 </select>
 
+<label>Status</label>
+
+<select id="statusProcedimento" class="form-control mb-2">
+
+<option value="planejado">A realizar</option>
+<option value="realizado">Realizado</option>
+
+</select>
+
 <label>Observações</label>
+
+<label class="mt-2"><strong>Histórico do dente</strong></label>
+
+<div id="historicoDente" 
+style="max-height:120px; overflow-y:auto; font-size:13px; background:#f8fafc; padding:8px; border-radius:6px;">
+Nenhum registro
+</div>
 
 <textarea id="observacoes" class="form-control mb-2" rows="2"></textarea>
 <button id="salvarRegistro" class="btn btn-success w-100">
 Salvar
+</button>
+
+<button id="removerRegistro" class="btn btn-danger w-100 mt-2">
+Remover Procedimento
 </button>
 
 </div>
@@ -202,7 +222,7 @@ Salvar Evolução
 
 <h5>🦷 Plano de Tratamento</h5>
 
-<textarea class="form-control mb-3" rows="4"
+<textarea id="planoTratamento" class="form-control mb-3" rows="4"
 placeholder="Descrever plano de tratamento..."></textarea>
 
 <button class="btn btn-success w-100">
@@ -244,7 +264,9 @@ tooth.dataset.dente = dente
 tooth.style.left = pos.x + "px"
 tooth.style.top = pos.y + "px"
 
-tooth.innerHTML = `<div class="procedimentos"></div>`
+tooth.innerHTML = `
+<div class="proc-layer"></div>
+`
 
 container.appendChild(tooth)
 
@@ -273,6 +295,8 @@ denteSelecionado = this.dataset.dente
 
 document.getElementById("infoDente").innerText =
 "Dente selecionado: " + denteSelecionado
+
+carregarHistoricoDente(denteSelecionado)
 
 })
 
@@ -395,6 +419,7 @@ return
 }
 
 const procedimento = document.getElementById("procedimento").value
+const status = document.getElementById("statusProcedimento").value
 const obs = document.getElementById("observacoes").value
 
 fetch("<?= BASE_URL ?>/prontuarios/salvarRegistro",{
@@ -410,7 +435,71 @@ body:new URLSearchParams({
 paciente_id:document.getElementById("paciente_id").value,
 dente:denteSelecionado,
 procedimento:procedimento,
+status:status,
 observacoes:obs
+
+})
+
+})
+.then(res=>res.json())
+.then(ret=>{
+
+if(ret.status==="ok"){
+
+/* atualiza odontograma */
+
+aplicarProcedimento(denteSelecionado,procedimento,status)
+
+/* atualiza histórico */
+
+carregarHistoricoDente(denteSelecionado)
+
+/* atualiza plano de tratamento */
+
+gerarPlanoTratamento()
+
+/* limpa campos */
+
+document.getElementById("procedimento").value=""
+document.getElementById("observacoes").value=""
+
+alert("Registro salvo")
+
+}
+
+})
+
+})
+
+
+
+/* ================= REMOVER PROCEDIMENTO ================= */
+
+document.getElementById("removerRegistro").addEventListener("click",function(){
+
+if(!denteSelecionado){
+
+alert("Selecione um dente primeiro")
+return
+
+}
+
+if(!confirm("Deseja remover os procedimentos deste dente?")){
+return
+}
+
+fetch("<?= BASE_URL ?>/prontuarios/removerRegistro",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/x-www-form-urlencoded"
+},
+
+body:new URLSearchParams({
+
+paciente_id:document.getElementById("paciente_id").value,
+dente:denteSelecionado
 
 })
 
@@ -424,13 +513,17 @@ const tooth = document.querySelector(
 `.tooth[data-dente="${denteSelecionado}"]`
 )
 
-if(procedimento){
+if(!tooth) return
 
-tooth.classList.add(procedimento)
+const layer = tooth.querySelector(".proc-layer")
 
+if(layer){
+layer.innerHTML=""
 }
 
-alert("Registro salvo")
+document.getElementById("historicoDente").innerHTML="Nenhum registro"
+
+alert("Procedimentos removidos")
 
 }
 
@@ -439,7 +532,84 @@ alert("Registro salvo")
 })
 
 
-/* ================= CARREGAR REGISTROS ================= */
+
+/* ================= APLICAR PROCEDIMENTO NO DENTE ================= */
+
+function aplicarProcedimento(dente,procedimento,status){
+
+const tooth = document.querySelector(
+`.tooth[data-dente="${dente}"]`
+)
+
+if(!tooth) return
+
+const layer = tooth.querySelector(".proc-layer")
+
+if(!layer) return
+
+
+/* EXTRAÇÃO INDICADA */
+
+if(procedimento === "extracao_indicada"){
+
+const x = document.createElement("div")
+x.className = "extracao-x"
+
+tooth.appendChild(x)
+
+return
+
+}
+
+
+/* EXTRAÇÃO REALIZADA */
+
+if(procedimento === "extracao_realizada"){
+
+const x = document.createElement("div")
+x.className = "extracao-realizada-x"
+
+tooth.appendChild(x)
+
+tooth.classList.add("tooth-ausente")
+
+return
+
+}
+
+
+/* OUTROS PROCEDIMENTOS */
+
+const item = document.createElement("div")
+
+item.classList.add("proc-item")
+
+/* posição do procedimento */
+
+if(procedimento === "restauracao" || procedimento === "carie" || procedimento === "profilaxia" || procedimento === "raspagem"){
+item.classList.add("proc-centro")
+}
+
+if(procedimento === "canal"){
+item.classList.add("proc-raiz")
+}
+
+if(procedimento === "coroa"){
+item.classList.add("proc-topo")
+}
+
+if(procedimento === "implante"){
+item.classList.add("proc-implante")
+}
+
+item.style.backgroundImage =
+`url("<?= BASE_URL ?>/assets/odontograma/${procedimento}_${status}.png")`
+
+layer.appendChild(item)
+
+}
+
+/* ================= CARREGAR ODONTOGRAMA ================= */
 
 function carregarOdontograma(){
 
@@ -453,15 +623,7 @@ fetch("<?= BASE_URL ?>/prontuarios/registros/"+paciente_id)
 
 dados.forEach(reg=>{
 
-const tooth = document.querySelector(
-`.tooth[data-dente="${reg.dente}"]`
-)
-
-if(tooth){
-
-tooth.classList.add(reg.procedimento)
-
-}
+aplicarProcedimento(reg.dente,reg.procedimento,reg.status)
 
 })
 
@@ -470,8 +632,94 @@ tooth.classList.add(reg.procedimento)
 }
 
 
-/* ================= INICIAR ================= */
+/* ================= CARREGAR HISTÓRICO DO DENTE ================= */
+
+function carregarHistoricoDente(dente){
+
+const paciente_id = document.getElementById("paciente_id").value
+
+fetch("<?= BASE_URL ?>/prontuarios/historico/"+paciente_id+"/"+dente)
+
+.then(res=>res.json())
+
+.then(dados=>{
+
+const box = document.getElementById("historicoDente")
+
+if(!box) return
+
+if(dados.length===0){
+
+box.innerHTML="Nenhum registro"
+return
+
+}
+
+let html=""
+
+dados.forEach(reg=>{
+
+html += `
+<div style="border-bottom:1px solid #e5e7eb;padding:4px 0;">
+<strong>${reg.procedimento}</strong> (${reg.status})<br>
+<span style="color:#64748b;font-size:12px">${reg.data}</span>
+</div>
+`
+
+})
+
+box.innerHTML=html
+
+})
+
+}
+
+/* ================= GERAR PLANO DE TRATAMENTO ================= */
+
+function gerarPlanoTratamento(){
+
+const paciente_id = document.getElementById("paciente_id").value
+
+fetch("<?= BASE_URL ?>/prontuarios/registros/"+paciente_id)
+
+.then(res=>res.json())
+
+.then(dados=>{
+
+const campo = document.getElementById("planoTratamento")
+
+if(!campo) return
+
+let texto = ""
+
+dados.forEach(reg=>{
+
+if(reg.status === "a_realizar"){
+
+texto += "• " + reg.procedimento + " — dente " + reg.dente + "\n"
+
+}
+
+})
+
+if(texto===""){
+texto="Nenhum procedimento pendente"
+}
+
+campo.value = texto
+
+})
+
+}
+
+/* ================= INICIAR ODONTOGRAMA ================= */
+
+document.addEventListener("DOMContentLoaded", function(){
 
 gerarOdontograma(mapaPermanente)
+
+gerarPlanoTratamento()
+
+})
 
 </script>

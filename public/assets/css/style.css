@@ -250,12 +250,7 @@ body {
 
 .odontograma{
 position:relative;
-width:100%;
-max-width:950px;
-margin:auto;
-display:flex;
-justify-content:center;
-align-items:center;
+text-align:center;
 }
 
 .odontograma img {
@@ -263,6 +258,7 @@ align-items:center;
     max-height: 550px;
     display:block;
     margin:auto;
+    pointer-events:none;
 }
 
 .tooth{
@@ -270,9 +266,7 @@ position:absolute;
 width:50px;
 height:90px;
 cursor:pointer;
-border:2px solid transparent;
-/* border:1px solid red; */
-transition:0.2s;
+z-index:10;
 }
 
 .tooth:hover{
@@ -317,53 +311,13 @@ background:rgba(132,204,22,0.4);
 background:rgba(220,38,38,0.4);
 }
 
-.face.ativo {   
-    background:rgba(239,68,68,0.6);
+.tooth-ausente{
+
+opacity:0.35;
+filter:grayscale(100%);
+pointer-events:none;
+
 }
-
-.face:hover{
-background:rgba(59,130,246,0.35);
-}
-
-
-
-
-.vestibular{
-top:0;
-left:8px;
-width:32px;
-height:20px;
-}
-
-.lingual{
-bottom:0;
-left:8px;
-width:32px;
-height:20px;
-}
-
-.mesial{
-top:20px;
-left:0;
-width:12px;
-height:40px;
-}
-
-.distal{
-top:20px;
-right:0;
-width:12px;
-height:40px;
-}
-
-.oclusal{
-top:25px;
-left:12px;
-width:24px;
-height:30px;
-}
-
-
 
 
 /* imagem do odontograma */
@@ -400,22 +354,6 @@ max-width:550px;
     display:block;
 }
 
-.face.carie{
-    background:#ef4444;
-}
-
-.face.restauracao{
-    background:#3b82f6;
-}
-
-.face.extracao{
-    background:#111827;
-}
-
-.face.canal{
-    background:#9333ea;
-}
-
 /* EXTRAÇÃO INDICADA (X vermelho) */
 
 .extracao-x{
@@ -436,81 +374,50 @@ height:100%;
 background:red;
 }
 
-.extracao-x::before{
-transform:rotate(45deg);
-}
-
-.extracao-x::after{
-transform:rotate(-45deg);
-}
-
-
-/* EXTRAÇÃO REALIZADA (X preto) */
-
-.extracao-realizada-x{
-position:absolute;
-width:50px;
-height:90px;
-pointer-events:none;
-}
-
-.extracao-realizada-x::before,
-.extracao-realizada-x::after{
-content:"";
-position:absolute;
-top:0;
-left:50%;
-width:4px;
-height:100%;
-background:black;
-}
-
+.extracao-x::before,
 .extracao-realizada-x::before{
 transform:rotate(45deg);
 }
 
+.extracao-x::after,
 .extracao-realizada-x::after{
 transform:rotate(-45deg);
 }
 
-.face.coroa{
-background:#f59e0b;
+/* EXTRAÇÃO REALIZADA (X preto) */
+
+.extracao-x,
+.extracao-realizada-x{
+
+position:absolute;
+width:70%;
+height:80%;
+top:10%;
+left:15%;
+pointer-events:none;
+
 }
 
-.face.faceta{
-background:#14b8a6;
+.extracao-realizada-x::before,
+.extracao-realizada-x::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:50%;
+
+    width:3px;     /* AQUI está a alteração */
+
+    height:100%;
 }
 
-.face.implante{
-background:#374151;
+.extracao-x::before,
+.extracao-x::after{
+background:red;
 }
 
-.face.protese{
-background:#ec4899;
-}
-
-.face.selante{
-background:#10b981;
-}
-
-.face.provisoria{
-background:#f97316;
-}
-
-.face.ausente{
-background:#000000;
-}
-
-.face.profilaxia{
-background:#06b6d4;
-}
-
-.face.raspagem{
-background:#84cc16;
-}
-
-.face.cirurgia{
-background:#dc2626;
+.extracao-realizada-x::before,
+.extracao-realizada-x::after{
+background:black;
 }
 
 /* ===== LEGENDA ODONTOGRAMA ===== */
@@ -652,4 +559,78 @@ font-size:16px;
 margin-bottom:10px;
 }
 
+/* STATUS DO PROCEDIMENTO */
 
+.proc-planejado{
+opacity:0.35;
+}
+
+.proc-realizado{
+opacity:1;
+}
+
+.proc-layer{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+}
+
+.proc-img{
+position:absolute;
+width:100%;
+height:100%;
+background-size:contain;
+background-repeat:no-repeat;
+background-position:center;
+}
+
+.proc-item{
+
+position:absolute;
+
+background-size:90%;
+background-repeat:no-repeat;
+background-position:center;
+
+pointer-events:none;
+
+}
+
+/* centro do dente */
+
+.proc-centro{
+top:15%;
+left:15%;
+width:70%;
+height:70%;
+}
+
+/* canal */
+
+.proc-raiz{
+top:25%;
+left:35%;
+width:30%;
+height:70%;
+}
+
+/* coroa */
+
+.proc-topo{
+top:-10%;
+left:10%;
+width:80%;
+height:50%;
+}
+
+/* implante */
+
+.proc-implante{
+top:20%;
+left:25%;
+width:50%;
+height:75%;
+}
