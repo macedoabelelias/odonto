@@ -1,41 +1,38 @@
-
-
 <div class="content-card">
 
-    <h4 class="mb-4">Dashboard</h4>
+<h4 class="mb-4">Dashboard</h4>
 
-    <!-- CARDS -->
-    <div class="row mb-4">
+<div class="row g-3 mb-4">
 
-        <div class="col-md-3">
-            <div class="card text-white bg-success p-3">
-                <h6>Recebido no Mês</h6>
-                <h4>R$ <?= number_format($recebido ?? 0, 2, ',', '.') ?></h4>
-            </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-success text-white p-3">
+            <h6>Recebido no Mês</h6>
+            <h3>R$ <?= number_format($recebido ?? 0,2,',','.') ?></h3>
         </div>
-
-        <div class="col-md-3">
-            <div class="card text-white bg-danger p-3">
-                <h6>Pago no Mês</h6>
-                <h4>R$ <?= number_format($pago ?? 0, 2, ',', '.') ?></h4>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-white bg-primary p-3">
-                <h6>Compras no Mês</h6>
-                <h4>R$ <?= number_format($compras ?? 0, 2, ',', '.') ?></h4>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-white bg-dark p-3">
-                <h6>Total de Pacientes</h6>
-                <h4><?= $pacientes ?></h4>
-            </div>
-        </div>
-
     </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-danger text-white p-3">
+            <h6>Pago no Mês</h6>
+            <h3>R$ <?= number_format($pago ?? 0,2,',','.') ?></h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-primary text-white p-3">
+            <h6>Compras no Mês</h6>
+            <h3>R$ <?= number_format($compras ?? 0,2,',','.') ?></h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-dark text-white p-3">
+            <h6>Total de Pacientes</h6>
+            <h3><?= $pacientes ?></h3>
+        </div>
+    </div>
+
+</div>
 
     <!-- ALERTA ESTOQUE -->
     <h5 class="mb-3">⚠ Produtos com Estoque Baixo</h5>
@@ -74,11 +71,14 @@
     <hr class="my-5">
 
     <!-- GRÁFICO -->
-    <h5 class="mb-3">📊 Faturamento dos Últimos 6 Meses</h5>
+    <div class="card shadow-sm border-0 p-4">
 
-    <canvas id="graficoFinanceiro" height="100"></canvas>
+        <h5 class="mb-3">📊 Faturamento dos Últimos 6 Meses</h5>
 
-</div>
+        <canvas id="graficoFinanceiro" height="100"></canvas>
+
+    </div>
+
 
 <!-- SCRIPT DO GRÁFICO -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

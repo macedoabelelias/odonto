@@ -69,7 +69,7 @@ if(!empty($paciente['data_nascimento'])){
 ?>
 
 <div class="row">
-    <div class="col-md-6 mb-3">
+    <div class="col-md-5 mb-3">
         <label>Nome *</label>
         <input type="text" name="nome" class="form-control"
                value="<?= htmlspecialchars($paciente['nome']) ?>" required>
@@ -78,28 +78,30 @@ if(!empty($paciente['data_nascimento'])){
     <div class="col-md-3 mb-3">
         <label>CPF</label>
         <input type="text" name="cpf" class="form-control"
-               value="<?= htmlspecialchars($paciente['cpf']) ?>">
+            value="<?= htmlspecialchars($paciente['cpf']) ?>" maxlength="14">
     </div>
 
-    <div class="col-md-3 mb-3">
+    <div class="col-md-2 mb-3">
         <label>Data de Nascimento</label>
-        <input type="date" name="data_nascimento" class="form-control"
+        <input type="date" name="data_nascimento" id="data_nascimento" class="form-control"
                value="<?= $paciente['data_nascimento'] ?>">
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-2 mb-3">
+     <div class="col-md-2 mb-3">
         <label>Idade</label>
-        <input type="text" class="form-control" value="<?= $idade ?>" readonly>
+        <input type="text" id="idade" class="form-control" value="<?= $idade ?>" readonly>      
     </div>
+</div>
+<div class="row">
+    
 
     <div class="col-md-3 mb-3">
         <label>Gênero</label>
         <select name="genero" class="form-control">
             <option value="">Selecione</option>
-            <option value="Masculino" <?= ($paciente['genero'] == 'Masculino') ? 'selected' : '' ?>>Masculino</option>
-            <option value="Feminino" <?= ($paciente['genero'] == 'Feminino') ? 'selected' : '' ?>>Feminino</option>
+            <option value="Masculino" <?= ($paciente['genero'] == 'Masculino') ? 'selected' : '' ?>>Cis Masculino</option>
+            <option value="Feminino" <?= ($paciente['genero'] == 'Feminino') ? 'selected' : '' ?>>Cis Feminino</option>
+            <option value="Transgênero" <?= ($paciente['genero'] == 'Transgênero') ? 'selected' : '' ?>>Transgênero</option>
             <option value="Outro" <?= ($paciente['genero'] == 'Outro') ? 'selected' : '' ?>>Outro</option>
         </select>
     </div>
@@ -110,13 +112,13 @@ if(!empty($paciente['data_nascimento'])){
                value="<?= htmlspecialchars($paciente['estado_civil']) ?>">
     </div>
 
-    <div class="col-md-2 mb-3">
+    <div class="col-md-3 mb-3">
         <label>Profissão</label>
         <input type="text" name="profissao" class="form-control"
                value="<?= htmlspecialchars($paciente['profissao']) ?>">
     </div>
 
-    <div class="col-md-2 mb-3">
+    <div class="col-md-3 mb-3">
         <label>Tipo Sanguíneo</label>
         <input type="text" name="tipo_sanguineo" class="form-control"
                value="<?= htmlspecialchars($paciente['tipo_sanguineo']) ?>">
@@ -139,13 +141,13 @@ if(!empty($paciente['data_nascimento'])){
     <div class="col-md-3 mb-3">
         <label>Telefone</label>
         <input type="text" name="telefone" class="form-control"
-               value="<?= htmlspecialchars($paciente['telefone']) ?>">
+value="<?= htmlspecialchars($paciente['telefone']) ?>" maxlength="15">
     </div>
 
     <div class="col-md-3 mb-3">
         <label>WhatsApp</label>
         <input type="text" name="whatsapp" class="form-control"
-               value="<?= htmlspecialchars($paciente['whatsapp']) ?>">
+value="<?= htmlspecialchars($paciente['whatsapp']) ?>" maxlength="15">
     </div>
 
     <div class="col-md-3 mb-3">
@@ -164,6 +166,28 @@ if(!empty($paciente['data_nascimento'])){
 </div>
 </div>
 
+<div class="card mb-4">
+<div class="card-body">
+
+<h5 class="mb-3">🩺 Informações Médicas</h5>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label>Alergias</label>
+<textarea name="alergias" class="form-control" rows="3"></textarea>
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Medicamentos em uso</label>
+<textarea name="medicamentos" class="form-control" rows="3"></textarea>
+</div>
+
+</div>
+
+</div>
+</div>
+
 
 <!-- ==========================
      ENDEREÇO
@@ -177,7 +201,7 @@ if(!empty($paciente['data_nascimento'])){
     <div class="col-md-3 mb-3">
         <label>CEP</label>
         <input type="text" name="cep" class="form-control"
-               value="<?= htmlspecialchars($paciente['cep']) ?>">
+value="<?= htmlspecialchars($paciente['cep']) ?>" maxlength="9">
     </div>
 
     <div class="col-md-6 mb-3">
@@ -216,6 +240,44 @@ if(!empty($paciente['data_nascimento'])){
 </div>
 </div>
 
+<!-- ==========================
+     RESPONSÁVEL
+========================== -->
+<div class="card mb-4">
+<div class="card-body">
+
+<h5 class="mb-3">👨‍👩‍👧 Responsável</h5>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label>Nome do Responsável</label>
+        <input type="text" name="responsavel_nome" class="form-control">
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <label>Telefone</label>
+       <input type="text" name="responsavel_telefone" class="form-control"
+value="<?= htmlspecialchars($paciente['responsavel_telefone']) ?>" maxlength="15">
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <label>CPF</label>
+        <input type="text" name="responsavel_cpf" class="form-control"
+value="<?= htmlspecialchars($paciente['responsavel_cpf']) ?>" maxlength="14">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label>Email</label>
+        <input type="email" name="responsavel_email" class="form-control">
+    </div>
+</div>
+
+</div>
+</div>
+
+
 
 <!-- ==========================
      OBSERVAÇÕES
@@ -239,3 +301,144 @@ if(!empty($paciente['data_nascimento'])){
 </div>
 
 </form>
+
+<script>
+
+/* ==========================
+   MÁSCARA CPF
+========================== */
+
+function mascaraCPF(campo){
+
+campo.addEventListener("input",function(){
+
+let v = campo.value.replace(/\D/g,"")
+
+v = v.replace(/(\d{3})(\d)/,"$1.$2")
+v = v.replace(/(\d{3})(\d)/,"$1.$2")
+v = v.replace(/(\d{3})(\d{1,2})$/,"$1-$2")
+
+campo.value = v
+
+})
+
+}
+
+
+/* ==========================
+   MÁSCARA TELEFONE
+========================== */
+
+function mascaraTelefone(campo){
+
+campo.addEventListener("input",function(){
+
+let v = campo.value.replace(/\D/g,"")
+
+if(v.length > 10){
+
+// celular (11 dígitos)
+
+v = v.replace(/^(\d{2})(\d)/g,"($1) $2")
+v = v.replace(/(\d)(\d{4})$/,"$1-$2")
+
+}else{
+
+// telefone fixo (10 dígitos)
+
+v = v.replace(/^(\d{2})(\d)/g,"($1) $2")
+v = v.replace(/(\d)(\d{4})$/,"$1-$2")
+
+}
+
+campo.value = v
+
+})
+
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+
+document.querySelectorAll('input[name="telefone"]').forEach(mascaraTelefone)
+
+document.querySelectorAll('input[name="whatsapp"]').forEach(mascaraTelefone)
+
+document.querySelectorAll('input[name="responsavel_telefone"]').forEach(mascaraTelefone)
+
+})
+
+
+/* ==========================
+   MÁSCARA CEP
+========================== */
+
+function mascaraCEP(campo){
+
+campo.addEventListener("input",function(){
+
+let v = campo.value.replace(/\D/g,"")
+
+v = v.replace(/^(\d{5})(\d)/,"$1-$2")
+
+campo.value = v
+
+})
+
+}
+
+
+/* ==========================
+   BUSCA CEP AUTOMÁTICO
+========================== */
+
+function buscarCEP(){
+
+const cep = document.querySelector('input[name="cep"]').value.replace(/\D/g,'')
+
+if(cep.length !== 8){
+return
+}
+
+fetch("https://viacep.com.br/ws/"+cep+"/json/")
+
+.then(res => res.json())
+
+.then(dados => {
+
+if(dados.erro){
+return
+}
+
+document.querySelector('input[name="endereco"]').value = dados.logradouro
+document.querySelector('input[name="bairro"]').value = dados.bairro
+document.querySelector('input[name="cidade"]').value = dados.localidade
+document.querySelector('input[name="estado"]').value = dados.uf
+
+})
+
+}
+
+
+/* ==========================
+   ATIVAR MÁSCARAS
+========================== */
+
+document.addEventListener("DOMContentLoaded",function(){
+
+document.querySelectorAll('input[name="cpf"], input[name="responsavel_cpf"]').forEach(mascaraCPF)
+
+document.querySelectorAll('input[name="telefone"], input[name="whatsapp"], input[name="responsavel_telefone"]').forEach(mascaraTelefone)
+
+document.querySelectorAll('input[name="cep"]').forEach(mascaraCEP)
+
+/* CEP automático */
+
+const campoCEP = document.querySelector('input[name="cep"]')
+
+if(campoCEP){
+campoCEP.addEventListener("blur",buscarCEP)
+}
+
+})
+
+</script>

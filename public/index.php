@@ -12,5 +12,9 @@ require_once BASE_PATH . "/core/Controller.php";
 require_once BASE_PATH . "/core/Model.php";
 require_once BASE_PATH . "/core/Router.php";
 
+
 $router = new Router();
 $router->run();
+
+
+?>

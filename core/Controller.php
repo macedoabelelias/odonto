@@ -1,36 +1,39 @@
 <?php
 
-class Controller
-{
-    public function view($view, $data = [])
-    {
+class Controller {
+
+    protected $pdo;
+
+    public function __construct(){
+
+        require BASE_PATH . "/config/conexao.php";
+
+        $this->pdo = $pdo;
+
+    }
+
+    protected function view($view, $data = [], $layout = "layout"){
+
         extract($data);
 
-        // Define o caminho da view
         $viewFile = BASE_PATH . "/app/views/" . $view . ".php";
 
-        /*
-        |--------------------------------------------------------------------------
-        | LOGIN (usa layout_login.php)
-        |--------------------------------------------------------------------------
-        */
-        if ($view === 'login') {
+        if($layout == "layout_login"){
+
             require BASE_PATH . "/app/views/layout/layout_login.php";
-            return;
+
+        } else if($layout == "layout"){
+
+            require BASE_PATH . "/app/views/layout/header.php";
+            require $viewFile;
+            require BASE_PATH . "/app/views/layout/footer.php";
+
+        } else {
+
+            require $viewFile;
+
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | PAINEL INTERNO
-        |--------------------------------------------------------------------------
-        */
-
-        require_once BASE_PATH . "/core/Database.php";
-
-        $pdo = Database::getConnection();
-        $sql = $pdo->query("SELECT * FROM configuracoes LIMIT 1");
-        $configSistema = $sql->fetch(PDO::FETCH_ASSOC);
-
-        require BASE_PATH . "/app/views/layout/layout.php";
     }
+
 }

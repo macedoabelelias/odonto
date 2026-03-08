@@ -4,83 +4,116 @@ require_once BASE_PATH . "/core/Model.php";
 
 class Prontuario extends Model
 {
-   public function salvarRegistro($dados)
-{
-    $sql = $this->pdo->prepare("
-        INSERT INTO prontuarios_registros
-        (paciente_id, dente, procedimento, status, observacoes)
-        VALUES
-        (:paciente_id, :dente, :procedimento, :status, :observacoes)
-    ");
 
-    return $sql->execute($dados);
-}
+    /* ==========================
+       LISTAR REGISTROS DO PACIENTE
+    ========================== */
 
     public function listarPorPaciente($paciente_id)
     {
+
         $sql = $this->pdo->prepare("
-            SELECT * FROM prontuarios_registros
-            WHERE paciente_id = :paciente_id
-            ORDER BY data_registro DESC
+        SELECT *
+        FROM prontuarios_registros
+        WHERE paciente_id = ?
         ");
 
-        $sql->bindValue(":paciente_id", $paciente_id);
-        $sql->execute();
+        $sql->execute([$paciente_id]);
 
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function historicoPorDente($paciente_id, $dente)
+
+    /* ==========================
+       HISTÓRICO DO DENTE
+    ========================== */
+
+    public function getHistoricoDente($paciente_id,$dente)
     {
 
-        $sql = $this->db->prepare("
-        SELECT procedimento, face, observacoes, data_registro
+        $sql = $this->pdo->prepare("
+        SELECT procedimento,status,data
         FROM prontuarios_registros
-        WHERE paciente_id = :paciente_id
-        AND dente = :dente
-        ORDER BY data_registro DESC
+
+        WHERE paciente_id = ?
+        AND dente = ?
+
+        ORDER BY data DESC
         ");
 
-        $sql->bindValue(":paciente_id",$paciente_id);
-        $sql->bindValue(":dente",$dente);
-
-        $sql->execute();
+        $sql->execute([$paciente_id,$dente]);
 
         return $sql->fetchAll(PDO::FETCH_ASSOC);
 
     }
 
-    public function getHistoricoDente($paciente,$dente){
 
-        $sql = "SELECT procedimento,status,
-        DATE_FORMAT(created_at,'%d/%m/%Y') as data
-        FROM prontuarios_registros
-        WHERE paciente_id = :paciente
-        AND dente = :dente
-        ORDER BY id DESC";
+    /* ==========================
+       SALVAR PROCEDIMENTO
+    ========================== */
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(":paciente",$paciente);
-        $stmt->bindValue(":dente",$dente);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    }
-
-    public function removerPorDente($paciente,$dente)
+    public function salvarRegistro($dados)
     {
 
         $sql = $this->pdo->prepare("
+
+        INSERT INTO prontuarios_registros
+        (paciente_id,dente,procedimento,status,observacoes,data)
+
+        VALUES (?,?,?,?,?,NOW())
+
+        ");
+
+        return $sql->execute([
+
+            $dados["paciente_id"],
+            $dados["dente"],
+            $dados["procedimento"],
+            $dados["status"],
+            $dados["observacoes"]
+
+        ]);
+
+    }
+
+    public function buscarRegistroDente($paciente,$dente)
+    {
+
+        $sql = $this->pdo->prepare("
+
+        SELECT *
+        FROM prontuarios_registros
+        WHERE paciente_id=? AND dente=?
+        ORDER BY id DESC
+        LIMIT 1
+
+        ");
+
+        $sql->execute([$paciente,$dente]);
+
+        return $sql->fetch(PDO::FETCH_ASSOC);
+
+    }
+
+
+    /* ==========================
+       REMOVER PROCEDIMENTOS DO DENTE
+    ========================== */
+
+    public function removerPorDente($paciente_id,$dente)
+    {
+
+        $sql = $this->pdo->prepare("
+
         DELETE FROM prontuarios_registros
-        WHERE paciente_id = :paciente
-        AND dente = :dente
+
+        WHERE paciente_id = ?
+        AND dente = ?
+
         ");
 
-        $sql->bindValue(":paciente",$paciente);
-        $sql->bindValue(":dente",$dente);
-
-        $sql->execute();
+        return $sql->execute([$paciente_id,$dente]);
 
     }
+
 }

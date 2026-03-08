@@ -4,6 +4,7 @@ require_once BASE_PATH . "/core/Model.php";
 
 class Paciente extends Model
 {
+
     /* ==========================
        LISTAR
     ========================== */
@@ -12,6 +13,7 @@ class Paciente extends Model
         $sql = $this->pdo->query("SELECT * FROM pacientes ORDER BY id DESC");
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     /* ==========================
        BUSCAR (Nome ou CPF)
@@ -31,6 +33,7 @@ class Paciente extends Model
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
     /* ==========================
        BUSCAR POR ID
     ========================== */
@@ -41,6 +44,7 @@ class Paciente extends Model
         $sql->execute();
         return $sql->fetch(PDO::FETCH_ASSOC);
     }
+
 
     /* ==========================
        VERIFICAR CPF EXISTENTE
@@ -65,73 +69,176 @@ class Paciente extends Model
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+
     /* ==========================
        SALVAR
     ========================== */
     public function salvar($dados)
     {
+
         $sql = $this->pdo->prepare("
-            INSERT INTO pacientes (
-                foto, nome, telefone, email, cpf,
-                data_nascimento, tipo_sanguineo,
-                estado_civil, genero, profissao,
-                cep, endereco, bairro, cidade, estado,
-                convenio, instagram, whatsapp,
-                responsavel_nome, responsavel_telefone,
-                responsavel_email, responsavel_cpf,
-                observacoes
-            ) VALUES (
-                :foto, :nome, :telefone, :email, :cpf,
-                :data_nascimento, :tipo_sanguineo,
-                :estado_civil, :genero, :profissao,
-                :cep, :endereco, :bairro, :cidade, :estado,
-                :convenio, :instagram, :whatsapp,
-                :responsavel_nome, :responsavel_telefone,
-                :responsavel_email, :responsavel_cpf,
-                :observacoes
-            )
+
+        INSERT INTO pacientes (
+
+        nome,
+        cpf,
+        data_nascimento,
+        genero,
+        estado_civil,
+        escolaridade,
+        profissao,
+        tipo_sanguineo,
+
+        telefone,
+        whatsapp,
+        email,
+        instagram,
+
+        cep,
+        endereco,
+        bairro,
+        cidade,
+        estado,
+        convenio,
+
+        responsavel_nome,
+        responsavel_telefone,
+        responsavel_cpf,
+        responsavel_email,
+
+        alergias,
+        medicamentos,
+        observacoes,
+        foto
+
+        ) VALUES (
+
+        ?,?,?,?,?,?,?,?,
+        ?,?,?,?,?,?,
+        ?,?,?,?,?,?,
+        ?,?,?,?,
+        ?,?,?,?
+
+        )
+
         ");
 
-        return $sql->execute($dados);
+        return $sql->execute([
+            $dados['nome'],
+            $dados['cpf'],
+            $dados['data_nascimento'],
+            $dados['genero'],
+            $dados['estado_civil'],
+            $dados['escolaridade'],
+            $dados['profissao'],
+            $dados['tipo_sanguineo'],
+
+            $dados['telefone'],
+            $dados['whatsapp'],
+            $dados['email'],
+            $dados['instagram'],
+
+            $dados['cep'],
+            $dados['endereco'],
+            $dados['bairro'],
+            $dados['cidade'],
+            $dados['estado'],
+            $dados['convenio'],
+
+            $dados['responsavel_nome'],
+            $dados['responsavel_telefone'],
+            $dados['responsavel_cpf'],
+            $dados['responsavel_email'],
+
+            $dados['alergias'],
+            $dados['medicamentos'],
+            $dados['observacoes'],
+            $dados['foto']
+        ]);
     }
+
 
     /* ==========================
        ATUALIZAR
     ========================== */
     public function atualizar($id, $dados)
     {
-        $dados['id'] = $id;
 
         $sql = $this->pdo->prepare("
-            UPDATE pacientes SET
-                foto = :foto,
-                nome = :nome,
-                telefone = :telefone,
-                email = :email,
-                cpf = :cpf,
-                data_nascimento = :data_nascimento,
-                tipo_sanguineo = :tipo_sanguineo,
-                estado_civil = :estado_civil,
-                genero = :genero,
-                profissao = :profissao,
-                cep = :cep,
-                endereco = :endereco,
-                bairro = :bairro,
-                cidade = :cidade,
-                estado = :estado,
-                convenio = :convenio,
-                instagram = :instagram,
-                whatsapp = :whatsapp,
-                responsavel_nome = :responsavel_nome,
-                responsavel_telefone = :responsavel_telefone,
-                responsavel_email = :responsavel_email,
-                responsavel_cpf = :responsavel_cpf,
-                observacoes = :observacoes
-            WHERE id = :id
+
+        UPDATE pacientes SET
+
+        nome = ?,
+        cpf = ?,
+        data_nascimento = ?,
+        genero = ?,
+        estado_civil = ?,
+        escolaridade = ?,
+        profissao = ?,
+        tipo_sanguineo = ?,
+
+        telefone = ?,
+        whatsapp = ?,
+        email = ?,
+        instagram = ?,
+
+        cep = ?,
+        endereco = ?,
+        bairro = ?,
+        cidade = ?,
+        estado = ?,
+        convenio = ?,
+
+        responsavel_nome = ?,
+        responsavel_telefone = ?,
+        responsavel_cpf = ?,
+        responsavel_email = ?,
+
+        alergias = ?,
+        medicamentos = ?,
+        observacoes = ?,
+        foto = ?
+
+        WHERE id = ?
+
         ");
 
-        return $sql->execute($dados);
+        return $sql->execute([
+            $dados['nome'],
+            $dados['cpf'],
+            $dados['data_nascimento'],
+            $dados['genero'],
+            $dados['estado_civil'],
+            $dados['escolaridade'],
+            $dados['profissao'],
+            $dados['tipo_sanguineo'],
+
+            $dados['telefone'],
+            $dados['whatsapp'],
+            $dados['email'],
+            $dados['instagram'],
+
+            $dados['cep'],
+            $dados['endereco'],
+            $dados['bairro'],
+            $dados['cidade'],
+            $dados['estado'],
+            $dados['convenio'],
+
+            $dados['responsavel_nome'],
+            $dados['responsavel_telefone'],
+            $dados['responsavel_cpf'],
+            $dados['responsavel_email'],
+
+            $dados['alergias'],
+            $dados['medicamentos'],
+            $dados['observacoes'],
+            $dados['foto'],
+
+            $id
+        ]);
     }
+
 
     /* ==========================
        EXCLUIR

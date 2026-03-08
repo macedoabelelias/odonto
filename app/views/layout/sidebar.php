@@ -4,23 +4,34 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $nivel = $_SESSION['usuario_nivel'] ?? '';
+
+// Proteção caso não exista configuração
+if(!isset($configSistema) || !$configSistema){
+    $configSistema = [
+        'nome_clinica' => 'Clínica',
+        'logo' => null
+    ];
+}
 ?>
 
 <div class="sidebar">
-    
 
     <div class="logo-area">
+
         <?php if(!empty($configSistema['logo'])): ?>
-            <img src="<?= BASE_URL ?>/uploads/<?= $configSistema['logo'] ?>"
-            class="logo-sidebar"
-             style="border-radius:10px;">
+
+            <img src="<?= BASE_URL ?>/assets/img/<?= $configSistema['logo'] ?>"
+                 class="logo-sidebar"  style="border-radius:10px;">
+
         <?php else: ?>
-            <h4><?= $configSistema['nome_clinica'] ?? 'Clínica' ?></h4>
-            <?php echo $configSistema['logo']; ?>
+
+            <img src="<?= BASE_URL ?>/assets/img/logo9.png"
+                 class="logo-sidebar">
+
         <?php endif; ?>
+
     </div>
 
-    <!-- DASHBOARD -->
     <a href="<?= BASE_URL ?>/dashboard">Dashboard</a>
 
     <?php if($nivel == 'admin' || $nivel == 'recepcao'): ?>
@@ -38,11 +49,13 @@ $nivel = $_SESSION['usuario_nivel'] ?? '';
     <?php endif; ?>
 
     <?php if($nivel == 'admin'): ?>
+
         <div class="menu-section">ESTOQUE</div>
 
         <a href="<?= BASE_URL ?>/fornecedores">Fornecedores</a>
         <a href="<?= BASE_URL ?>/produtos">Produtos</a>
         <a href="<?= BASE_URL ?>/compras">Compras</a>
+
     <?php endif; ?>
 
     <a href="<?= BASE_URL ?>/login/logout">Sair</a>

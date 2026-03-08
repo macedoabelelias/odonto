@@ -187,4 +187,46 @@ class PacientesController extends Controller
         header("Location: " . BASE_URL . "/pacientes");
         exit;
     }
+
+    /* ==========================
+       HISTÓRICO DO DENTE       
+    ========================== */
+ public function historico($paciente_id, $dente = null)
+{
+
+$model = new Prontuario();
+
+/* pegar dente da URL se router não enviar */
+
+if($dente === null){
+
+$url = $_GET['url'] ?? '';
+
+$partes = explode("/", $url);
+
+$dente = $partes[3] ?? null;
+
+}
+
+/* se não houver dente */
+
+if(!$dente){
+
+header('Content-Type: application/json');
+
+echo json_encode([]);
+
+exit;
+
+}
+
+$dados = $model->getHistoricoDente($paciente_id,$dente);
+
+header('Content-Type: application/json');
+
+echo json_encode($dados);
+
+exit;
+
+}
 }

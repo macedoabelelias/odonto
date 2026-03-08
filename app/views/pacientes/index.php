@@ -1,5 +1,13 @@
 <h4 class="mb-4">Pacientes</h4>
 
+<div class="alert alert-light border">
+
+Total de pacientes cadastrados:
+
+<strong><?= count($pacientes) ?></strong>
+
+</div>
+
 <!-- ==========================
      BUSCA + NOVO PACIENTE
 ========================== -->
