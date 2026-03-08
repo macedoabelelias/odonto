@@ -14,6 +14,7 @@ SIDEBAR
 ============================= */
 
 .sidebar{
+
 width:240px;
 height:100vh;
 position:fixed;
@@ -271,7 +272,13 @@ display:flex;
 align-items:center;
 justify-content:center;
 transition:.2s;
+position:relative;
 }
+
+
+/* =============================
+AJUSTE ODONTOGRAMA DECÍDUO
+============================= */
 
 .dente:hover{
 background:#e9f3ff;
@@ -287,11 +294,46 @@ margin-left:20px;
 ODONTOGRAMA DECÍDUO
 ============================= */
 
+.odontograma-img.deciduo{
+width:820px;
+max-width:100%;
+margin:auto;
+display:block;
+transform: scale(2.18);
+transform-origin:center;
+}
+
+/* =============================
+ODONTOGRAMA DECÍDUO - PROPORÇÃO
+============================= */
+
+.odontograma.deciduo-container{
+transform: scale(1.25);
+transform-origin: center;
+margin-top:40px;
+}
+
+.odontograma.deciduo-container .odontograma-img{
+width:100%;
+}
+
+.odontograma.deciduo-container .tooth{
+transform:scale(1.15);
+}
+
 .deciduos .dente{
-width:30px;
-height:30px;
-font-size:10px;
-margin:2px;
+width:40px;
+height:40px;
+font-size:13px;
+margin:3px;
+}
+
+.deciduos{
+margin-top:25px;
+}
+
+.quadrante-gap{
+margin-left:26px;
 }
 
 
@@ -301,14 +343,15 @@ margin:2px;
 
 .tooth{
 position:absolute;
-width:28px;
-height:28px;
+width:32px;
+height:32px;
+margin-left:-16px;
+margin-top:-16px;
 border-radius:50%;
 cursor:pointer;
 z-index:5;
-border:1px solid red; 
+/* border:1px solid red; */
 }
-
 .tooth:hover{
 border:2px solid #6366f1;
 background:rgba(99,102,241,0.15);
@@ -460,4 +503,30 @@ border:none;
 
 .btn-main:hover{
 background:#4338ca;
+}
+
+.proc-layer{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+pointer-events:none;
+}
+
+.proc-item{
+width:18px;
+height:18px;
+background-size:contain;
+background-repeat:no-repeat;
+background-position:center;
+}
+
+.dente-ativo{
+
+background:#6366f1;
+color:#fff;
+border:2px solid #4f46e5;
+
 }

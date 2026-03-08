@@ -6,6 +6,11 @@ require_once BASE_PATH . "/app/models/Anamnese.php";
 
 class ProntuariosController extends Controller
 {
+
+/* ==========================
+   ABRIR PRONTUÁRIO
+========================== */
+
 public function index($paciente_id = null)
 {
 
@@ -24,87 +29,96 @@ $registros = $prontuarioModel->listarPorPaciente($paciente_id);
 
 $anamnese = $anamneseModel->buscarPorPaciente($paciente_id);
 
-$this->view("prontuarios/index", [
+$this->view("prontuarios/index",[
 
 "paciente"=>$paciente,
 "registros"=>$registros,
-"anamnese"=>$anamnese
+"anamnese"=>$anamnese,
+"prontuario"=>$prontuarioModel
 
 ]);
 
 }
 
-   public function salvarRegistro()
-    {
 
-        $model = new Prontuario();
+/* ==========================
+   SALVAR PROCEDIMENTO
+========================== */
 
-        $dados = [
+public function salvarRegistro()
+{
 
-        "paciente_id"=>$_POST["paciente_id"],
-        "dente"=>$_POST["dente"],
-        "procedimento"=>$_POST["procedimento"],
-        "status"=>$_POST["status"],
-        "observacoes"=>$_POST["observacoes"]
+$model = new Prontuario();
 
-        ];
+$dados = [
 
-        $model->salvarRegistro($dados);
+"paciente_id"=>$_POST["paciente_id"],
+"dente"=>$_POST["dente"],
+"procedimento"=>$_POST["procedimento"],
+"status"=>$_POST["status"],
+"observacoes"=>$_POST["observacoes"]
 
-        header("Location: ".BASE_URL."prontuario/paciente/".$_POST["paciente_id"]);
+];
 
-        exit;
+$model->salvarRegistro($dados);
 
-    }
+header("Location: ".BASE_URL."prontuarios/index/".$dados["paciente_id"]);
+exit;
 
-    public function registros($paciente_id)
-    {
-        $model = new Prontuario();
+}
 
-        $dados = $model->listarPorPaciente($paciente_id);
 
-        echo json_encode($dados);
-        exit;
-    }
+/* ==========================
+   LISTAR REGISTROS (AJAX)
+========================== */
 
-    public function historico($paciente_id,$dente)
-    {
+public function registros($paciente_id)
+{
 
-        $model = new Prontuario();
+$model = new Prontuario();
 
-        $dados = $model->getHistoricoDente($paciente_id,$dente);
+$dados = $model->listarPorPaciente($paciente_id);
 
-        echo json_encode($dados);
-        exit;
+echo json_encode($dados);
+exit;
 
-    }
+}
 
-    public function removerRegistro()
-    {
 
-        $model = new Prontuario();
+/* ==========================
+   HISTÓRICO DO DENTE
+========================== */
 
-        $paciente = $_POST["paciente_id"];
-        $dente = $_POST["dente"];
+public function historico($paciente_id,$dente)
+{
 
-        $model->removerPorDente($paciente,$dente);
+$model = new Prontuario();
 
-        echo json_encode(["status"=>"ok"]);
-        exit;
+$dados = $model->getHistoricoDente($paciente_id,$dente);
 
-    }
+echo json_encode($dados);
+exit;
 
-    public function salvarProcedimento(){
+}
 
-        $dente = $_POST['dente'];
-        $procedimento = $_POST['procedimento'];
-        $obs = $_POST['observacoes'];
 
-        $model = new Prontuario();
+/* ==========================
+   REMOVER PROCEDIMENTO
+========================== */
 
-        $model->salvarProcedimento($dente,$procedimento,$obs);
+public function removerRegistro()
+{
 
-        header("Location: ".BASE_URL."prontuario");
+$model = new Prontuario();
 
-    }
+$paciente = $_POST["paciente_id"];
+$dente = $_POST["dente"];
+
+$model->removerPorDente($paciente,$dente);
+
+echo json_encode(["status"=>"ok"]);
+exit;
+
+}
+
 }

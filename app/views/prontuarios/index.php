@@ -32,7 +32,6 @@
 
 <?php endif; ?>
 
-
 <h4 class="mb-4">🦷 Prontuário do Paciente</h4>
 
 <input type="hidden" id="paciente_id" value="<?= $paciente['id'] ?>">
@@ -51,15 +50,13 @@
 
 <hr>
 
-
-
 <div class="row">
 
 <!-- ODONTOGRAMA -->
 
-<div class="col-lg-9">
+<div class="col-lg-9" style="border-radius:14px; border-shadow:0 2px 8px rgba(2,0,0,0.1)">
 
-<div class="card mb-4">
+<div class="card mb-4" style="margin-top: 88px;">
 
 <div class="card-body text-center">
 
@@ -80,21 +77,17 @@ src="<?= BASE_URL ?>/assets/img/dentesperm.png">
 
 </div>
 
-<div id="tooltipDente"></div>
-
 </div>
 
 </div>
 
 </div>
-
-
 
 <!-- LATERAL -->
 
 <div class="col-lg-3">
 
-<div class="card mb-3 shadow-sm">
+<div class="card shadow-sm">
 
 <div class="card-body">
 
@@ -118,11 +111,18 @@ src="<?= BASE_URL ?>/assets/img/dentesperm.png">
 
 <label>Status</label>
 
-<select id="statusProcedimento" class="form-control mb-2">
 
+<input type="hidden" id="denteSelecionado">
+
+<label>Dente selecionado</label>
+
+<input type="text" id="denteVisual" class="form-control mb-2" readonly>
+
+<label>Status</label>
+
+<select id="statusProcedimento" class="form-control mb-2">
 <option value="planejado">A realizar</option>
 <option value="realizado">Realizado</option>
-
 </select>
 
 <textarea id="observacoes" class="form-control mb-2"
@@ -140,7 +140,6 @@ Remover
 
 </div>
 
-
 <div class="card shadow-sm">
 
 <div class="card-body">
@@ -157,94 +156,87 @@ Remover
 
 </div>
 
-</div>
-
-
-
-<!-- ================= SCRIPT ODONTOGRAMA ================= -->
 
 <script>
 
 let denteSelecionado = null;
 
 
-/* ================= MAPA PERMANENTE ================= */
+/* MAPA PERMANENTE */
 
 const mapaPermanente = {
 
-18:{x:40,y:80},
-17:{x:92,y:80},
-16:{x:145,y:80},
-15:{x:195,y:80},
-14:{x:245,y:80},
-13:{x:295,y:80},
-12:{x:340,y:80},
-11:{x:390,y:80},
+18:{x:160,y:226},
+17:{x:206,y:228},
+16:{x:253,y:228},
+15:{x:300,y:224},
+14:{x:337,y:224},
+13:{x:375,y:222},
+12:{x:414,y:226},
+11:{x:454,y:224},
 
-21:{x:440,y:80},
-22:{x:485,y:80},
-23:{x:535,y:80},
-24:{x:585,y:80},
-25:{x:635,y:80},
-26:{x:690,y:80},
-27:{x:742,y:80},
-28:{x:792,y:80},
+21:{x:515,y:224},
+22:{x:556,y:226},
+23:{x:592,y:222},
+24:{x:632,y:224},
+25:{x:668,y:226},
+26:{x:715,y:228},
+27:{x:762,y:228},
+28:{x:806,y:228},
 
-48:{x:40,y:205},
-47:{x:92,y:205},
-46:{x:145,y:205},
-45:{x:195,y:205},
-44:{x:245,y:205},
-43:{x:295,y:205},
-42:{x:340,y:205},
-41:{x:390,y:205},
+48:{x:168,y:274},
+47:{x:218,y:276},
+46:{x:272,y:274},
+45:{x:318,y:274},
+44:{x:358,y:274},
+43:{x:395,y:276},
+42:{x:428,y:274},
+41:{x:461,y:274},
 
-31:{x:440,y:205},
-32:{x:485,y:205},
-33:{x:535,y:205},
-34:{x:585,y:205},
-35:{x:635,y:205},
-36:{x:690,y:205},
-37:{x:742,y:205},
-38:{x:792,y:205}
+31:{x:508,y:274},
+32:{x:538,y:274},
+33:{x:572,y:278},
+34:{x:612,y:276},
+35:{x:650,y:274},
+36:{x:695,y:274},
+37:{x:750,y:276},
+38:{x:798,y:276}
 
 };
 
 
-
-/* ================= MAPA DECIDUO ================= */
+/* MAPA DECIDUO */
 
 const mapaDeciduo = {
 
-55:{x:160,y:90},
-54:{x:230,y:90},
-53:{x:290,y:90},
-52:{x:340,y:90},
-51:{x:395,y:90},
+55:{x:331,y:180},
+54:{x:370,y:180},
+53:{x:402,y:180},
+52:{x:430,y:180},
+51:{x:460,y:180},
 
-61:{x:445,y:90},
-62:{x:495,y:90},
-63:{x:550,y:90},
-64:{x:610,y:90},
-65:{x:670,y:90},
+61:{x:505,y:180},
+62:{x:535,y:180},
+63:{x:562,y:180},
+64:{x:595,y:180},
+65:{x:632,y:180},
 
-85:{x:160,y:190},
-84:{x:230,y:190},
-83:{x:290,y:190},
-82:{x:340,y:190},
-81:{x:395,y:190},
+85:{x:332,y:220},
+84:{x:378,y:220},
+83:{x:412,y:218},
+82:{x:438,y:218},
+81:{x:465,y:220},
 
-71:{x:445,y:190},
-72:{x:495,y:190},
-73:{x:550,y:190},
-74:{x:610,y:190},
-75:{x:670,y:190}
+71:{x:500,y:220},
+72:{x:525,y:218},
+73:{x:552,y:218},
+74:{x:588,y:220},
+75:{x:631,y:220}
 
 };
 
 
-
-/* ================= GERAR ODONTOGRAMA ================= */
+/* GERAR ODONTOGRAMA */
 
 function gerarOdontograma(mapa){
 
@@ -264,13 +256,16 @@ tooth.dataset.dente = dente;
 tooth.style.left = pos.x + "px";
 tooth.style.top = pos.y + "px";
 
-tooth.innerHTML = `<div class="proc-layer"></div>`;
-
 tooth.addEventListener("click",function(){
 
 denteSelecionado = this.dataset.dente;
 
-console.log("Dente selecionado:", denteSelecionado);
+document.getElementById("denteSelecionado").value = denteSelecionado;
+document.getElementById("denteVisual").value = denteSelecionado;
+
+document.querySelectorAll(".tooth").forEach(t=>t.classList.remove("tooth-ativo"));
+
+this.classList.add("tooth-ativo");
 
 });
 
@@ -281,8 +276,7 @@ container.appendChild(tooth);
 }
 
 
-
-/* ================= TROCAR DENTIÇÃO ================= */
+/* TROCAR DENTIÇÃO */
 
 document.getElementById("tipoDenticao").addEventListener("change",function(){
 
@@ -307,7 +301,7 @@ gerarOdontograma(mapaDeciduo);
 });
 
 
-/* ================= INICIAR ================= */
+/* INICIAR */
 
 document.addEventListener("DOMContentLoaded",function(){
 
@@ -315,10 +309,70 @@ gerarOdontograma(mapaPermanente);
 
 });
 
+/* SALVAR REGISTRO */
+
+document.getElementById("salvarRegistro").addEventListener("click",function(){
+
+let paciente = document.getElementById("paciente_id").value;
+let dente = document.getElementById("denteSelecionado").value;
+let procedimento = document.getElementById("procedimento").value;
+let status = document.getElementById("statusProcedimento").value;
+let observacoes = document.getElementById("observacoes").value;
+
+if(!dente){
+alert("Selecione um dente primeiro");
+return;
+}
+
+fetch("<?= BASE_URL ?>prontuarios/salvarRegistro",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/x-www-form-urlencoded"
+},
+
+body:
+"paciente_id="+paciente+
+"&dente="+dente+
+"&procedimento="+procedimento+
+"&status="+status+
+"&observacoes="+observacoes
+
+})
+.then(response=>response.text())
+.then(()=>{
+
+pintarDente(dente,procedimento);
+
+});
+
+});
+
+/* PINTAR DENTE */
+
+function pintarDente(dente,procedimento){
+
+let tooth = document.querySelector(`.tooth[data-dente='${dente}']`);
+
+if(!tooth) return;
+
+let camada = tooth.querySelector(".proc-layer");
+
+if(!camada){
+
+camada = document.createElement("div");
+camada.className="proc-layer";
+tooth.appendChild(camada);
+
+}
+
+camada.innerHTML = `<div class="proc-item" 
+style="background-image:url('<?= BASE_URL ?>assets/img/procedimentos/${procedimento}.png')"></div>`;
+
+}
+
 </script>
-
-
-
 
 
 <!-- ================= LEGENDA + RECOMENDAÇÕES ================= -->
@@ -361,9 +415,7 @@ gerarOdontograma(mapaPermanente);
 
     </div>
 
-
-
-<div class="col-md-4">
+    <div class="col-md-4">
 
     <div class="card shadow-sm card-compacto">
 
@@ -405,6 +457,48 @@ gerarOdontograma(mapaPermanente);
 style="max-height:140px;overflow:auto;background:#f8fafc;padding:8px;border-radius:6px">
 
 Nenhum registro
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card shadow-sm card-compacto">
+
+<div class="card-body">
+
+<h6>🦷 Procedimentos Gerais</h6>
+
+<select id="procedimentoGeral" class="form-control mb-2">
+
+<option value="">Selecione</option>
+
+<option value="profilaxia">Profilaxia</option>
+<option value="fluor">Aplicação de Flúor</option>
+<option value="clareamento">Clareamento</option>
+<option value="protese_total">Prótese Total</option>
+<option value="protese_parcial">Prótese Parcial</option>
+<option value="protocolo_implante">Protocolo sobre Implantes</option>
+<option value="placa_bruxismo">Placa de Bruxismo</option>
+<option value="manutencao_periodontal">Manutenção Periodontal</option>
+<option value="urgencia">Urgência Odontológica</option>
+
+</select>
+
+<textarea 
+id="obsProcedimentoGeral"
+class="form-control mb-2"
+placeholder="Observações"></textarea>
+
+<button id="salvarProcedimentoGeral"
+class="btn btn-success w-100">
+
+Salvar Procedimento
+
+</button>
 
 </div>
 
