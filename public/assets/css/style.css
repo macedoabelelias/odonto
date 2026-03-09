@@ -343,24 +343,25 @@ margin-left:26px;
 
 .tooth{
 position:absolute;
-width:32px;
-height:32px;
-margin-left:-16px;
-margin-top:-16px;
-border-radius:50%;
+width:28px;
+height:28px;
 cursor:pointer;
 z-index:5;
-/* border:1px solid red; */
+border:1px solid red;
 }
+
+
+
 .tooth:hover{
 border:2px solid #6366f1;
 background:rgba(99,102,241,0.15);
 }
 
 .tooth-ativo{
-border:2px solid #22c55e;
+border:2px solid #2563eb;
+border-radius:50%;
+background:rgba(37,99,235,0.15);
 }
-
 
 /* =============================
 CORES DOS PROCEDIMENTOS
@@ -524,9 +525,31 @@ background-position:center;
 }
 
 .dente-ativo{
+border:2px solid #2563eb;
+background:#dbeafe;
+}
 
-background:#6366f1;
-color:#fff;
-border:2px solid #4f46e5;
+.procedimentos-gerais{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+text-align:center;
+}
+
+.proc-geral img{
+width:48px;
+height:48px;
+display:block;
+margin:auto;
+}
+
+.proc-geral{
+cursor:pointer;
+font-size:12px;
+}
+
+.proc-geral:hover{
+
+transform:scale(1.1);
 
 }

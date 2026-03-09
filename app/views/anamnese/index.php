@@ -1,8 +1,8 @@
-<h4 class="mb-4">🩺 Anamnese Odontológica</h4>
-
-<form method="POST" action="<?= BASE_URL ?>/anamnese/salvar">
+<form method="POST" action="anamnese/salvar/<?= $paciente['id'] ?>">
 
 <input type="hidden" name="paciente_id" value="<?= $paciente['id'] ?>">
+
+<h4 class="mb-4">🩺 Anamnese Odontológica</h4>
 
 <div class="row">
 

@@ -45,8 +45,7 @@ $this->view("prontuarios/index",[
    SALVAR PROCEDIMENTO
 ========================== */
 
-public function salvarRegistro()
-{
+public function salvarRegistro(){
 
 $model = new Prontuario();
 
@@ -62,11 +61,10 @@ $dados = [
 
 $model->salvarRegistro($dados);
 
-header("Location: ".BASE_URL."prontuarios/index/".$dados["paciente_id"]);
+echo json_encode(["status"=>"ok"]);
 exit;
 
 }
-
 
 /* ==========================
    LISTAR REGISTROS (AJAX)
@@ -120,5 +118,7 @@ echo json_encode(["status"=>"ok"]);
 exit;
 
 }
+
+
 
 }

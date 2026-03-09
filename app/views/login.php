@@ -1,4 +1,5 @@
 <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+    
 
 <?php if(isset($_GET['erro'])): ?>
     <div class="alert alert-danger text-center position-absolute top-0 start-50 translate-middle-x mt-3 shadow">
@@ -16,7 +17,7 @@
 
             <img src="<?= BASE_URL ?>/assets/img/logo9.png"
                  alt="Logo"
-                 style="max-width:320px;
+                 style="max-width:360px;
                  border-radius:10px;
                  filter: drop-shadow(0 5px 10px rgba(0,0,0,.4));">
 

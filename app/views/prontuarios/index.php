@@ -56,7 +56,7 @@
 
 <div class="col-lg-9" style="border-radius:14px; border-shadow:0 2px 8px rgba(2,0,0,0.1)">
 
-<div class="card mb-4" style="margin-top: 88px;">
+<div class="card mb-4" style="margin-top: 98px;">
 
 <div class="card-body text-center">
 
@@ -139,7 +139,7 @@ Remover
 </div>
 
 </div>
-
+<br>
 <div class="card shadow-sm">
 
 <div class="card-body">
@@ -182,7 +182,7 @@ const mapaPermanente = {
 25:{x:668,y:226},
 26:{x:715,y:228},
 27:{x:762,y:228},
-28:{x:806,y:228},
+28:{x:792,y:212},
 
 48:{x:168,y:274},
 47:{x:218,y:276},
@@ -242,39 +242,58 @@ function gerarOdontograma(mapa){
 
 const container = document.getElementById("odontograma");
 
-document.querySelectorAll(".tooth").forEach(el=>el.remove());
+// remove dentes antigos
+document.querySelectorAll(".tooth").forEach(el => el.remove());
 
 Object.keys(mapa).forEach(function(dente){
 
 const pos = mapa[dente];
 
+// cria o dente
 const tooth = document.createElement("div");
 
 tooth.className = "tooth";
 tooth.dataset.dente = dente;
 
+// posição
+tooth.style.position = "absolute";
 tooth.style.left = pos.x + "px";
 tooth.style.top = pos.y + "px";
 
-tooth.addEventListener("click",function(){
+// tamanho clicável
+tooth.style.width = "28px";
+tooth.style.height = "28px";
+tooth.style.cursor = "pointer";
+
+// camada de procedimento
+const camada = document.createElement("div");
+camada.className = "proc-layer";
+tooth.appendChild(camada);
+
+// evento clique
+tooth.onclick = function(){
 
 denteSelecionado = this.dataset.dente;
 
+// preencher campos
 document.getElementById("denteSelecionado").value = denteSelecionado;
 document.getElementById("denteVisual").value = denteSelecionado;
 
-document.querySelectorAll(".tooth").forEach(t=>t.classList.remove("tooth-ativo"));
+// remover seleção anterior
+document.querySelectorAll(".tooth").forEach(function(t){
+t.classList.remove("tooth-ativo");
+});
 
+// marcar atual
 this.classList.add("tooth-ativo");
 
-});
+};
 
 container.appendChild(tooth);
 
 });
 
 }
-
 
 /* TROCAR DENTIÇÃO */
 
@@ -307,6 +326,13 @@ document.addEventListener("DOMContentLoaded",function(){
 
 gerarOdontograma(mapaPermanente);
 
+// pequeno delay para garantir que os dentes existam
+setTimeout(function(){
+
+carregarProcedimentos();
+
+},300);
+
 });
 
 /* SALVAR REGISTRO */
@@ -324,7 +350,7 @@ alert("Selecione um dente primeiro");
 return;
 }
 
-fetch("<?= BASE_URL ?>prontuarios/salvarRegistro",{
+fetch("/odonto/public/prontuarios/salvarRegistro",{
 
 method:"POST",
 
@@ -333,21 +359,25 @@ headers:{
 },
 
 body:
-"paciente_id="+paciente+
-"&dente="+dente+
-"&procedimento="+procedimento+
-"&status="+status+
-"&observacoes="+observacoes
+`paciente_id=${paciente}&dente=${dente}&procedimento=${procedimento}&status=${status}&observacoes=${observacoes}`
 
 })
-.then(response=>response.text())
-.then(()=>{
+.then(res=>res.json())
+.then(data=>{
+
+if(data.status=="ok"){
 
 pintarDente(dente,procedimento);
 
+}
+
+})
+.catch(error=>{
+console.log(error);
 });
 
 });
+
 
 /* PINTAR DENTE */
 
@@ -371,6 +401,58 @@ camada.innerHTML = `<div class="proc-item"
 style="background-image:url('<?= BASE_URL ?>assets/img/procedimentos/${procedimento}.png')"></div>`;
 
 }
+
+function carregarProcedimentos(){
+
+let paciente = document.getElementById("paciente_id").value;
+
+fetch("<?= BASE_URL ?>prontuarios/registros/"+paciente)
+
+.then(response => response.json())
+
+.then(dados => {
+
+dados.forEach(function(item){
+
+pintarDente(item.dente,item.procedimento);
+
+});
+
+});
+
+}
+
+  document.querySelectorAll(".proc-geral").forEach(function(item){
+
+        item.addEventListener("click",function(){
+
+        let procedimento = this.dataset.proc;
+
+        document.getElementById("procedimento").value = procedimento;
+
+        });
+
+    });
+
+    function carregarProcedimentos(){
+
+        let paciente = document.getElementById("paciente_id").value;
+
+        fetch("<?= BASE_URL ?>prontuarios/registros/"+paciente)
+
+        .then(response => response.json())
+
+        .then(dados => {
+
+        dados.forEach(function(item){
+
+        pintarDente(item.dente,item.procedimento);
+
+        });
+
+        });
+
+    }
 
 </script>
 
@@ -447,7 +529,7 @@ style="background-image:url('<?= BASE_URL ?>assets/img/procedimentos/${procedime
 
 <!-- HISTÓRICO -->
 <div class="col-md-4">
-<div class="card shadow-sm card-compacto">
+<div class="card shadow-sm card-compacto mt-1">
 
 <div class="card-body">
 
@@ -464,47 +546,7 @@ Nenhum registro
 
 </div>
 
-<div class="col-md-4">
 
-<div class="card shadow-sm card-compacto">
-
-<div class="card-body">
-
-<h6>🦷 Procedimentos Gerais</h6>
-
-<select id="procedimentoGeral" class="form-control mb-2">
-
-<option value="">Selecione</option>
-
-<option value="profilaxia">Profilaxia</option>
-<option value="fluor">Aplicação de Flúor</option>
-<option value="clareamento">Clareamento</option>
-<option value="protese_total">Prótese Total</option>
-<option value="protese_parcial">Prótese Parcial</option>
-<option value="protocolo_implante">Protocolo sobre Implantes</option>
-<option value="placa_bruxismo">Placa de Bruxismo</option>
-<option value="manutencao_periodontal">Manutenção Periodontal</option>
-<option value="urgencia">Urgência Odontológica</option>
-
-</select>
-
-<textarea 
-id="obsProcedimentoGeral"
-class="form-control mb-2"
-placeholder="Observações"></textarea>
-
-<button id="salvarProcedimentoGeral"
-class="btn btn-success w-100">
-
-Salvar Procedimento
-
-</button>
-
-</div>
-
-</div>
-
-</div>
 
 <!-- </div> -->
 
@@ -512,9 +554,9 @@ Salvar Procedimento
 
 <!-- ================= EVOLUÇÃO + PLANO ================= -->
 
-<div class="row mt-3">
+<div class="row mt-4">
 
-<div class="col-md-6">
+<div class="col-md-4">
 
 <div class="card shadow-sm">
 
@@ -538,7 +580,7 @@ Salvar Evolução
 
 
 
-<div class="col-md-6">
+<div class="col-md-4">
 
 <div class="card shadow-sm">
 
@@ -547,7 +589,7 @@ Salvar Evolução
 <h6>🦷 Plano de Tratamento</h6>
 
 <textarea id="planoTratamento"
-class="form-control mb-3"
+class="form-control mb-4"
 rows="4"
 placeholder="Descrever plano de tratamento..."></textarea>
 
@@ -561,5 +603,65 @@ Salvar Plano
 
 </div>
 
+<div class="col-md-4">
+<div class="card shadow-sm mt-1">
 
+<div class="card-body">
+
+<h6>🦷 Procedimentos Gerais</h6>
+
+<div class="procedimentos-gerais">
+
+<div class="proc-geral" data-proc="profilaxia">
+<img src="/odonto/public/assets/img/procedimentos/profilaxia.png" width="48">
+<span>Profilaxia</span>
+</div>
+
+<div class="proc-geral" data-proc="fluor">
+<img src="/odonto/public/assets/img/procedimentos/fluor.png" width="48">
+<span>Flúor</span>
+</div>
+
+<div class="proc-geral" data-proc="protese_total">
+<img src="/odonto/public/assets/img/procedimentos/protese_total.png" width="48">
+<span>Prótese Total</span>
+</div>
+
+<div class="proc-geral" data-proc="protese_parcial">
+<img src="/odonto/public/assets/img/procedimentos/protese_parcial.png" width="48">
+<span>Prótese Parcial</span>
+</div>
+
+<div class="proc-geral" data-proc="protocolo_implante">
+<img src="/odonto/public/assets/img/procedimentos/protocolo_implante.png" width="48">
+<span>Protocolo</span>
+</div>
+
+<div class="proc-geral" data-proc="placa_bruxismo">
+<img src="/odonto/public/assets/img/procedimentos/placa_bruxismo.png" width="48">
+<span>Placa Bruxismo</span>
+</div>
+
+<div class="proc-geral" data-proc="manutencao_periodontal">
+<img src="/odonto/public/assets/img/procedimentos/manutencao_periodontal.png" width="48">
+<span>Manutenção</span>
+</div>
+
+<div class="proc-geral" data-proc="urgencia">
+<img src="/odonto/public/assets/img/procedimentos/urgencia.png" width="48">
+<span>Urgência</span>
+</div>
+
+<div class="proc-geral" data-proc="raspagem">
+<img src="/odonto/public/assets/img/procedimentos/raspagem.png" width="48">
+<span>Raspagem</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 

@@ -53,28 +53,28 @@ class Prontuario extends Model
     ========================== */
 
     public function salvarRegistro($dados)
-    {
+{
 
-        $sql = $this->pdo->prepare("
+$sql = $this->pdo->prepare("
 
-        INSERT INTO prontuarios_registros
-        (paciente_id,dente,procedimento,status,observacoes,data)
+INSERT INTO prontuarios_registros
+(paciente_id,dente,procedimento,status,observacoes,data)
 
-        VALUES (?,?,?,?,?,NOW())
+VALUES (?,?,?,?,?,NOW())
 
-        ");
+");
 
-        return $sql->execute([
+return $sql->execute([
 
-            $dados["paciente_id"],
-            $dados["dente"],
-            $dados["procedimento"],
-            $dados["status"],
-            $dados["observacoes"]
+$dados["paciente_id"],
+$dados["dente"],
+$dados["procedimento"],
+$dados["status"],
+$dados["observacoes"]
 
-        ]);
+]);
 
-    }
+}
 
     public function buscarRegistroDente($paciente,$dente)
     {

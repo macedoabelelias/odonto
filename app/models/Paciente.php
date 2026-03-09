@@ -114,7 +114,7 @@ class Paciente extends Model
         ) VALUES (
 
         ?,?,?,?,?,?,?,?,
-        ?,?,?,?,?,?,
+        ?,?,?,?,
         ?,?,?,?,?,?,
         ?,?,?,?,
         ?,?,?,?
@@ -124,36 +124,37 @@ class Paciente extends Model
         ");
 
         return $sql->execute([
-            $dados['nome'],
-            $dados['cpf'],
-            $dados['data_nascimento'],
-            $dados['genero'],
-            $dados['estado_civil'],
-            $dados['escolaridade'],
-            $dados['profissao'],
-            $dados['tipo_sanguineo'],
 
-            $dados['telefone'],
-            $dados['whatsapp'],
-            $dados['email'],
-            $dados['instagram'],
+            $dados['nome'] ?? null,
+            $dados['cpf'] ?? null,
+            $dados['data_nascimento'] ?? null,
+            $dados['genero'] ?? null,
+            $dados['estado_civil'] ?? null,
+            $dados['escolaridade'] ?? null,
+            $dados['profissao'] ?? null,
+            $dados['tipo_sanguineo'] ?? null,
 
-            $dados['cep'],
-            $dados['endereco'],
-            $dados['bairro'],
-            $dados['cidade'],
-            $dados['estado'],
-            $dados['convenio'],
+            $dados['telefone'] ?? null,
+            $dados['whatsapp'] ?? null,
+            $dados['email'] ?? null,
+            $dados['instagram'] ?? null,
 
-            $dados['responsavel_nome'],
-            $dados['responsavel_telefone'],
-            $dados['responsavel_cpf'],
-            $dados['responsavel_email'],
+            $dados['cep'] ?? null,
+            $dados['endereco'] ?? null,
+            $dados['bairro'] ?? null,
+            $dados['cidade'] ?? null,
+            $dados['estado'] ?? null,
+            $dados['convenio'] ?? null,
 
-            $dados['alergias'],
-            $dados['medicamentos'],
-            $dados['observacoes'],
-            $dados['foto']
+            $dados['responsavel_nome'] ?? null,
+            $dados['responsavel_telefone'] ?? null,
+            $dados['responsavel_cpf'] ?? null,
+            $dados['responsavel_email'] ?? null,
+
+            $dados['alergias'] ?? null,
+            $dados['medicamentos'] ?? null,
+            $dados['observacoes'] ?? null,
+            $dados['foto'] ?? null
         ]);
     }
 
@@ -204,36 +205,37 @@ class Paciente extends Model
         ");
 
         return $sql->execute([
-            $dados['nome'],
-            $dados['cpf'],
-            $dados['data_nascimento'],
-            $dados['genero'],
-            $dados['estado_civil'],
-            $dados['escolaridade'],
-            $dados['profissao'],
-            $dados['tipo_sanguineo'],
 
-            $dados['telefone'],
-            $dados['whatsapp'],
-            $dados['email'],
-            $dados['instagram'],
+            $dados['nome'] ?? null,
+            $dados['cpf'] ?? null,
+            $dados['data_nascimento'] ?? null,
+            $dados['genero'] ?? null,
+            $dados['estado_civil'] ?? null,
+            $dados['escolaridade'] ?? null,
+            $dados['profissao'] ?? null,
+            $dados['tipo_sanguineo'] ?? null,
 
-            $dados['cep'],
-            $dados['endereco'],
-            $dados['bairro'],
-            $dados['cidade'],
-            $dados['estado'],
-            $dados['convenio'],
+            $dados['telefone'] ?? null,
+            $dados['whatsapp'] ?? null,
+            $dados['email'] ?? null,
+            $dados['instagram'] ?? null,
 
-            $dados['responsavel_nome'],
-            $dados['responsavel_telefone'],
-            $dados['responsavel_cpf'],
-            $dados['responsavel_email'],
+            $dados['cep'] ?? null,
+            $dados['endereco'] ?? null,
+            $dados['bairro'] ?? null,
+            $dados['cidade'] ?? null,
+            $dados['estado'] ?? null,
+            $dados['convenio'] ?? null,
 
-            $dados['alergias'],
-            $dados['medicamentos'],
-            $dados['observacoes'],
-            $dados['foto'],
+            $dados['responsavel_nome'] ?? null,
+            $dados['responsavel_telefone'] ?? null,
+            $dados['responsavel_cpf'] ?? null,
+            $dados['responsavel_email'] ?? null,
+
+            $dados['alergias'] ?? null,
+            $dados['medicamentos'] ?? null,
+            $dados['observacoes'] ?? null,
+            $dados['foto'] ?? null,
 
             $id
         ]);
@@ -249,4 +251,5 @@ class Paciente extends Model
         $sql->bindValue(":id", $id);
         return $sql->execute();
     }
+
 }
