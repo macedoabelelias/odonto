@@ -14,19 +14,36 @@ class PacientesController extends Controller
     /* ==========================
        LISTAR + BUSCA
     ========================== */
-    public function index()
-    {
+public function index()
+{
+    $usuario_id = $_SESSION['usuario_id'] ?? null;
+    $nivel = $_SESSION['usuario_nivel'] ?? '';
+
+    /* ADMIN */
+    if ($nivel === 'admin') {
+
         if (!empty($_GET['busca'])) {
             $pacientes = $this->pacienteModel->buscar($_GET['busca']);
         } else {
-            $pacientes = $this->pacienteModel->listar();
+            $pacientes = $this->pacienteModel->listarTodos();
         }
 
-        $this->view("pacientes/index", [
-            "pacientes" => $pacientes
-        ]);
+    } 
+    /* DENTISTA */
+    else {
+
+        if (!empty($_GET['busca'])) {
+            $pacientes = $this->pacienteModel->buscarPorUsuario($_GET['busca'], $usuario_id);
+        } else {
+            $pacientes = $this->pacienteModel->listar($usuario_id);
+        }
+
     }
 
+    $this->view("pacientes/index", [
+        "pacientes" => $pacientes
+    ]);
+}
     /* ==========================
        CRIAR
     ========================== */
@@ -70,7 +87,9 @@ class PacientesController extends Controller
             move_uploaded_file($_FILES['foto']['tmp_name'], $pasta . $fotoNome);
         }
 
+        /* ========= DADOS ========= */
         $dados = [
+            "usuario_id" => $_SESSION['usuario_id'],
             "foto" => $fotoNome,
             "nome" => $_POST["nome"] ?? null,
             "telefone" => $_POST["telefone"] ?? null,
@@ -130,7 +149,7 @@ class PacientesController extends Controller
         $pacienteAtual = $this->pacienteModel->buscarPorId($id);
         $fotoNome = $pacienteAtual['foto'] ?? null;
 
-        /* ========= NOVA FOTO? ========= */
+        /* ========= NOVA FOTO ========= */
         if (isset($_FILES['foto']) && !empty($_FILES['foto']['name'])) {
 
             $pasta = BASE_PATH . "/public/uploads/";
@@ -189,44 +208,28 @@ class PacientesController extends Controller
     }
 
     /* ==========================
-       HISTÓRICO DO DENTE       
+       HISTÓRICO DO DENTE
     ========================== */
- public function historico($paciente_id, $dente = null)
-{
+    public function historico($paciente_id, $dente = null)
+    {
+        $model = new Prontuario();
 
-$model = new Prontuario();
+        if ($dente === null) {
+            $url = $_GET['url'] ?? '';
+            $partes = explode("/", $url);
+            $dente = $partes[3] ?? null;
+        }
 
-/* pegar dente da URL se router não enviar */
+        if (!$dente) {
+            header('Content-Type: application/json');
+            echo json_encode([]);
+            exit;
+        }
 
-if($dente === null){
+        $dados = $model->getHistoricoDente($paciente_id, $dente);
 
-$url = $_GET['url'] ?? '';
-
-$partes = explode("/", $url);
-
-$dente = $partes[3] ?? null;
-
-}
-
-/* se não houver dente */
-
-if(!$dente){
-
-header('Content-Type: application/json');
-
-echo json_encode([]);
-
-exit;
-
-}
-
-$dados = $model->getHistoricoDente($paciente_id,$dente);
-
-header('Content-Type: application/json');
-
-echo json_encode($dados);
-
-exit;
-
-}
+        header('Content-Type: application/json');
+        echo json_encode($dados);
+        exit;
+    }
 }

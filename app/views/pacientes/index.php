@@ -1,11 +1,8 @@
 <h4 class="mb-4">Pacientes</h4>
 
 <div class="alert alert-light border">
-
-Total de pacientes cadastrados:
-
-<strong><?= count($pacientes) ?></strong>
-
+    Total de pacientes cadastrados:
+    <strong><?= count($pacientes) ?></strong>
 </div>
 
 <!-- ==========================
@@ -39,99 +36,110 @@ Total de pacientes cadastrados:
      TABELA DE PACIENTES
 ========================== -->
 <table class="table table-bordered table-striped align-middle">
-    <thead class="table-light">
-        <tr>
-            <th>Foto</th>
-            <th>Nome</th>
-            <th>CPF</th>
-            <th>Telefone</th>
-            <th>Idade</th>
-            <th>Convênio</th>
-            <th width="300">Ações</th>
-        </tr>
-    </thead>
 
-    <tbody>
+<thead class="table-light">
+<tr>
+<th>Foto</th>
+<th>Nome</th>
+<th>CPF</th>
+<th>Telefone</th>
+<th>Idade</th>
+<th>Convênio</th>
+<th>Dentista</th>
+<th width="300">Ações</th>
+</tr>
+</thead>
 
-    <?php if(!empty($pacientes)): ?>
-        
-        <?php foreach($pacientes as $p): ?>
+<tbody>
 
-            <?php
-            // Calcular idade automaticamente
-            $idade = '-';
-            if(!empty($p['data_nascimento'])){
-                $dataNasc = new DateTime($p['data_nascimento']);
-                $hoje = new DateTime();
-                $idade = $hoje->diff($dataNasc)->y . " anos";
-            }
-            ?>
+<?php if(!empty($pacientes)): ?>
 
-            <tr>
+<?php foreach($pacientes as $p): ?>
 
-                <!-- FOTO -->
-                <td>
-                    <?php if(!empty($p['foto'])): ?>
-                        <img src="<?= BASE_URL ?>/uploads/<?= $p['foto'] ?>" 
-                             width="55" 
-                             height="55"
-                             style="object-fit:cover;border-radius:8px;">
-                    <?php else: ?>
-                        <div style="
-                            width:55px;
-                            height:55px;
-                            background:#e5e7eb;
-                            border-radius:8px;
-                            display:flex;
-                            align-items:center;
-                            justify-content:center;
-                            font-size:12px;">
-                            Sem Foto
-                        </div>
-                    <?php endif; ?>
-                </td>
+<?php
+$idade = '-';
 
-                <!-- DADOS -->
-                <td><?= htmlspecialchars($p['nome']) ?></td>
-                <td><?= htmlspecialchars($p['cpf']) ?></td>
-                <td><?= htmlspecialchars($p['telefone']) ?></td>
-                <td><?= $idade ?></td>
-                <td><?= htmlspecialchars($p['convenio']) ?></td>
+if(!empty($p['data_nascimento'])){
+    $dataNasc = new DateTime($p['data_nascimento']);
+    $hoje = new DateTime();
+    $idade = $hoje->diff($dataNasc)->y . " anos";
+}
+?>
 
-                <!-- AÇÕES -->
-                <td>
+<tr>
 
-                    <a href="<?= BASE_URL ?>/prontuarios/index/<?= $p['id'] ?>"
-                        class="btn btn-info btn-sm">
-                        Prontuário
-                    </a>
+<!-- FOTO -->
+<td>
+<?php if(!empty($p['foto'])): ?>
 
-                    <a href="<?= BASE_URL ?>/pacientes/editar/<?= $p['id'] ?>"
-                        class="btn btn-warning btn-sm">
-                        Editar
-                    </a>
+<img src="<?= BASE_URL ?>/uploads/<?= $p['foto'] ?>"
+width="55"
+height="55"
+style="object-fit:cover;border-radius:8px;">
 
-                    <a href="<?= BASE_URL ?>/pacientes/excluir/<?= $p['id'] ?>"
-                        class="btn btn-danger btn-sm"
-                        onclick="return confirm('Tem certeza que deseja excluir este paciente?');">
-                        Excluir
-                    </a>
+<?php else: ?>
 
-                </td>
+<div style="
+width:55px;
+height:55px;
+background:#e5e7eb;
+border-radius:8px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:12px;">
+Sem Foto
+</div>
 
-            </tr>
+<?php endif; ?>
+</td>
 
-        <?php endforeach; ?>
+<!-- DADOS -->
+<td><?= htmlspecialchars($p['nome']) ?></td>
+<td><?= htmlspecialchars($p['cpf']) ?></td>
+<td><?= htmlspecialchars($p['telefone']) ?></td>
+<td><?= $idade ?></td>
+<td><?= htmlspecialchars($p['convenio']) ?></td>
 
-    <?php else: ?>
+<!-- DENTISTA -->
+<td>
+<?= htmlspecialchars($p['profissional'] ?? '-') ?>
+</td>
 
-        <tr>
-            <td colspan="7" class="text-center">
-                Nenhum paciente encontrado.
-            </td>
-        </tr>
+<!-- AÇÕES -->
+<td>
 
-    <?php endif; ?>
+<a href="<?= BASE_URL ?>/prontuarios/index/<?= $p['id'] ?>"
+class="btn btn-info btn-sm">
+Prontuário
+</a>
 
-    </tbody>
+<a href="<?= BASE_URL ?>/pacientes/editar/<?= $p['id'] ?>"
+class="btn btn-warning btn-sm">
+Editar
+</a>
+
+<a href="<?= BASE_URL ?>/pacientes/excluir/<?= $p['id'] ?>"
+class="btn btn-danger btn-sm"
+onclick="return confirm('Tem certeza que deseja excluir este paciente?');">
+Excluir
+</a>
+
+</td>
+
+</tr>
+
+<?php endforeach; ?>
+
+<?php else: ?>
+
+<tr>
+<td colspan="8" class="text-center">
+Nenhum paciente encontrado.
+</td>
+</tr>
+
+<?php endif; ?>
+
+</tbody>
 </table>

@@ -2,7 +2,7 @@
 
 require_once BASE_PATH . "/app/models/Prontuario.php";
 require_once BASE_PATH . "/app/models/Paciente.php";
-require_once BASE_PATH . "/app/models/Anamnese.php";
+
 
 class ProntuariosController extends Controller
 {
@@ -21,19 +21,18 @@ exit;
 
 $pacienteModel = new Paciente();
 $prontuarioModel = new Prontuario();
-$anamneseModel = new Anamnese();
+
 
 $paciente = $pacienteModel->buscarPorId($paciente_id);
 
 $registros = $prontuarioModel->listarPorPaciente($paciente_id);
 
-$anamnese = $anamneseModel->buscarPorPaciente($paciente_id);
+
 
 $this->view("prontuarios/index",[
 
 "paciente"=>$paciente,
 "registros"=>$registros,
-"anamnese"=>$anamnese,
 "prontuario"=>$prontuarioModel
 
 ]);

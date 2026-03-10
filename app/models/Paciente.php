@@ -8,11 +8,32 @@ class Paciente extends Model
     /* ==========================
        LISTAR
     ========================== */
-    public function listar()
-    {
-        $sql = $this->pdo->query("SELECT * FROM pacientes ORDER BY id DESC");
-        return $sql->fetchAll(PDO::FETCH_ASSOC);
-    }
+   public function listar($usuario_id)
+{
+    $sql = $this->pdo->prepare("
+        SELECT * 
+        FROM pacientes 
+        WHERE usuario_id = :usuario_id
+        ORDER BY id DESC
+    ");
+
+    $sql->bindValue(':usuario_id', $usuario_id);
+    $sql->execute();
+
+    return $sql->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function listarTodos()
+{
+    $sql = $this->pdo->query("
+        SELECT pacientes.*, usuarios.nome AS profissional
+        FROM pacientes
+        LEFT JOIN usuarios ON usuarios.id = pacientes.usuario_id
+        ORDER BY pacientes.id DESC
+    ");
+
+    return $sql->fetchAll(PDO::FETCH_ASSOC);
+}
 
 
     /* ==========================
@@ -46,6 +67,22 @@ class Paciente extends Model
     }
 
 
+    public function buscarPorUsuario($termo, $usuario_id)
+{
+    $sql = $this->pdo->prepare("
+        SELECT * FROM pacientes
+        WHERE usuario_id = :usuario_id
+        AND (nome LIKE :termo OR cpf LIKE :termo)
+        ORDER BY id DESC
+    ");
+
+    $sql->bindValue(":usuario_id", $usuario_id);
+    $sql->bindValue(":termo", "%".$termo."%");
+    $sql->execute();
+
+    return $sql->fetchAll(PDO::FETCH_ASSOC);
+}
+
     /* ==========================
        VERIFICAR CPF EXISTENTE
     ========================== */
@@ -74,89 +111,94 @@ class Paciente extends Model
        SALVAR
     ========================== */
     public function salvar($dados)
-    {
+{
 
-        $sql = $this->pdo->prepare("
+    $sql = $this->pdo->prepare("
 
-        INSERT INTO pacientes (
+    INSERT INTO pacientes (
 
-        nome,
-        cpf,
-        data_nascimento,
-        genero,
-        estado_civil,
-        escolaridade,
-        profissao,
-        tipo_sanguineo,
+    usuario_id,
 
-        telefone,
-        whatsapp,
-        email,
-        instagram,
+    nome,
+    cpf,
+    data_nascimento,
+    genero,
+    estado_civil,
+    escolaridade,
+    profissao,
+    tipo_sanguineo,
 
-        cep,
-        endereco,
-        bairro,
-        cidade,
-        estado,
-        convenio,
+    telefone,
+    whatsapp,
+    email,
+    instagram,
 
-        responsavel_nome,
-        responsavel_telefone,
-        responsavel_cpf,
-        responsavel_email,
+    cep,
+    endereco,
+    bairro,
+    cidade,
+    estado,
+    convenio,
 
-        alergias,
-        medicamentos,
-        observacoes,
-        foto
+    responsavel_nome,
+    responsavel_telefone,
+    responsavel_cpf,
+    responsavel_email,
 
-        ) VALUES (
+    alergias,
+    medicamentos,
+    observacoes,
+    foto
 
-        ?,?,?,?,?,?,?,?,
-        ?,?,?,?,
-        ?,?,?,?,?,?,
-        ?,?,?,?,
-        ?,?,?,?
+    ) VALUES (
 
-        )
+    ?,
+    ?,?,?,?,?,?,?,?,
+    ?,?,?,?,
+    ?,?,?,?,?,?,
+    ?,?,?,?,
+    ?,?,?,?
 
-        ");
+    )
 
-        return $sql->execute([
+    ");
 
-            $dados['nome'] ?? null,
-            $dados['cpf'] ?? null,
-            $dados['data_nascimento'] ?? null,
-            $dados['genero'] ?? null,
-            $dados['estado_civil'] ?? null,
-            $dados['escolaridade'] ?? null,
-            $dados['profissao'] ?? null,
-            $dados['tipo_sanguineo'] ?? null,
+    return $sql->execute([
 
-            $dados['telefone'] ?? null,
-            $dados['whatsapp'] ?? null,
-            $dados['email'] ?? null,
-            $dados['instagram'] ?? null,
+        $dados['usuario_id'] ?? null,
 
-            $dados['cep'] ?? null,
-            $dados['endereco'] ?? null,
-            $dados['bairro'] ?? null,
-            $dados['cidade'] ?? null,
-            $dados['estado'] ?? null,
-            $dados['convenio'] ?? null,
+        $dados['nome'] ?? null,
+        $dados['cpf'] ?? null,
+        $dados['data_nascimento'] ?? null,
+        $dados['genero'] ?? null,
+        $dados['estado_civil'] ?? null,
+        $dados['escolaridade'] ?? null,
+        $dados['profissao'] ?? null,
+        $dados['tipo_sanguineo'] ?? null,
 
-            $dados['responsavel_nome'] ?? null,
-            $dados['responsavel_telefone'] ?? null,
-            $dados['responsavel_cpf'] ?? null,
-            $dados['responsavel_email'] ?? null,
+        $dados['telefone'] ?? null,
+        $dados['whatsapp'] ?? null,
+        $dados['email'] ?? null,
+        $dados['instagram'] ?? null,
 
-            $dados['alergias'] ?? null,
-            $dados['medicamentos'] ?? null,
-            $dados['observacoes'] ?? null,
-            $dados['foto'] ?? null
-        ]);
-    }
+        $dados['cep'] ?? null,
+        $dados['endereco'] ?? null,
+        $dados['bairro'] ?? null,
+        $dados['cidade'] ?? null,
+        $dados['estado'] ?? null,
+        $dados['convenio'] ?? null,
+
+        $dados['responsavel_nome'] ?? null,
+        $dados['responsavel_telefone'] ?? null,
+        $dados['responsavel_cpf'] ?? null,
+        $dados['responsavel_email'] ?? null,
+
+        $dados['alergias'] ?? null,
+        $dados['medicamentos'] ?? null,
+        $dados['observacoes'] ?? null,
+        $dados['foto'] ?? null
+    ]);
+}
 
 
     /* ==========================
@@ -251,5 +293,18 @@ class Paciente extends Model
         $sql->bindValue(":id", $id);
         return $sql->execute();
     }
+
+    public function listarPorUsuario($usuario_id)
+{
+    $sql = "SELECT * FROM pacientes 
+            WHERE usuario_id = :usuario_id
+            ORDER BY nome";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->bindValue(':usuario_id', $usuario_id);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 }

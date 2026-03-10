@@ -1,46 +1,35 @@
 </div> <!-- page-wrapper -->
 
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-
-    const btn = document.getElementById("btnConfig");
-    const menu = document.getElementById("menuConfig");
-
-    if(btn){
-        btn.addEventListener("click", function(e){
-            e.stopPropagation();
-            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-        });
-
-        document.addEventListener("click", function(){
-            if(menu){
-                menu.style.display = "none";
-            }
-        });
-    }
-
-});
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-
-    document.querySelectorAll("#telefone, #whatsapp, #resp_tel").forEach(function(campo){
-        mascaraTelefone(campo);
-    });
-
-});
-</script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 
+document.addEventListener("DOMContentLoaded", function(){
+
+/* =====================================
+   MENU CONFIGURAÇÕES
+===================================== */
+
+const btn = document.getElementById("btnConfig");
+const menu = document.getElementById("menuConfig");
+
+if(btn && menu){
+
+btn.addEventListener("click", function(e){
+e.stopPropagation();
+menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+});
+
+document.addEventListener("click", function(){
+menu.style.display = "none";
+});
+
+}
 
 
-/* ==============================
+/* =====================================
    MÁSCARA CPF
-============================== */
+===================================== */
 
 function mascaraCPF(campo){
 
@@ -61,9 +50,9 @@ campo.value = v
 }
 
 
-/* ==============================
+/* =====================================
    VALIDAR CPF
-============================== */
+===================================== */
 
 function validarCPF(cpf){
 
@@ -92,7 +81,7 @@ soma += parseInt(cpf.substring(i-1,i))*(11-i)
 
 resto = (soma*10)%11
 
-if((resto === 10) || (resto === 11))
+if(resto === 10 || resto === 11)
 resto = 0
 
 if(resto !== parseInt(cpf.substring(9,10)))
@@ -105,7 +94,7 @@ soma += parseInt(cpf.substring(i-1,i))*(12-i)
 
 resto = (soma*10)%11
 
-if((resto === 10) || (resto === 11))
+if(resto === 10 || resto === 11)
 resto = 0
 
 if(resto !== parseInt(cpf.substring(10,11)))
@@ -116,43 +105,9 @@ return true
 }
 
 
-/* ==============================
-   ATIVAR VALIDAÇÃO
-============================== */
-
-document.addEventListener("DOMContentLoaded",function(){
-
-document.querySelectorAll('input[name="cpf"], input[name="responsavel_cpf"]').forEach(function(campo){
-
-mascaraCPF(campo)
-
-campo.addEventListener("blur",function(){
-
-let cpf = campo.value
-
-if(cpf === "") return
-
-if(!validarCPF(cpf)){
-
-alert("CPF inválido")
-
-campo.focus()
-campo.value = ""
-
-}
-
-})
-
-})
-
-})
-
-
-
-
-/* ==============================
+/* =====================================
    MÁSCARA TELEFONE
-============================== */
+===================================== */
 
 function mascaraTelefone(campo){
 
@@ -164,14 +119,10 @@ v = v.substring(0,11)
 
 if(v.length > 10){
 
-// celular
-
 v = v.replace(/^(\d{2})(\d)/,"($1) $2")
 v = v.replace(/(\d{5})(\d{4})$/,"$1-$2")
 
 }else if(v.length > 5){
-
-// telefone fixo
 
 v = v.replace(/^(\d{2})(\d)/,"($1) $2")
 v = v.replace(/(\d{4})(\d{4})$/,"$1-$2")
@@ -185,30 +136,69 @@ campo.value = v
 }
 
 
+/* =====================================
+   MÁSCARA CEP
+===================================== */
 
+function mascaraCEP(campo){
 
+campo.addEventListener("input",function(){
 
-/* ==============================
-   ATIVAR MÁSCARAS
-============================== */
+let v = campo.value.replace(/\D/g,'')
 
-document.addEventListener("DOMContentLoaded",function(){
+v = v.substring(0,8)
 
-document.querySelectorAll('input[name="cpf"], input[name="responsavel_cpf"]').forEach(mascaraCPF)
+v = v.replace(/(\d{5})(\d)/,"$1-$2")
 
-document.querySelectorAll('input[name="telefone"], input[name="whatsapp"], input[name="responsavel_telefone"]').forEach(mascaraTelefone)
-
-document.querySelectorAll('input[name="cep"]').forEach(mascaraCEP)
+campo.value = v
 
 })
 
-</script>
+}
 
-<script>
 
-/* ===============================
-   CALCULAR IDADE AUTOMÁTICA
-================================ */
+/* =====================================
+   BUSCAR CEP AUTOMÁTICO
+===================================== */
+
+function buscarCEP(){
+
+const campoCEP = document.querySelector('input[name="cep"]')
+
+if(!campoCEP) return
+
+campoCEP.addEventListener("blur",function(){
+
+let cep = this.value.replace(/\D/g,'')
+
+if(cep.length !== 8) return
+
+fetch("https://viacep.com.br/ws/"+cep+"/json/")
+.then(res => res.json())
+.then(dados => {
+
+if(dados.erro) return
+
+const endereco = document.querySelector('input[name="endereco"]')
+const bairro = document.querySelector('input[name="bairro"]')
+const cidade = document.querySelector('input[name="cidade"]')
+const estado = document.querySelector('input[name="estado"]')
+
+if(endereco) endereco.value = dados.logradouro
+if(bairro) bairro.value = dados.bairro
+if(cidade) cidade.value = dados.localidade
+if(estado) estado.value = dados.uf
+
+})
+
+})
+
+}
+
+
+/* =====================================
+   CALCULAR IDADE
+===================================== */
 
 function calcularIdade(){
 
@@ -237,61 +227,46 @@ campoIdade.value = idade + " anos"
 }
 
 
-/* ===============================
-   BUSCAR CEP AUTOMÁTICO
-================================ */
+/* =====================================
+   ATIVAR MÁSCARAS
+===================================== */
 
-function buscarCEP(){
+document.querySelectorAll('input[name="cpf"], input[name="responsavel_cpf"]').forEach(function(campo){
 
-const campoCEP = document.querySelector('input[name="cep"]')
+mascaraCPF(campo)
 
-if(!campoCEP) return
+campo.addEventListener("blur",function(){
 
-campoCEP.addEventListener("blur",function(){
+let cpf = campo.value
 
-let cep = this.value.replace(/\D/g,'')
+if(cpf === "") return
 
-if(cep.length !== 8) return
+if(!validarCPF(cpf)){
 
-fetch("https://viacep.com.br/ws/"+cep+"/json/")
+alert("CPF inválido")
 
-.then(res => res.json())
-
-.then(dados => {
-
-if(dados.erro) return
-
-const endereco = document.querySelector('input[name="endereco"]')
-const bairro = document.querySelector('input[name="bairro"]')
-const cidade = document.querySelector('input[name="cidade"]')
-const estado = document.querySelector('input[name="estado"]')
-
-if(endereco) endereco.value = dados.logradouro
-if(bairro) bairro.value = dados.bairro
-if(cidade) cidade.value = dados.localidade
-if(estado) estado.value = dados.uf
-
-})
-
-})
+campo.focus()
+campo.value = ""
 
 }
 
+})
 
-/* ===============================
-   ATIVAR FUNÇÕES
-================================ */
+})
 
-document.addEventListener("DOMContentLoaded",function(){
+document.querySelectorAll('input[name="telefone"], input[name="whatsapp"], input[name="responsavel_telefone"]').forEach(mascaraTelefone)
+
+document.querySelectorAll('input[name="cep"]').forEach(mascaraCEP)
+
+
+/* ATIVAR FUNÇÕES */
 
 calcularIdade()
 buscarCEP()
 
-})
+});
 
 </script>
 
 </body>
 </html>
-
-

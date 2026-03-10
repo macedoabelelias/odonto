@@ -30,53 +30,68 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-<script>
+<<script>
+
 $(document).ready(function(){
 
-    // CPF
-    $('input[name="cpf"]').mask('000.000.000-00');
+/* TELEFONE */
 
-    // Telefone fixo
-    $('input[name="telefone"]').mask('(00) 0000-0000');
-
-    // WhatsApp / celular
-    $('input[name="whatsapp"]').mask('(00) 00000-0000');
-
-    // CEP
-    $('input[name="cep"]').mask('00000-000');
-
-    // RESPONSÁVEL CPF
-    $('input[name="responsavel_cpf"]').mask('000.000.000-00');
-
-    // RESPONSÁVEL TELEFONE
-    $('input[name="responsavel_telefone"]').mask('(00) 00000-0000');
+$('#telefone').mask('(00) 00000-0000');
 
 
-    // ==========================
-    // BUSCAR CEP AUTOMÁTICO
-    // ==========================
-    $('input[name="cep"]').blur(function(){
+/* CEP */
 
-        var cep = $(this).val().replace(/\D/g, '');
+$('#cep').mask('00000-000');
 
-        if(cep.length === 8){
 
-            $.getJSON("https://viacep.com.br/ws/" + cep + "/json/", function(dados){
+/* CPF OU CNPJ */
 
-                if(!dados.erro){
-                    $('input[name="endereco"]').val(dados.logradouro);
-                    $('input[name="bairro"]').val(dados.bairro);
-                    $('input[name="cidade"]').val(dados.localidade);
-                    $('input[name="estado"]').val(dados.uf);
-                }
+$('#cpf_cnpj').on('input', function(){
 
-            });
+let valor = $(this).val().replace(/\D/g,'');
 
-        }
+if(valor.length <= 11){
 
-    });
+$(this).mask('000.000.000-00');
+
+}else{
+
+$(this).mask('00.000.000/0000-00');
+
+}
 
 });
+
+
+/* CEP AUTOMÁTICO */
+
+$("#cep").blur(function(){
+
+let cep = $(this).val().replace(/\D/g,'');
+
+if(cep.length != 8){
+return;
+}
+
+let url = "https://viacep.com.br/ws/"+cep+"/json/";
+
+$.getJSON(url,function(dados){
+
+if(!("erro" in dados)){
+
+$("#endereco").val(dados.logradouro);
+$("#bairro").val(dados.bairro);
+$("#cidade").val(dados.localidade);
+$("#estado").val(dados.uf);
+
+}
+
+});
+
+});
+
+});
+
 </script>
 
 </body>

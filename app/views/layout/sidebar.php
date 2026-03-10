@@ -1,63 +1,123 @@
 <?php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
 $nivel = $_SESSION['usuario_nivel'] ?? '';
 
-// Proteção caso não exista configuração
-if(!isset($configSistema) || !$configSistema){
-    $configSistema = [
-        'nome_clinica' => 'Clínica',
-        'logo' => null
-    ];
-}
+require_once BASE_PATH."/app/models/Configuracao.php";
+
+$modelConfig = new Configuracao();
+$configSistema = $modelConfig->get();
+
 ?>
 
 <div class="sidebar">
 
-    <div class="logo-area">
+<div class="logo-area">
 
-        <?php if(!empty($configSistema['logo'])): ?>
+<?php if(!empty($configSistema['logo'])): ?>
 
-            <img src="<?= BASE_URL ?>/assets/img/<?= $configSistema['logo'] ?>"
-                 class="logo-sidebar"  style="border-radius:10px;">
+<img src="<?= BASE_URL ?>/assets/img/<?= $configSistema['logo'] ?>" class="logo-sidebar">
 
-        <?php else: ?>
+<?php else: ?>
 
-            <img src="<?= BASE_URL ?>/assets/img/logo9.png"
-                 class="logo-sidebar">
+<img src="<?= BASE_URL ?>/assets/img/logo.png" class="logo-sidebar">
 
-        <?php endif; ?>
+<?php endif; ?>
 
-    </div>
+</div>
 
-    <a href="<?= BASE_URL ?>/dashboard">Dashboard</a>
 
-    <?php if($nivel == 'admin' || $nivel == 'recepcao'): ?>
-        <a href="<?= BASE_URL ?>/pacientes">Pacientes</a>
-        <a href="<?= BASE_URL ?>/agendamentos">Agendamentos</a>
-    <?php endif; ?>
+<a href="<?= BASE_URL ?>/dashboard">
+<i class="bi bi-speedometer2"></i> Dashboard
+</a>
 
-    <?php if($nivel == 'admin' || $nivel == 'dentista'): ?>
-        <a href="<?= BASE_URL ?>/consultas">Consultas</a>
-    <?php endif; ?>
 
-    <?php if($nivel == 'admin' || $nivel == 'auxiliar'): ?>
-        <a href="<?= BASE_URL ?>/financeiro">Financeiro</a>
-        <a href="<?= BASE_URL ?>/relatorios">Relatórios</a>
-    <?php endif; ?>
+<?php if($nivel == 'admin' || $nivel == 'recepcao' || $nivel == 'dentista'): ?>
 
-    <?php if($nivel == 'admin'): ?>
+<a href="<?= BASE_URL ?>/pacientes">
+<i class="bi bi-people"></i> Pacientes
+</a>
 
-        <div class="menu-section">ESTOQUE</div>
+<?php endif; ?>
 
-        <a href="<?= BASE_URL ?>/fornecedores">Fornecedores</a>
-        <a href="<?= BASE_URL ?>/produtos">Produtos</a>
-        <a href="<?= BASE_URL ?>/compras">Compras</a>
 
-    <?php endif; ?>
+<?php if($nivel == 'admin' || $nivel == 'recepcao' || $nivel == 'dentista'): ?>
 
-    <a href="<?= BASE_URL ?>/login/logout">Sair</a>
+<a href="<?= BASE_URL ?>/agendamentos">
+<i class="bi bi-calendar"></i> Agenda
+</a>
+
+<?php endif; ?>
+
+
+<?php if($nivel == 'admin' || $nivel == 'dentista' || $nivel == 'auxiliar'): ?>
+
+<a href="<?= BASE_URL ?>/consultas">
+<i class="bi bi-heart-pulse"></i> Consultas
+</a>
+
+<?php endif; ?>
+
+
+<!-- <?php if($nivel == 'admin' || $nivel == 'dentista' || $nivel == 'auxiliar'): ?>
+
+<a href="<?= BASE_URL ?>/odontograma">
+<i class="bi bi-grid"></i> Odontograma
+</a>
+
+<?php endif; ?> -->
+
+
+<?php if($nivel == 'admin' || $nivel == 'dentista'): ?>
+
+<div class="menu-section">FINANCEIRO</div>
+
+<a href="<?= BASE_URL ?>/financeiro/receber">
+<i class="bi bi-cash-coin"></i> Contas a Receber
+</a>
+
+<a href="<?= BASE_URL ?>/financeiro/comissoes">
+<i class="bi bi-currency-dollar"></i> Comissões
+</a>
+
+<?php endif; ?>
+
+
+<?php if($nivel == 'admin'): ?>
+
+<div class="menu-section">ESTOQUE</div>
+
+<a href="<?= BASE_URL ?>/fornecedores">
+<i class="bi bi-truck"></i> Fornecedores
+</a>
+
+<a href="<?= BASE_URL ?>/produtos">
+<i class="bi bi-box"></i> Produtos
+</a>
+
+<a href="<?= BASE_URL ?>/compras">
+<i class="bi bi-cart"></i> Compras
+</a>
+
+
+<div class="menu-section">SISTEMA</div>
+
+<a href="<?= BASE_URL ?>/usuarios">
+<i class="bi bi-person-gear"></i> Usuários
+</a>
+
+<a href="<?= BASE_URL ?>/configuracoes">
+<i class="bi bi-sliders"></i> Configurações
+</a>
+
+<?php endif; ?>
+
+
+<a href="<?= BASE_URL ?>/login/logout">
+<i class="bi bi-box-arrow-right"></i> Sair
+</a>
 
 </div>
