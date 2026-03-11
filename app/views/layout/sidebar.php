@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $nivel = $_SESSION['usuario_nivel'] ?? '';
 
-require_once BASE_PATH."/app/models/Configuracao.php";
+require_once BASE_PATH . "/app/models/Configuracao.php";
 
 $modelConfig = new Configuracao();
 $configSistema = $modelConfig->get();
@@ -30,10 +30,14 @@ $configSistema = $modelConfig->get();
 </div>
 
 
+<!-- DASHBOARD -->
 <a href="<?= BASE_URL ?>/dashboard">
 <i class="bi bi-speedometer2"></i> Dashboard
 </a>
 
+
+<!-- CLÍNICA -->
+<div class="menu-section">CLÍNICA</div>
 
 <?php if($nivel == 'admin' || $nivel == 'recepcao' || $nivel == 'dentista'): ?>
 
@@ -41,13 +45,8 @@ $configSistema = $modelConfig->get();
 <i class="bi bi-people"></i> Pacientes
 </a>
 
-<?php endif; ?>
-
-
-<?php if($nivel == 'admin' || $nivel == 'recepcao' || $nivel == 'dentista'): ?>
-
-<a href="<?= BASE_URL ?>/agendamentos">
-<i class="bi bi-calendar"></i> Agenda
+<a href="<?= BASE_URL ?>/consultas">
+<i class="bi bi-calendar-check"></i> Agenda
 </a>
 
 <?php endif; ?>
@@ -55,22 +54,14 @@ $configSistema = $modelConfig->get();
 
 <?php if($nivel == 'admin' || $nivel == 'dentista' || $nivel == 'auxiliar'): ?>
 
-<a href="<?= BASE_URL ?>/consultas">
-<i class="bi bi-heart-pulse"></i> Consultas
+<a href="<?= BASE_URL ?>/prontuarios">
+<i class="bi bi-heart-pulse"></i> Prontuários
 </a>
 
 <?php endif; ?>
 
 
-<!-- <?php if($nivel == 'admin' || $nivel == 'dentista' || $nivel == 'auxiliar'): ?>
-
-<a href="<?= BASE_URL ?>/odontograma">
-<i class="bi bi-grid"></i> Odontograma
-</a>
-
-<?php endif; ?> -->
-
-
+<!-- FINANCEIRO -->
 <?php if($nivel == 'admin' || $nivel == 'dentista'): ?>
 
 <div class="menu-section">FINANCEIRO</div>
@@ -86,6 +77,7 @@ $configSistema = $modelConfig->get();
 <?php endif; ?>
 
 
+<!-- ESTOQUE -->
 <?php if($nivel == 'admin'): ?>
 
 <div class="menu-section">ESTOQUE</div>
@@ -102,6 +94,11 @@ $configSistema = $modelConfig->get();
 <i class="bi bi-cart"></i> Compras
 </a>
 
+<?php endif; ?>
+
+
+<!-- SISTEMA -->
+<?php if($nivel == 'admin'): ?>
 
 <div class="menu-section">SISTEMA</div>
 
@@ -116,6 +113,7 @@ $configSistema = $modelConfig->get();
 <?php endif; ?>
 
 
+<!-- SAIR -->
 <a href="<?= BASE_URL ?>/login/logout">
 <i class="bi bi-box-arrow-right"></i> Sair
 </a>

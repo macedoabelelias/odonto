@@ -120,4 +120,20 @@ return $sql->execute();
 
 }
 
+public function listarDentistas()
+{
+
+$sql = $this->pdo->prepare("
+SELECT id, nome 
+FROM usuarios
+WHERE nivel = 'dentista' OR nivel = 'admin'
+ORDER BY nome
+");
+
+$sql->execute();
+
+return $sql->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
 }

@@ -21,7 +21,7 @@ body{
 
 .login-card{
     background:
-        linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)),
+        linear-gradient(rgba(142, 160, 238, 0.85), rgba(255,255,255,0.85)),
         url('<?= BASE_URL ?>/assets/img/fundo-login.jpg');
 
     background-size:cover;

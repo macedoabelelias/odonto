@@ -166,41 +166,41 @@ let denteSelecionado = null;
 
 const mapaPermanente = {
 
-18:{x:160,y:226},
-17:{x:206,y:228},
-16:{x:253,y:228},
-15:{x:300,y:224},
-14:{x:337,y:224},
-13:{x:375,y:222},
-12:{x:414,y:226},
-11:{x:454,y:224},
+18:{x:138,y:210},
+17:{x:184,y:210},
+16:{x:232,y:210},
+15:{x:278,y:210},
+14:{x:314,y:210},
+13:{x:355,y:210},
+12:{x:390,y:210},
+11:{x:432,y:210},
 
-21:{x:515,y:224},
-22:{x:556,y:226},
-23:{x:592,y:222},
-24:{x:632,y:224},
-25:{x:668,y:226},
-26:{x:715,y:228},
-27:{x:762,y:228},
-28:{x:792,y:212},
+21:{x:490,y:210},
+22:{x:532,y:210},
+23:{x:570,y:210},
+24:{x:608,y:210},
+25:{x:646,y:210},
+26:{x:692,y:210},
+27:{x:740,y:210},
+28:{x:782,y:210},
 
-48:{x:168,y:274},
-47:{x:218,y:276},
-46:{x:272,y:274},
-45:{x:318,y:274},
-44:{x:358,y:274},
-43:{x:395,y:276},
-42:{x:428,y:274},
-41:{x:461,y:274},
+48:{x:146,y:260},
+47:{x:194,y:260},
+46:{x:248,y:260},
+45:{x:294,y:260},
+44:{x:334,y:260},
+43:{x:374,y:260},
+42:{x:408,y:260},
+41:{x:438,y:260},
 
-31:{x:508,y:274},
-32:{x:538,y:274},
-33:{x:572,y:278},
-34:{x:612,y:276},
-35:{x:650,y:274},
-36:{x:695,y:274},
-37:{x:750,y:276},
-38:{x:798,y:276}
+31:{x:486,y:260},
+32:{x:516,y:260},
+33:{x:550,y:260},
+34:{x:588,y:260},
+35:{x:628,y:260},
+36:{x:672,y:260},
+37:{x:726,y:260},
+38:{x:774,y:260}
 
 };
 
@@ -209,29 +209,29 @@ const mapaPermanente = {
 
 const mapaDeciduo = {
 
-55:{x:331,y:180},
-54:{x:370,y:180},
-53:{x:402,y:180},
-52:{x:430,y:180},
-51:{x:460,y:180},
+55:{x:308,y:166},
+54:{x:348,y:166},
+53:{x:380,y:166},
+52:{x:408,y:166},
+51:{x:438,y:166},
 
-61:{x:505,y:180},
-62:{x:535,y:180},
-63:{x:562,y:180},
-64:{x:595,y:180},
-65:{x:632,y:180},
+61:{x:480,y:166},
+62:{x:511,y:166},
+63:{x:538,y:166},
+64:{x:572,y:166},
+65:{x:612,y:166},
 
-85:{x:332,y:220},
-84:{x:378,y:220},
-83:{x:412,y:218},
-82:{x:438,y:218},
-81:{x:465,y:220},
+85:{x:312,y:206},
+84:{x:356,y:206},
+83:{x:390,y:202},
+82:{x:416,y:206},
+81:{x:438,y:206},
 
-71:{x:500,y:220},
-72:{x:525,y:218},
-73:{x:552,y:218},
-74:{x:588,y:220},
-75:{x:631,y:220}
+71:{x:476,y:206},
+72:{x:504,y:206},
+73:{x:530,y:202},
+74:{x:562,y:206},
+75:{x:608,y:206}
 
 };
 
@@ -278,6 +278,8 @@ denteSelecionado = this.dataset.dente;
 // preencher campos
 document.getElementById("denteSelecionado").value = denteSelecionado;
 document.getElementById("denteVisual").value = denteSelecionado;
+
+carregarHistorico(denteSelecionado);
 
 // remover seleção anterior
 document.querySelectorAll(".tooth").forEach(function(t){
@@ -331,6 +333,7 @@ setTimeout(function(){
 
 carregarProcedimentos();
 
+
 },300);
 
 });
@@ -368,6 +371,7 @@ body:
 if(data.status=="ok"){
 
 pintarDente(dente,procedimento);
+
 
 }
 
@@ -422,6 +426,71 @@ pintarDente(item.dente,item.procedimento);
 
 }
 
+/* HISTÓRICO */
+
+function carregarHistorico(dente){
+
+fetch("<?= BASE_URL ?>/prontuarios/historicoDente",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+
+paciente: <?= $paciente['id'] ?>,
+dente: dente
+
+})
+
+})
+
+.then(res=>res.json())
+
+.then(data=>{
+
+let html='';
+
+if(data.length==0){
+
+html="Nenhum registro";
+
+}else{
+
+data.forEach(r=>{
+
+html+=`
+
+<div style="font-size:13px;margin-bottom:6px">
+
+<strong>${new Date(r.data).toLocaleDateString()}</strong><br>
+
+${r.procedimento}
+
+</div>
+
+`;
+
+});
+
+}
+
+/* inserir no card */
+
+document.getElementById("historico_dente").innerHTML = html;
+
+})
+
+.catch(error => {
+
+console.log("Erro ao carregar histórico:", error);
+
+});
+
+}
+
   document.querySelectorAll(".proc-geral").forEach(function(item){
 
         item.addEventListener("click",function(){
@@ -461,7 +530,7 @@ pintarDente(item.dente,item.procedimento);
 
 <div class="row mt-3">
 
-    <div class="col-md-4">
+    <div class="col-md-3">
 
         <div class="card shadow-sm card-compacto">
 
@@ -497,29 +566,26 @@ pintarDente(item.dente,item.procedimento);
 
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
 
     <div class="card shadow-sm card-compacto">
 
         <div class="card-body">
+            
+<h6>💡 Recomendações</h6>
 
-        <h6>💡 Recomendações</h6>
-<!-- 
-        <strong>✨ Clareamento Dental</strong>
+<strong>📅 Lembrete</strong>
 
-            <p style="font-size:13px">
-            Recupere o brilho do seu sorriso com clareamento profissional.
-            </p> -->
+<p style="font-size:13px">
+Profilaxia recomendada a cada 6 meses. Fazer agendamento para limpeza e prevenção.
+</p>
 
-        <strong>📅 Lembrete</strong>
+<a href="<?= BASE_URL ?>/consultas/criar?paciente=<?= $paciente['id'] ?>"
+class="btn btn-outline-primary btn-sm w-100">
 
-            <p style="font-size:13px">
-            Profilaxia recomendada a cada 6 meses. Fazer agendamento para limpeza e prevenção.
-            </p>
+📅 Agendar Retorno
 
-        <button class="btn btn-outline-primary btn-sm w-100">
-        Agendar Retorno
-        </button>
+</a>
 
 </div>
 
@@ -528,14 +594,14 @@ pintarDente(item.dente,item.procedimento);
 </div>
 
 <!-- HISTÓRICO -->
-<div class="col-md-4">
-<div class="card shadow-sm card-compacto mt-1">
+<div class="col-md-3">
+<div class="card shadow-sm  h-100">
 
 <div class="card-body">
 
 <h6>Histórico do dente</h6>
 
-<div id="historicoDente"
+<div id="historico_dente"
 style="max-height:140px;overflow:auto;background:#f8fafc;padding:8px;border-radius:6px">
 
 Nenhum registro
@@ -547,113 +613,132 @@ Nenhum registro
 </div>
 
 
+</div>
 
-<!-- </div> -->
+<br>
+
+<div class="col-md-3">
+
+<div class="card shadow-sm h-100">
+
+<div class="card-body">
+
+<h6>📋 Histórico Clínico</h6>
+
+<div id="historicoPaciente"
+style="max-height:200px;overflow:auto;background:#f8fafc;padding:10px;border-radius:6px">
+
+Carregando...
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
 <!-- ================= EVOLUÇÃO + PLANO ================= -->
 
-<div class="row mt-4">
+<!-- EVOLUÇÃO CLÍNICA -->
+    <div class="col-md-4">
+    <br>
+        <div class="card shadow-sm ">
 
-<div class="col-md-4">
+            <div class="card-body p-4">
 
-<div class="card shadow-sm">
+                <h6>📋 Evolução Clínica</h6>
 
-<div class="card-body">
+                <textarea class="form-control mb-3"
+                rows="4"
+                placeholder="Registrar evolução clínica..."></textarea>
 
-<h6>📋 Evolução Clínica</h6>
+                <button class="btn btn-primary w-100">
+                Salvar Evolução
+                </button>
 
-<textarea class="form-control mb-3"
-rows="4"
-placeholder="Registrar evolução clínica..."></textarea>
+            </div>
 
-<button class="btn btn-primary w-100">
-Salvar Evolução
-</button>
+        </div>
 
-</div>
+    </div>
 
-</div>
+ <!-- PLANO DE TRATAMENTO -->
+    <div class="col-md-4">
+<br>
+        <div class="card shadow-sm ">
 
-</div>
+            <div class="card-body p-4">
 
+                <h6>🦷 Plano de Tratamento</h6>
 
+                <textarea class="form-control mb-3"
+                rows="4"
+                placeholder="Descrever plano de tratamento..."></textarea>
 
-<div class="col-md-4">
+                <button class="btn btn-success w-100">
+                Salvar Plano
+                </button>
 
-<div class="card shadow-sm">
+            </div>
 
-<div class="card-body">
+        </div>
 
-<h6>🦷 Plano de Tratamento</h6>
+    </div>
 
-<textarea id="planoTratamento"
-class="form-control mb-4"
-rows="4"
-placeholder="Descrever plano de tratamento..."></textarea>
+ <!-- PROCEDIMENTOS GERAIS -->
+    <div class="col-md-4">
+<br>
+        <div class="card shadow-sm">
 
-<button class="btn btn-success w-100">
-Salvar Plano
-</button>
+            <div class="card-body p-0">
 
-</div>
+                <h6>🦷 Procedimentos Gerais</h6>
 
-</div>
-
-</div>
-
-<div class="col-md-4">
-<div class="card shadow-sm mt-1">
-
-<div class="card-body">
-
-<h6>🦷 Procedimentos Gerais</h6>
-
-<div class="procedimentos-gerais">
+                <div class="procedimentos-gerais">
 
 <div class="proc-geral" data-proc="profilaxia">
-<img src="/odonto/public/assets/img/procedimentos/profilaxia.png" width="48">
+<img src="/odonto/public/assets/img/procedimentos/profilaxia.png" width="28">
 <span>Profilaxia</span>
 </div>
 
 <div class="proc-geral" data-proc="fluor">
-<img src="/odonto/public/assets/img/procedimentos/fluor.png" width="48">
+<img src="/odonto/public/assets/img/procedimentos/fluor.png" width="28">
 <span>Flúor</span>
 </div>
 
 <div class="proc-geral" data-proc="protese_total">
-<img src="/odonto/public/assets/img/procedimentos/protese_total.png" width="48">
+<img src="/odonto/public/assets/img/procedimentos/protese_total.png" width="28">
 <span>Prótese Total</span>
 </div>
 
 <div class="proc-geral" data-proc="protese_parcial">
-<img src="/odonto/public/assets/img/procedimentos/protese_parcial.png" width="48">
+<img src="/odonto/public/assets/img/procedimentos/protese_parcial.png" width="28">
 <span>Prótese Parcial</span>
 </div>
 
 <div class="proc-geral" data-proc="protocolo_implante">
-<img src="/odonto/public/assets/img/procedimentos/protocolo_implante.png" width="48">
+<img src="/odonto/public/assets/img/procedimentos/protocolo_implante.png" width="28">
 <span>Protocolo</span>
 </div>
 
 <div class="proc-geral" data-proc="placa_bruxismo">
-<img src="/odonto/public/assets/img/procedimentos/placa_bruxismo.png" width="48">
+<img src="/odonto/public/assets/img/procedimentos/placa_bruxismo.png" width="28">
 <span>Placa Bruxismo</span>
 </div>
 
 <div class="proc-geral" data-proc="manutencao_periodontal">
-<img src="/odonto/public/assets/img/procedimentos/manutencao_periodontal.png" width="48">
+<img src="/odonto/public/assets/img/procedimentos/manutencao_periodontal.png" width="28">
 <span>Manutenção</span>
 </div>
 
 <div class="proc-geral" data-proc="urgencia">
-<img src="/odonto/public/assets/img/procedimentos/urgencia.png" width="48">
+<img src="/odonto/public/assets/img/procedimentos/urgencia.png" width="28">
 <span>Urgência</span>
 </div>
 
 <div class="proc-geral" data-proc="raspagem">
-<img src="/odonto/public/assets/img/procedimentos/raspagem.png" width="48">
+<img src="/odonto/public/assets/img/procedimentos/raspagem.png" width="28">
 <span>Raspagem</span>
 </div>
 
@@ -664,4 +749,110 @@ Salvar Plano
 </div>
 
 </div>
+</div>
+
+<script>
+
+function carregarHistorico(dente){
+
+fetch("<?= BASE_URL ?>/prontuarios/historicoDente",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+
+paciente: <?= $paciente['id'] ?>,
+dente: dente
+
+})
+
+})
+
+.then(res=>res.json())
+
+.then(data=>{
+
+let html='';
+
+if(data.length==0){
+
+html="Nenhum registro";
+
+}
+
+else{
+
+data.forEach(r=>{
+
+html+=`
+
+<div style="font-size:13px;margin-bottom:6px">
+
+<strong>${new Date(r.data).toLocaleDateString()}</strong><br>
+
+${r.procedimento}
+
+</div>
+
+`;
+
+});
+
+}
+
+document.getElementById("historico_dente").innerHTML=html;
+
+});
+
+}
+
+function carregarHistoricoPaciente(){
+
+let paciente = document.getElementById("paciente_id").value;
+
+fetch("<?= BASE_URL ?>/prontuarios/historicoPaciente/"+paciente)
+
+.then(res=>res.json())
+
+.then(data=>{
+
+let html='';
+
+if(data.length==0){
+
+html="Nenhum registro";
+
+}else{
+
+data.forEach(r=>{
+
+html+=`
+
+<div style="font-size:13px;margin-bottom:8px;border-bottom:1px solid #eee;padding-bottom:6px">
+
+<strong>${new Date(r.data).toLocaleDateString()}</strong><br>
+
+${r.procedimento}
+
+${r.dente ? ' - Dente '+r.dente : ''}
+
+</div>
+
+`;
+
+});
+
+}
+
+document.getElementById("historicoPaciente").innerHTML=html;
+
+});
+
+}
+
+</script>
 

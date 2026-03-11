@@ -3,7 +3,6 @@
 require_once BASE_PATH . "/app/models/Prontuario.php";
 require_once BASE_PATH . "/app/models/Paciente.php";
 
-
 class ProntuariosController extends Controller
 {
 
@@ -22,12 +21,9 @@ exit;
 $pacienteModel = new Paciente();
 $prontuarioModel = new Prontuario();
 
-
 $paciente = $pacienteModel->buscarPorId($paciente_id);
 
 $registros = $prontuarioModel->listarPorPaciente($paciente_id);
-
-
 
 $this->view("prontuarios/index",[
 
@@ -44,7 +40,8 @@ $this->view("prontuarios/index",[
    SALVAR PROCEDIMENTO
 ========================== */
 
-public function salvarRegistro(){
+public function salvarRegistro()
+{
 
 $model = new Prontuario();
 
@@ -64,6 +61,7 @@ echo json_encode(["status"=>"ok"]);
 exit;
 
 }
+
 
 /* ==========================
    LISTAR REGISTROS (AJAX)
@@ -86,14 +84,19 @@ exit;
    HISTÓRICO DO DENTE
 ========================== */
 
-public function historico($paciente_id,$dente)
+public function historicoDente()
 {
+
+$data = json_decode(file_get_contents("php://input"),true);
+
+$paciente = $data['paciente'];
+$dente = $data['dente'];
 
 $model = new Prontuario();
 
-$dados = $model->getHistoricoDente($paciente_id,$dente);
+$historico = $model->historicoDente($paciente,$dente);
 
-echo json_encode($dados);
+echo json_encode($historico);
 exit;
 
 }
@@ -118,6 +121,27 @@ exit;
 
 }
 
+public function historicoPaciente($paciente_id)
+{
 
+$sql = $this->pdo->prepare("
+
+SELECT *
+
+FROM prontuario_registros
+
+WHERE paciente_id = :paciente
+
+ORDER BY data DESC
+
+");
+
+$sql->bindValue(":paciente",$paciente_id);
+
+$sql->execute();
+
+return $sql->fetchAll(PDO::FETCH_ASSOC);
+
+}
 
 }
