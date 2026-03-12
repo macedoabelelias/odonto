@@ -13,9 +13,23 @@ class ProntuariosController extends Controller
 public function index($paciente_id = null)
 {
 
+$nivel = $_SESSION['usuario_nivel'] ?? '';
+$usuario_id = $_SESSION['usuario_id'] ?? null;
+
+/* BLOQUEAR RECEPÇÃO */
+
+if($nivel == 'recepcionista' || $nivel == 'recepcao'){
+
+header("Location: ".BASE_URL."/pacientes");
+exit;
+
+}
+
 if(!$paciente_id){
+
 header("Location: " . BASE_URL . "/pacientes");
 exit;
+
 }
 
 $pacienteModel = new Paciente();
@@ -23,13 +37,25 @@ $prontuarioModel = new Prontuario();
 
 $paciente = $pacienteModel->buscarPorId($paciente_id);
 
+/* DENTISTA SÓ PODE VER PACIENTES DELE */
+
+if($nivel == 'dentista'){
+
+if($paciente['usuario_id'] != $usuario_id){
+
+header("Location: ".BASE_URL."/pacientes");
+exit;
+
+}
+
+}
+
 $registros = $prontuarioModel->listarPorPaciente($paciente_id);
 
 $this->view("prontuarios/index",[
 
 "paciente"=>$paciente,
-"registros"=>$registros,
-"prontuario"=>$prontuarioModel
+"registros"=>$registros
 
 ]);
 

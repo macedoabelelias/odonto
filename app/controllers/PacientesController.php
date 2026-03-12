@@ -20,42 +20,47 @@ public function index()
 $usuario_id = $_SESSION['usuario_id'] ?? null;
 $nivel = $_SESSION['usuario_nivel'] ?? '';
 
-/* ADMIN ou RECEPCIONISTA */
-if($nivel == 'admin' || $nivel == 'recepcionista'){
+$pacientes = [];
 
-if(!empty($_GET['busca'])){
+/* ADMIN OU RECEPÇÃO */
 
-$pacientes = $this->pacienteModel->buscar($_GET['busca']);
+if($nivel == 'administrador' || $nivel == 'admin' || $nivel == 'recepcionista' || $nivel == 'recepcao'){
 
-}else{
+    if(!empty($_GET['busca'])){
 
-$pacientes = $this->pacienteModel->listarTodos();
+        $pacientes = $this->pacienteModel->buscar($_GET['busca']);
 
-}
+    }else{
+
+        $pacientes = $this->pacienteModel->listarTodos();
+
+    }
 
 }
 
 /* DENTISTA */
+
 elseif($nivel == 'dentista'){
 
-$pacientes = $this->pacienteModel->listarPorDentista($usuario_id);
+    if(!empty($_GET['busca'])){
 
-}
+        $pacientes = $this->pacienteModel->buscarPorUsuario($_GET['busca'],$usuario_id);
 
-/* segurança caso não tenha nível */
-else{
+    }else{
 
-$pacientes = [];
+        $pacientes = $this->pacienteModel->listar($usuario_id);
+
+    }
 
 }
 
 $this->view("pacientes/index",[
-
-"pacientes"=>$pacientes
-
+    "pacientes"=>$pacientes
 ]);
 
 }
+
+
     /* ==========================
        CRIAR
     ========================== */

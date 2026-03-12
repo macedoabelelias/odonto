@@ -34,10 +34,16 @@
 
 <h4 class="mb-4">🦷 Prontuário do Paciente</h4>
 
+<div class="alert alert-info">
+
+<strong>Paciente:</strong> <?= htmlspecialchars($paciente['nome']) ?> |
+<strong>Telefone:</strong> <?= htmlspecialchars($paciente['telefone']) ?> |
+<strong>Convênio:</strong> <?= htmlspecialchars($paciente['convenio']) ?>
+
 <input type="hidden" id="paciente_id" value="<?= $paciente['id'] ?>">
 
 <div class="mb-3">
-
+<br>
 <a href="<?= BASE_URL ?>/anamnese/index/<?= $paciente['id'] ?>" class="btn btn-primary">
 🩺 Anamnese do Paciente
 </a>

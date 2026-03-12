@@ -1,33 +1,39 @@
 <h4 class="mb-4">Pacientes</h4>
 
+<?php $pacientes = $pacientes ?? []; ?>
+
 <div class="alert alert-light border">
     Total de pacientes cadastrados:
-    <strong><?= count($pacientes) ?></strong>
+    <strong><?= is_array($pacientes) ? count($pacientes) : 0 ?></strong>
 </div>
+
+<?php
+$nivel = $_SESSION['usuario_nivel'] ?? '';
+?>
 
 <!-- ==========================
      BUSCA + NOVO PACIENTE
 ========================== -->
 <form method="GET" action="<?= BASE_URL ?>/pacientes" class="row mb-3">
 
-    <div class="col-md-4">
-        <input type="text" 
-               name="busca" 
-               class="form-control"
-               placeholder="Buscar por nome ou CPF"
-               value="<?= $_GET['busca'] ?? '' ?>">
-    </div>
+<div class="col-md-4">
+<input type="text"
+name="busca"
+class="form-control"
+placeholder="Buscar por nome ou CPF"
+value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
+</div>
 
-    <div class="col-md-3">
-        <button type="submit" class="btn btn-primary">Buscar</button>
-        <a href="<?= BASE_URL ?>/pacientes" class="btn btn-secondary">Limpar</a>
-    </div>
+<div class="col-md-3">
+<button type="submit" class="btn btn-primary">Buscar</button>
+<a href="<?= BASE_URL ?>/pacientes" class="btn btn-secondary">Limpar</a>
+</div>
 
-    <div class="col-md-5 text-end">
-        <a href="<?= BASE_URL ?>/pacientes/criar" class="btn btn-success">
-            Novo Paciente
-        </a>
-    </div>
+<div class="col-md-5 text-end">
+<a href="<?= BASE_URL ?>/pacientes/criar" class="btn btn-success">
+Novo Paciente
+</a>
+</div>
 
 </form>
 
@@ -35,6 +41,7 @@
 <!-- ==========================
      TABELA DE PACIENTES
 ========================== -->
+
 <table class="table table-bordered table-striped align-middle">
 
 <thead class="table-light">
@@ -60,9 +67,9 @@
 $idade = '-';
 
 if(!empty($p['data_nascimento'])){
-    $dataNasc = new DateTime($p['data_nascimento']);
-    $hoje = new DateTime();
-    $idade = $hoje->diff($dataNasc)->y . " anos";
+$dataNasc = new DateTime($p['data_nascimento']);
+$hoje = new DateTime();
+$idade = $hoje->diff($dataNasc)->y . " anos";
 }
 ?>
 
@@ -70,9 +77,10 @@ if(!empty($p['data_nascimento'])){
 
 <!-- FOTO -->
 <td>
+
 <?php if(!empty($p['foto'])): ?>
 
-<img src="<?= BASE_URL ?>/uploads/<?= $p['foto'] ?>"
+<img src="<?= BASE_URL ?>/uploads/<?= htmlspecialchars($p['foto']) ?>"
 width="55"
 height="55"
 style="object-fit:cover;border-radius:8px;">
@@ -88,10 +96,13 @@ display:flex;
 align-items:center;
 justify-content:center;
 font-size:12px;">
+
 Sem Foto
+
 </div>
 
 <?php endif; ?>
+
 </td>
 
 <!-- DADOS -->
@@ -106,24 +117,42 @@ Sem Foto
 <?= htmlspecialchars($p['profissional'] ?? '-') ?>
 </td>
 
+
 <!-- AÇÕES -->
 <td>
+
+<?php if($nivel == 'dentista' || $nivel == 'administrador' || $nivel == 'admin'): ?>
 
 <a href="<?= BASE_URL ?>/prontuarios/index/<?= $p['id'] ?>"
 class="btn btn-info btn-sm">
 Prontuário
 </a>
 
+<?php else: ?>
+
+<a href="<?= BASE_URL ?>/consultas/criar?paciente=<?= $p['id'] ?>"
+class="btn btn-success btn-sm">
+Agendar
+</a>
+
+<?php endif; ?>
+
+
 <a href="<?= BASE_URL ?>/pacientes/editar/<?= $p['id'] ?>"
 class="btn btn-warning btn-sm">
 Editar
 </a>
+
+
+<?php if($nivel == 'administrador' || $nivel == 'admin'): ?>
 
 <a href="<?= BASE_URL ?>/pacientes/excluir/<?= $p['id'] ?>"
 class="btn btn-danger btn-sm"
 onclick="return confirm('Tem certeza que deseja excluir este paciente?');">
 Excluir
 </a>
+
+<?php endif; ?>
 
 </td>
 

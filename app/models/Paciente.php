@@ -307,4 +307,17 @@ public function listarTodos()
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+public function aniversariantesHoje()
+{
+
+$sql = $this->pdo->query("
+SELECT nome, telefone
+FROM pacientes
+WHERE DATE_FORMAT(data_nascimento,'%m-%d') = DATE_FORMAT(CURDATE(),'%m-%d')
+");
+
+return $sql->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
 }

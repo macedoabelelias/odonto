@@ -592,3 +592,11 @@ font-weight:600;
 font-size:11px;
 color:#777;
 }
+
+.content-card{
+    width:100%;
+}
+
+.content-card .row{
+    width:100%;
+}

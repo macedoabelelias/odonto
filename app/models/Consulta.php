@@ -304,4 +304,65 @@ return $stmt->fetch(PDO::FETCH_ASSOC);
 
 }
 
+public function index()
+{
+
+require_once BASE_PATH."/app/models/Consulta.php";
+require_once BASE_PATH."/app/models/Paciente.php";
+require_once BASE_PATH."/app/models/Financeiro.php";
+
+$consultaModel = new Consulta();
+$pacienteModel = new Paciente();
+$financeiroModel = new Financeiro();
+
+$dataHoje = date('Y-m-d');
+
+/* CONSULTAS HOJE */
+
+$consultasHoje = $consultaModel->listarPorData($dataHoje);
+
+/* PACIENTES ATENDIDOS */
+
+$atendidosHoje = $consultaModel->contarAtendidosHoje();
+
+/* FATURAMENTO HOJE */
+
+$faturamentoHoje = $financeiroModel->faturamentoHoje();
+
+/* PRÓXIMAS CONSULTAS */
+
+$proximas = $consultaModel->proximasConsultas();
+
+/* ANIVERSARIANTES */
+
+$aniversariantes = $pacienteModel->aniversariantesHoje();
+
+$this->view("dashboard/index",[
+
+"consultasHoje"=>$consultasHoje,
+"atendidosHoje"=>$atendidosHoje,
+"faturamentoHoje"=>$faturamentoHoje,
+"proximas"=>$proximas,
+"aniversariantes"=>$aniversariantes
+
+]);
+
+}
+
+public function proximasConsultas()
+{
+
+$sql = $this->pdo->query("
+SELECT consultas.*, pacientes.nome as paciente
+FROM consultas
+LEFT JOIN pacientes ON pacientes.id = consultas.paciente_id
+WHERE data >= CURDATE()
+ORDER BY data, hora
+LIMIT 5
+");
+
+return $sql->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
 }
