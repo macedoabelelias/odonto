@@ -15,107 +15,107 @@ $configSistema = $modelConfig->get();
 
 <div class="sidebar">
 
-<div class="logo-area">
+    <div class="logo-area">
 
-<?php if(!empty($configSistema['logo'])): ?>
+        <?php if(!empty($configSistema['logo'])): ?>
 
-<img src="<?= BASE_URL ?>/assets/img/<?= $configSistema['logo'] ?>" class="logo-sidebar">
+            <img src="<?= BASE_URL ?>/assets/img/<?= $configSistema['logo'] ?>" class="logo-sidebar">
 
-<?php else: ?>
+        <?php else: ?>
 
-<img src="<?= BASE_URL ?>/assets/img/logo.png" class="logo-sidebar">
+            <img src="<?= BASE_URL ?>/assets/img/logo.png" class="logo-sidebar">
 
-<?php endif; ?>
+        <?php endif; ?>
 
-</div>
-
-
-<!-- DASHBOARD -->
-<a href="<?= BASE_URL ?>/dashboard">
-<i class="bi bi-speedometer2"></i> Dashboard
-</a>
+    </div>
 
 
-<!-- CLÍNICA -->
-<div class="menu-section">CLÍNICA</div>
-
-<?php if($nivel == 'admin' || $nivel == 'recepcao' || $nivel == 'dentista'): ?>
-
-<a href="<?= BASE_URL ?>/pacientes">
-<i class="bi bi-people"></i> Pacientes
-</a>
-
-<a href="<?= BASE_URL ?>/consultas">
-<i class="bi bi-calendar-check"></i> Agenda
-</a>
-
-<?php endif; ?>
+    <!-- DASHBOARD -->
+    <a href="<?= BASE_URL ?>/dashboard">
+        <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
 
 
-<?php if($nivel == 'admin' || $nivel == 'dentista' || $nivel == 'auxiliar'): ?>
+    <!-- CLÍNICA -->
+    <?php if(in_array($nivel,['administrador','admin','recepcionista','recepcao','dentista'])): ?>
 
-<a href="<?= BASE_URL ?>/prontuarios">
-<i class="bi bi-heart-pulse"></i> Prontuários
-</a>
+        <div class="menu-section">CLÍNICA</div>
 
-<?php endif; ?>
+        <a href="<?= BASE_URL ?>/pacientes">
+            <i class="bi bi-people"></i> Pacientes
+        </a>
 
+        <a href="<?= BASE_URL ?>/consultas">
+            <i class="bi bi-calendar"></i> Agenda
+        </a>
 
-<!-- FINANCEIRO -->
-<?php if($nivel == 'admin' || $nivel == 'dentista'): ?>
+        <a href="<?= BASE_URL ?>/pacientes">
+            <i class="bi bi-heart-pulse"></i> Prontuários
+        </a>
 
-<div class="menu-section">FINANCEIRO</div>
-
-<a href="<?= BASE_URL ?>/financeiro/receber">
-<i class="bi bi-cash-coin"></i> Contas a Receber
-</a>
-
-<a href="<?= BASE_URL ?>/financeiro/comissoes">
-<i class="bi bi-currency-dollar"></i> Comissões
-</a>
-
-<?php endif; ?>
+    <?php endif; ?>
 
 
-<!-- ESTOQUE -->
-<?php if($nivel == 'admin'): ?>
+    <!-- FINANCEIRO -->
+    <?php if(in_array($nivel,['administrador','admin','recepcionista','recepcao','dentista'])): ?>
 
-<div class="menu-section">ESTOQUE</div>
+        <div class="menu-section">FINANCEIRO</div>
 
-<a href="<?= BASE_URL ?>/fornecedores">
-<i class="bi bi-truck"></i> Fornecedores
-</a>
+        <a href="<?= BASE_URL ?>/financeiro">
+            <i class="bi bi-cash"></i> Contas a Receber
+        </a>
 
-<a href="<?= BASE_URL ?>/produtos">
-<i class="bi bi-box"></i> Produtos
-</a>
-
-<a href="<?= BASE_URL ?>/compras">
-<i class="bi bi-cart"></i> Compras
-</a>
-
-<?php endif; ?>
+    <?php endif; ?>
 
 
-<!-- SISTEMA -->
-<?php if($nivel == 'admin'): ?>
+    <?php if(in_array($nivel,['administrador','admin'])): ?>
 
-<div class="menu-section">SISTEMA</div>
+        <a href="<?= BASE_URL ?>/financeiro/comissoes">
+            <i class="bi bi-percent"></i> Comissões
+        </a>
 
-<a href="<?= BASE_URL ?>/usuarios">
-<i class="bi bi-person-gear"></i> Usuários
-</a>
-
-<a href="<?= BASE_URL ?>/configuracoes">
-<i class="bi bi-sliders"></i> Configurações
-</a>
-
-<?php endif; ?>
+    <?php endif; ?>
 
 
-<!-- SAIR -->
-<a href="<?= BASE_URL ?>/login/logout">
-<i class="bi bi-box-arrow-right"></i> Sair
-</a>
+    <!-- ESTOQUE -->
+    <?php if(in_array($nivel,['administrador','admin','recepcionista','recepcao'])): ?>
+
+        <div class="menu-section">ESTOQUE</div>
+
+        <a href="<?= BASE_URL ?>/fornecedores">
+            <i class="bi bi-truck"></i> Fornecedores
+        </a>
+
+        <a href="<?= BASE_URL ?>/produtos">
+            <i class="bi bi-box"></i> Produtos
+        </a>
+
+        <a href="<?= BASE_URL ?>/compras">
+            <i class="bi bi-cart"></i> Compras
+        </a>
+
+    <?php endif; ?>
+
+
+    <!-- SISTEMA -->
+    <?php if(in_array($nivel,['administrador','admin'])): ?>
+
+        <div class="menu-section">SISTEMA</div>
+
+        <a href="<?= BASE_URL ?>/usuarios">
+            <i class="bi bi-person-gear"></i> Usuários
+        </a>
+
+        <a href="<?= BASE_URL ?>/configuracoes">
+            <i class="bi bi-sliders"></i> Configurações
+        </a>
+
+    <?php endif; ?>
+
+
+    <!-- SAIR -->
+    <a href="<?= BASE_URL ?>/login/logout">
+        <i class="bi bi-box-arrow-right"></i> Sair
+    </a>
 
 </div>

@@ -146,9 +146,16 @@ Remover
 
 <h6>📸 Radiografias</h6>
 
-<input type="file" class="form-control mb-3">
+<input type="file" id="arquivoRX" class="form-control mb-2">
 
-<div style="height:90px;background:#eef2f7;border-radius:8px"></div>
+<button type="button" id="uploadRX" class="btn btn-primary btn-sm w-100 mb-2">
+Enviar Radiografia
+</button>
+
+<div id="listaRX"
+style="max-height:120px;overflow:auto;background:#eef2f7;border-radius:8px;padding:8px;font-size:13px">
+
+Nenhuma radiografia
 
 </div>
 
@@ -156,6 +163,7 @@ Remover
 
 </div>
 
+</div>
 
 <script>
 
@@ -328,11 +336,10 @@ document.addEventListener("DOMContentLoaded",function(){
 
 gerarOdontograma(mapaPermanente);
 
-// pequeno delay para garantir que os dentes existam
 setTimeout(function(){
 
 carregarProcedimentos();
-
+carregarHistoricoPaciente();
 
 },300);
 
@@ -402,8 +409,7 @@ tooth.appendChild(camada);
 }
 
 camada.innerHTML = `<div class="proc-item" 
-style="background-image:url('<?= BASE_URL ?>assets/img/procedimentos/${procedimento}.png')"></div>`;
-
+style="background-image:url('<?= BASE_URL ?>/assets/img/procedimentos/${procedimento}.png')"></div>`;
 }
 
 function carregarProcedimentos(){
@@ -503,25 +509,7 @@ console.log("Erro ao carregar histórico:", error);
 
     });
 
-    function carregarProcedimentos(){
-
-        let paciente = document.getElementById("paciente_id").value;
-
-        fetch("<?= BASE_URL ?>prontuarios/registros/"+paciente)
-
-        .then(response => response.json())
-
-        .then(dados => {
-
-        dados.forEach(function(item){
-
-        pintarDente(item.dente,item.procedimento);
-
-        });
-
-        });
-
-    }
+    
 
 </script>
 
@@ -853,6 +841,43 @@ document.getElementById("historicoPaciente").innerHTML=html;
 });
 
 }
+
+document.getElementById("uploadRX").addEventListener("click",function(){
+
+let paciente = document.getElementById("paciente_id").value;
+let dente = document.getElementById("denteSelecionado").value;
+
+let arquivo = document.getElementById("arquivoRX").files[0];
+
+if(!arquivo){
+alert("Selecione uma radiografia");
+return;
+}
+
+let formData = new FormData();
+
+formData.append("arquivo",arquivo);
+formData.append("paciente_id",paciente);
+formData.append("dente",dente);
+
+fetch("<?= BASE_URL ?>/radiografias/upload",{
+
+method:"POST",
+body:formData
+
+})
+.then(res=>res.json())
+.then(data=>{
+
+if(data.status=="ok"){
+
+alert("Radiografia enviada com sucesso");
+
+}
+
+});
+
+});
 
 </script>
 

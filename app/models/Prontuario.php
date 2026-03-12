@@ -1,6 +1,10 @@
 <?php
 
-require_once BASE_PATH . "/core/Model.php";
+// require_once BASE_PATH . "/core/Model.php";
+require_once BASE_PATH . "/app/models/Consulta.php";
+require_once BASE_PATH . "/app/models/Paciente.php";
+require_once BASE_PATH . "/app/models/Usuario.php";
+require_once BASE_PATH . "/app/models/Prontuario.php";
 
 class Prontuario extends Model
 {

@@ -16,33 +16,45 @@ class PacientesController extends Controller
     ========================== */
 public function index()
 {
-    $usuario_id = $_SESSION['usuario_id'] ?? null;
-    $nivel = $_SESSION['usuario_nivel'] ?? '';
 
-    /* ADMIN */
-    if ($nivel === 'admin') {
+$usuario_id = $_SESSION['usuario_id'] ?? null;
+$nivel = $_SESSION['usuario_nivel'] ?? '';
 
-        if (!empty($_GET['busca'])) {
-            $pacientes = $this->pacienteModel->buscar($_GET['busca']);
-        } else {
-            $pacientes = $this->pacienteModel->listarTodos();
-        }
+/* ADMIN ou RECEPCIONISTA */
+if($nivel == 'admin' || $nivel == 'recepcionista'){
 
-    } 
-    /* DENTISTA */
-    else {
+if(!empty($_GET['busca'])){
 
-        if (!empty($_GET['busca'])) {
-            $pacientes = $this->pacienteModel->buscarPorUsuario($_GET['busca'], $usuario_id);
-        } else {
-            $pacientes = $this->pacienteModel->listar($usuario_id);
-        }
+$pacientes = $this->pacienteModel->buscar($_GET['busca']);
 
-    }
+}else{
 
-    $this->view("pacientes/index", [
-        "pacientes" => $pacientes
-    ]);
+$pacientes = $this->pacienteModel->listarTodos();
+
+}
+
+}
+
+/* DENTISTA */
+elseif($nivel == 'dentista'){
+
+$pacientes = $this->pacienteModel->listarPorDentista($usuario_id);
+
+}
+
+/* segurança caso não tenha nível */
+else{
+
+$pacientes = [];
+
+}
+
+$this->view("pacientes/index",[
+
+"pacientes"=>$pacientes
+
+]);
+
 }
     /* ==========================
        CRIAR
