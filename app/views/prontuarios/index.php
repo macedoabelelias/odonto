@@ -32,7 +32,9 @@
 
 <?php endif; ?>
 
+
 <h4 class="mb-4">🦷 Prontuário do Paciente</h4>
+
 
 <div class="alert alert-info">
 
@@ -42,8 +44,8 @@
 
 <input type="hidden" id="paciente_id" value="<?= $paciente['id'] ?>">
 
-<div class="mb-3">
-<br>
+<br><br>
+
 <a href="<?= BASE_URL ?>/anamnese/index/<?= $paciente['id'] ?>" class="btn btn-primary">
 🩺 Anamnese do Paciente
 </a>
@@ -54,17 +56,16 @@
 
 </div>
 
-<hr>
 
 <div class="row">
 
 <!-- ODONTOGRAMA -->
 
-<div class="col-lg-9" style="border-radius:14px; border-shadow:0 2px 8px rgba(2,0,0,0.1)">
+<div class="col-lg-9" style="border-radius:14px; ">
 
-<div class="card mb-4" style="margin-top: 98px;">
+<div class="card shadow-sm mb-4" style="margin-top: 98px;">
 
-<div class="card-body text-center">
+<div class="card-body text-center" style="box-shadow:0 2px 8px rgba(2,0,0,1.2)">
 
 <label><strong>Tipo de Dentição</strong></label>
 
@@ -74,6 +75,7 @@
 <option value="deciduo">Decíduo</option>
 
 </select>
+
 
 <div id="odontograma" class="odontograma">
 
@@ -88,6 +90,7 @@ src="<?= BASE_URL ?>/assets/img/dentesperm.png">
 </div>
 
 </div>
+
 
 <!-- LATERAL -->
 
@@ -107,16 +110,11 @@ src="<?= BASE_URL ?>/assets/img/dentesperm.png">
 <option value="canal">Canal</option>
 <option value="coroa">Coroa</option>
 <option value="implante">Implante</option>
-<option value="profilaxia">Profilaxia</option>
-<option value="raspagem">Raspagem</option>
 <option value="cirurgia">Cirurgia</option>
 <option value="extracao_indicada">Extração indicada</option>
 <option value="extracao_realizada">Extração realizada</option>
 
 </select>
-
-<label>Status</label>
-
 
 <input type="hidden" id="denteSelecionado">
 
@@ -127,12 +125,16 @@ src="<?= BASE_URL ?>/assets/img/dentesperm.png">
 <label>Status</label>
 
 <select id="statusProcedimento" class="form-control mb-2">
+
 <option value="planejado">A realizar</option>
 <option value="realizado">Realizado</option>
+
 </select>
+
 
 <textarea id="observacoes" class="form-control mb-2"
 placeholder="Observações"></textarea>
+
 
 <button id="salvarRegistro" class="btn btn-success w-100 mb-2">
 Salvar
@@ -145,7 +147,11 @@ Remover
 </div>
 
 </div>
+
+
 <br>
+
+
 <div class="card shadow-sm">
 
 <div class="card-body">
@@ -162,6 +168,8 @@ Enviar Radiografia
 style="max-height:120px;overflow:auto;background:#eef2f7;border-radius:8px;padding:8px;font-size:13px">
 
 Nenhuma radiografia
+
+</div>
 
 </div>
 
@@ -353,7 +361,11 @@ carregarHistoricoPaciente();
 
 /* SALVAR REGISTRO */
 
-document.getElementById("salvarRegistro").addEventListener("click",function(){
+// const btnSalvar = document.getElementById("salvarRegistro");
+
+if(btnSalvar){
+
+btnSalvar.addEventListener("click",function(){
 
 let paciente = document.getElementById("paciente_id").value;
 let dente = document.getElementById("denteSelecionado").value;
@@ -366,7 +378,7 @@ alert("Selecione um dente primeiro");
 return;
 }
 
-fetch("/odonto/public/prontuarios/salvarRegistro",{
+fetch("<?= BASE_URL ?>/prontuarios/salvarRegistro",{
 
 method:"POST",
 
@@ -381,24 +393,29 @@ body:
 .then(res=>res.json())
 .then(data=>{
 
-if(data.status=="ok"){
+if(data.status==="ok"){
 
-pintarDente(dente,procedimento);
-
+pintarDente(dente,procedimento,status);
+carregarHistorico(dente);
+carregarHistoricoPaciente();
 
 }
 
 })
 .catch(error=>{
-console.log(error);
+console.log("Erro:",error);
 });
 
 });
+
+}
+
+
 
 
 /* PINTAR DENTE */
 
-function pintarDente(dente,procedimento){
+function pintarDente(dente,procedimento,status){
 
 let tooth = document.querySelector(`.tooth[data-dente='${dente}']`);
 
@@ -409,34 +426,46 @@ let camada = tooth.querySelector(".proc-layer");
 if(!camada){
 
 camada = document.createElement("div");
-camada.className="proc-layer";
+camada.className = "proc-layer";
 tooth.appendChild(camada);
 
 }
 
-camada.innerHTML = `<div class="proc-item" 
-style="background-image:url('<?= BASE_URL ?>/assets/img/procedimentos/${procedimento}.png')"></div>`;
+/* caminho correto */
+
+let base = "<?= BASE_URL ?>/assets/img/odontograma/";
+
+/* escolher imagem */
+
+let icone = "";
+
+if(status==="planejado"){
+icone = base + procedimento + "_a_realizar.png";
 }
 
-function carregarProcedimentos(){
+if(status==="realizado"){
+icone = base + procedimento + "_realizado.png";
+}
 
-let paciente = document.getElementById("paciente_id").value;
-
-fetch("<?= BASE_URL ?>prontuarios/registros/"+paciente)
-
-.then(response => response.json())
-
-.then(dados => {
-
-dados.forEach(function(item){
-
-pintarDente(item.dente,item.procedimento);
-
-});
-
-});
+camada.innerHTML = `<img src="${icone}" width="18">`;
 
 }
+
+/* mostrar ícone */
+
+camada.innerHTML = `
+<div style="
+display:flex;
+align-items:center;
+justify-content:center;
+width:100%;
+height:100%;
+">
+<img src="${icone}" width="18">
+</div>
+`;
+
+
 
 /* HISTÓRICO */
 
@@ -884,6 +913,26 @@ alert("Radiografia enviada com sucesso");
 });
 
 });
+
+function carregarProcedimentos(){
+
+let paciente = document.getElementById("paciente_id").value;
+
+fetch("<?= BASE_URL ?>/prontuarios/registros/"+paciente)
+
+.then(response => response.json())
+
+.then(dados => {
+
+dados.forEach(function(item){
+
+pintarDente(item.dente,item.procedimento,item.status);
+
+});
+
+});
+
+}
 
 </script>
 

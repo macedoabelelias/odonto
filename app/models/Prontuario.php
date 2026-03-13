@@ -238,4 +238,21 @@ return $sql->fetchAll(PDO::FETCH_ASSOC);
 
 }
 
+public function buscarRegistrosPaciente($paciente)
+{
+
+$sql = $this->pdo->prepare("
+SELECT dente, procedimento, status
+FROM prontuarios_registros
+WHERE paciente_id = :paciente
+AND dente IS NOT NULL
+");
+
+$sql->bindValue(":paciente",$paciente);
+
+$sql->execute();
+
+return $sql->fetchAll(PDO::FETCH_ASSOC);
+
+}
 }

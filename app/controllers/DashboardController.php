@@ -1,39 +1,44 @@
 <?php
 
-require_once BASE_PATH . "/app/models/Consulta.php";
 require_once BASE_PATH . "/app/models/Paciente.php";
+require_once BASE_PATH . "/app/models/Financeiro.php";
 
-class DashboardController extends Controller {
-
-public function index()
+class DashboardController extends Controller
 {
 
-$consultaModel = new Consulta();
-$pacienteModel = new Paciente();
+    public function index()
+    {
 
-$dataHoje = date('Y-m-d');
+        $pacienteModel = new Paciente();
+        $financeiroModel = new Financeiro();
 
-$consultasHoje = $consultaModel->listarPorData($dataHoje);
+        $dataHoje = date('Y-m-d');
 
-$pacientes = $pacienteModel->listarTodos();
-$totalPacientes = count($pacientes);
+        $consultasHoje = 0;
+        $atendidosHoje = 0;
+        $agendaHoje = [];
 
-$this->view("dashboard/index",[
+        $aniversariantes = $pacienteModel->aniversariantesHoje();
 
-"consultasHoje"=>$consultasHoje,
-"pacientes"=>$totalPacientes,
-"atendidosHoje"=>0,
-"faturamentoHoje"=>0,
-"aniversariantes"=>[],
-"recebido"=>0,
-"pago"=>0,
-"compras"=>0,
-"estoqueBaixo"=>[],
-"labels"=>[],
-"receitas"=>[],
-"despesas"=>[]
+        $contasReceberHoje = $financeiroModel->contasReceberHoje($dataHoje);
+        $recebidoHoje = $financeiroModel->recebidoHoje($dataHoje);
+        $totalAberto = $financeiroModel->totalEmAberto();
 
-]);
+        $dados = [
 
-}
+            "consultasHoje"=>$consultasHoje,
+            "atendidosHoje"=>$atendidosHoje,
+            "agendaHoje"=>$agendaHoje,
+            "aniversariantes"=>$aniversariantes,
+
+            "contasReceberHoje"=>$contasReceberHoje,
+            "recebidoHoje"=>$recebidoHoje,
+            "totalAberto"=>$totalAberto
+
+        ];
+
+        $this->view("dashboard/index",$dados);
+
+    }
+
 }

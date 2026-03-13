@@ -69,22 +69,49 @@ $this->view("prontuarios/index",[
 public function salvarRegistro()
 {
 
-$model = new Prontuario();
+$paciente = $_POST['paciente_id'] ?? null;
+$dente = $_POST['dente'] ?? null;
+$procedimento = $_POST['procedimento'] ?? null;
+$status = $_POST['status'] ?? 'planejado';
+$observacoes = $_POST['observacoes'] ?? null;
 
-$dados = [
+$usuario = $_SESSION['usuario_id'] ?? null;
 
-"paciente_id"=>$_POST["paciente_id"],
-"dente"=>$_POST["dente"],
-"procedimento"=>$_POST["procedimento"],
-"status"=>$_POST["status"],
-"observacoes"=>$_POST["observacoes"]
+$sql = $this->pdo->prepare("
+INSERT INTO prontuarios_registros
+(
+paciente_id,
+usuario_id,
+dente,
+procedimento,
+status,
+observacoes,
+tipo,
+data
+)
+VALUES
+(
+:paciente,
+:usuario,
+:dente,
+:procedimento,
+:status,
+:obs,
+'odontograma',
+NOW()
+)
+");
 
-];
+$sql->bindValue(":paciente",$paciente);
+$sql->bindValue(":usuario",$usuario);
+$sql->bindValue(":dente",$dente);
+$sql->bindValue(":procedimento",$procedimento);
+$sql->bindValue(":status",$status);
+$sql->bindValue(":obs",$observacoes);
 
-$model->salvarRegistro($dados);
+$sql->execute();
 
 echo json_encode(["status"=>"ok"]);
-exit;
 
 }
 

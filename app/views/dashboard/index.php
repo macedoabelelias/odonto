@@ -2,60 +2,68 @@
 $nivel = $_SESSION['usuario_nivel'] ?? '';
 ?>
 
-<div class="content-card">
+<style>
+
+.dashboard-card{
+border-radius:12px;
+}
+
+.card-blue{ background:#eef5ff; }
+.card-green{ background:#eefaf3; }
+.card-red{ background:#fff0f0; }
+.card-yellow{ background:#fff8e6; }
+.card-cyan{ background:#eef9ff; }
+
+</style>
 
 <h4 class="mb-4">Dashboard</h4>
 
-<!-- =========================
-CARDS PRINCIPAIS (TODOS VEEM)
-========================= -->
-
-<?php
-$nivel = $_SESSION['usuario_nivel'] ?? '';
-?>
+<!-- ======================
+CARDS SUPERIORES
+====================== -->
 
 <div class="row g-3 mb-4">
 
-<!-- CONSULTAS HOJE -->
-<div class="col-lg-3 col-md-6">
-<div class="card shadow-sm text-center" style="background:#eef5ff;">
-<div class="card-body">
-<h6 style="color:#2563eb;">Consultas Hoje</h6>
-<h3><?= count($consultasHoje ?? []) ?></h3>
+<div class="col-md-4">
+<div class="card dashboard-card card-blue shadow-sm border-0">
+<div class="card-body text-center">
+
+<h6 class="text-muted">Contas a Receber Hoje</h6>
+
+<h3 class="fw-bold text-primary">
+R$ <?= number_format($contasReceberHoje ?? 0,2,',','.') ?>
+</h3>
+
 </div>
 </div>
 </div>
 
-<!-- ATENDIDOS HOJE -->
-<div class="col-lg-3 col-md-6">
-<div class="card shadow-sm text-center" style="background:#eafaf1;">
-<div class="card-body">
-<h6 style="color:#16a34a;">Atendidos Hoje</h6>
-<h3><?= $atendidosHoje ?? 0 ?></h3>
+
+<div class="col-md-4">
+<div class="card dashboard-card card-green shadow-sm border-0">
+<div class="card-body text-center">
+
+<h6 class="text-muted">Recebido Hoje</h6>
+
+<h3 class="fw-bold text-success">
+R$ <?= number_format($recebidoHoje ?? 0,2,',','.') ?>
+</h3>
+
 </div>
 </div>
 </div>
 
-<?php if($nivel == 'admin' || $nivel == 'administrador'){ ?>
 
-<!-- FATURAMENTO (SÓ ADMIN) -->
-<div class="col-lg-3 col-md-6">
-<div class="card shadow-sm text-center" style="background:#fff8e6;">
-<div class="card-body">
-<h6 style="color:#f59e0b;">Faturamento Hoje</h6>
-<h3>R$ <?= number_format($faturamentoHoje ?? 0,2,",",".") ?></h3>
-</div>
-</div>
-</div>
+<div class="col-md-4">
+<div class="card dashboard-card card-red shadow-sm border-0">
+<div class="card-body text-center">
 
-<?php } ?>
+<h6 class="text-muted">Total em Aberto</h6>
 
-<!-- ANIVERSARIANTES -->
-<div class="col-lg-3 col-md-6">
-<div class="card shadow-sm text-center" style="background:#fde8ef;">
-<div class="card-body">
-<h6 style="color:#ec4899;">Aniversariantes</h6>
-<h3><?= count($aniversariantes ?? []) ?></h3>
+<h3 class="fw-bold text-danger">
+R$ <?= number_format($totalAberto ?? 0,2,',','.') ?>
+</h3>
+
 </div>
 </div>
 </div>
@@ -63,59 +71,103 @@ $nivel = $_SESSION['usuario_nivel'] ?? '';
 </div>
 
 
-<!-- =========================
-AGENDA (DENTISTA E RECEPÇÃO)
-========================= -->
+<div class="row g-3 mb-4">
 
-<?php if($nivel == 'dentista' || $nivel == 'recepcionista'){ ?>
+<div class="col-md-4">
+<div class="card dashboard-card card-cyan shadow-sm border-0">
+<div class="card-body text-center">
+
+<h6 class="text-muted">Consultas Hoje</h6>
+
+<h2 class="fw-bold"><?= $consultasHoje ?? 0 ?></h2>
+
+</div>
+</div>
+</div>
+
+
+<div class="col-md-4">
+<div class="card dashboard-card card-green shadow-sm border-0">
+<div class="card-body text-center">
+
+<h6 class="text-muted">Atendidos Hoje</h6>
+
+<h2 class="fw-bold"><?= $atendidosHoje ?? 0 ?></h2>
+
+</div>
+</div>
+</div>
+
+
+<div class="col-md-4">
+<div class="card dashboard-card card-yellow shadow-sm border-0">
+<div class="card-body text-center">
+
+<h6 class="text-muted">Aniversariantes</h6>
+
+<h2 class="fw-bold"><?= count($aniversariantes ?? []) ?></h2>
+
+</div>
+</div>
+</div>
+
+</div>
+
+
+<!-- ======================
+AGENDA DO DIA
+====================== -->
 
 <div class="card shadow-sm mb-4">
 
+<div class="card-header bg-white fw-semibold">
+<i class="bi bi-calendar3 text-primary me-2"></i>
+Agenda de Hoje
+</div>
+
 <div class="card-body">
 
-<h5>📅 Agenda de Hoje</h5>
+<?php if(empty($agendaHoje)): ?>
 
-<?php if(!empty($consultasHoje)){ ?>
-
-<table class="table table-sm">
-
-<tr>
-<th>Hora</th>
-<th>Paciente</th>
-<th>Procedimento</th>
-</tr>
-
-<?php foreach($consultasHoje as $c){ ?>
-
-<tr>
-<td><?= $c['hora'] ?></td>
-<td><?= htmlspecialchars($c['paciente']) ?></td>
-<td><?= htmlspecialchars($c['procedimento'] ?? '-') ?></td>
-</tr>
-
-<?php } ?>
-
-</table>
-
-<?php }else{ ?>
-
-<div class="alert alert-light">
+<div class="text-muted">
 Nenhuma consulta hoje
 </div>
 
-<?php } ?>
+<?php else: ?>
+
+<ul class="list-group">
+
+<?php foreach($agendaHoje as $consulta): ?>
+
+<li class="list-group-item d-flex justify-content-between">
+
+<span>
+<strong><?= $consulta['hora'] ?></strong>
+- <?= htmlspecialchars($consulta['paciente']) ?>
+</span>
+
+<span class="badge bg-secondary">
+<?= $consulta['procedimento'] ?>
+</span>
+
+</li>
+
+<?php endforeach; ?>
+
+</ul>
+
+<?php endif; ?>
 
 </div>
+
 </div>
 
-<?php } ?>
 
+<!-- ======================
+PRÓXIMAS CONSULTAS
+====================== -->
 
-<!-- =========================
-PRÓXIMAS CONSULTAS (RECEPÇÃO)
-========================= -->
-
-<?php if($nivel == 'recepcionista'){ ?>
+<?php if($nivel == 'recepcionista'): ?>
 
 <div class="card shadow-sm mb-4">
 
@@ -123,42 +175,40 @@ PRÓXIMAS CONSULTAS (RECEPÇÃO)
 
 <h5>⏰ Próximas Consultas</h5>
 
-<?php if(!empty($proximasConsultas)){ ?>
+<?php if(!empty($proximasConsultas)): ?>
 
 <ul class="list-group">
 
-<?php foreach($proximasConsultas as $c){ ?>
+<?php foreach($proximasConsultas as $c): ?>
 
 <li class="list-group-item">
-
-<strong><?= $c['hora'] ?></strong> -  
+<strong><?= $c['hora'] ?></strong> -
 <?= htmlspecialchars($c['paciente']) ?>
-
 </li>
 
-<?php } ?>
+<?php endforeach; ?>
 
 </ul>
 
-<?php } else { ?>
+<?php else: ?>
 
 <div class="text-muted">
 Nenhuma consulta agendada
 </div>
 
-<?php } ?>
+<?php endif; ?>
 
 </div>
 </div>
 
-<?php } ?>
+<?php endif; ?>
 
 
-<!-- =========================
-ANIVERSARIANTES (DENTISTA E RECEPÇÃO)
-========================= -->
+<!-- ======================
+ANIVERSARIANTES
+====================== -->
 
-<?php if($nivel == 'dentista' || $nivel == 'recepcionista'){ ?>
+<?php if($nivel == 'dentista' || $nivel == 'recepcionista'): ?>
 
 <div class="card shadow-sm mb-4">
 
@@ -166,163 +216,51 @@ ANIVERSARIANTES (DENTISTA E RECEPÇÃO)
 
 <h5>🎂 Aniversariantes Hoje</h5>
 
-<?php if(!empty($aniversariantes)){ ?>
+<?php if(!empty($aniversariantes)): ?>
 
 <ul class="list-group">
 
-<?php foreach($aniversariantes as $p){ ?>
+<?php foreach($aniversariantes as $p): ?>
 
 <li class="list-group-item">
 <?= htmlspecialchars($p['nome']) ?>
 </li>
 
-<?php } ?>
+<?php endforeach; ?>
 
 </ul>
 
-<?php } else { ?>
+<?php else: ?>
 
 <div class="text-muted">
 Nenhum aniversariante hoje
 </div>
 
-<?php } ?>
+<?php endif; ?>
 
-</div>
-</div>
-
-<?php } ?>
-
-
-<!-- =========================
-FINANCEIRO
-========================= -->
-
-<?php if($nivel == 'financeiro'){ ?>
-
-<div class="row g-3 mb-4">
-
-<div class="col-md-4">
-<div class="card shadow-sm bg-success text-white">
-<div class="card-body">
-<h6>Recebido Hoje</h6>
-<h3>R$ <?= number_format($recebidoHoje ?? 0,2,",",".") ?></h3>
-</div>
-</div>
-</div>
-
-<div class="col-md-4">
-<div class="card shadow-sm bg-warning">
-<div class="card-body">
-<h6>Contas a Receber Hoje</h6>
-<h3><?= $contasHoje ?? 0 ?></h3>
-</div>
-</div>
-</div>
-
-<div class="col-md-4">
-<div class="card shadow-sm bg-danger text-white">
-<div class="card-body">
-<h6>Contas Vencidas</h6>
-<h3><?= $contasVencidas ?? 0 ?></h3>
-</div>
-</div>
 </div>
 
 </div>
 
-<?php } ?>
+<?php endif; ?>
 
 
-<!-- =========================
-ADMINISTRADOR
-========================= -->
-
-<?php if($nivel == 'admin' || $nivel == 'administrador'){ ?>
-
-<div class="row g-3 mb-4">
-
-<div class="col-md-3">
-<div class="card shadow-sm border-0 bg-success text-white p-3">
-<h6>Recebido no Mês</h6>
-<h3>R$ <?= number_format($recebido ?? 0,2,',','.') ?></h3>
-</div>
-</div>
-
-<div class="col-md-3">
-<div class="card shadow-sm border-0 bg-danger text-white p-3">
-<h6>Pago no Mês</h6>
-<h3>R$ <?= number_format($pago ?? 0,2,',','.') ?></h3>
-</div>
-</div>
-
-<div class="col-md-3">
-<div class="card shadow-sm border-0 bg-primary text-white p-3">
-<h6>Compras no Mês</h6>
-<h3>R$ <?= number_format($compras ?? 0,2,',','.') ?></h3>
-</div>
-</div>
-
-<div class="col-md-3">
-<div class="card shadow-sm border-0 bg-dark text-white p-3">
-<h6>Total de Pacientes</h6>
-<h3><?= $pacientes ?? 0 ?></h3>
-</div>
-</div>
-
-</div>
-
-
-<h5 class="mb-3">⚠ Produtos com Estoque Baixo</h5>
-
-<?php if(!empty($estoqueBaixo)){ ?>
-
-<div class="table-responsive mb-4">
-
-<table class="table table-bordered">
-
-<thead>
-<tr>
-<th>Produto</th>
-<th>Estoque Atual</th>
-<th>Estoque Mínimo</th>
-</tr>
-</thead>
-
-<tbody>
-
-<?php foreach($estoqueBaixo as $p){ ?>
-
-<tr>
-<td><?= htmlspecialchars($p['nome']) ?></td>
-<td class="text-danger"><?= $p['estoque'] ?></td>
-<td><?= $p['estoque_minimo'] ?></td>
-</tr>
-
-<?php } ?>
-
-</tbody>
-</table>
-
-</div>
-
-<?php }else{ ?>
-
-<div class="alert alert-success mb-4">
-Nenhum produto com estoque baixo 🎉
-</div>
-
-<?php } ?>
-
-<hr class="my-5">
+<!-- ======================
+GRÁFICO
+====================== -->
 
 <div class="card shadow-sm border-0 p-4">
 
-<h5 class="mb-3">📊 Faturamento dos Últimos 6 Meses</h5>
+<h5 class="mb-3">📊 Contas a Receber</h5>
 
-<canvas id="graficoFinanceiro" height="100"></canvas>
+<div style="height:180px;">
+<canvas id="graficoFinanceiro"></canvas>
+</div>
 
 </div>
+
+</div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -332,43 +270,24 @@ const ctx = document.getElementById('graficoFinanceiro');
 
 new Chart(ctx, {
 
-type: 'bar',
+type:'bar',
 
-data: {
-
-labels: <?= json_encode($labels ?? []) ?>,
-
-datasets: [
-
-{
-label: 'Receitas',
-data: <?= json_encode($receitas ?? []) ?>,
-backgroundColor: '#28a745'
+data:{
+labels:['Seg','Ter','Qua','Qui','Sex','Sab'],
+datasets:[{
+label:'Contas a Receber',
+data:[500,900,700,1200,400,200],
+backgroundColor:'#0d6efd'
+}]
 },
 
-{
-label: 'Despesas',
-data: <?= json_encode($despesas ?? []) ?>,
-backgroundColor: '#dc3545'
-}
-
-]
-
-},
-
-options: {
-responsive: true,
-plugins: {
-legend: {
-position: 'top'
+options:{
+responsive:true,
+maintainAspectRatio:false,
+plugins:{
+legend:{position:'top'}
 }
 }
-}
-
 });
 
 </script>
-
-<?php } ?>
-
-</div>

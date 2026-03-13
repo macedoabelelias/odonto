@@ -253,6 +253,10 @@ align-items:center;
 margin-top:20px;
 }
 
+.odontograma-img{
+max-width:100%;
+}
+
 .linha-dentes{
 display:flex;
 justify-content:center;
@@ -350,7 +354,9 @@ z-index:5;
 border:1px solid red;
 }
 
-
+.tooth img{
+pointer-events:none;
+}
 
 .tooth:hover{
 border:2px solid #6366f1;
@@ -514,12 +520,13 @@ background:#4338ca;
 
 .proc-layer{
 position:absolute;
+top:0;
+left:0;
 width:100%;
 height:100%;
 display:flex;
 align-items:center;
 justify-content:center;
-pointer-events:none;
 }
 
 .proc-item{
@@ -600,3 +607,32 @@ color:#777;
 .content-card .row{
     width:100%;
 }
+
+/* .dashboard-card{
+border-radius:12px;
+border:1px solid rgba(0,0,0,0.04);
+transition:0.2s;
+}
+
+.dashboard-card:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* CORES SUAVES */
+
+
+
+
+.card-icon{
+width:50px;
+height:50px;
+margin:auto;
+margin-bottom:10px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:22px;
+} 

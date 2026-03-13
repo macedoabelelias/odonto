@@ -1,9 +1,9 @@
 <?php
 
-require_once BASE_PATH . "/app/models/Consulta.php";
-require_once BASE_PATH . "/app/models/Paciente.php";
-require_once BASE_PATH . "/app/models/Usuario.php";
-require_once BASE_PATH . "/app/models/Prontuario.php";
+require_once __DIR__ . "/../models/Consulta.php";
+require_once __DIR__ . "/../models/Paciente.php";
+require_once __DIR__ . "/../models/Usuario.php";
+require_once __DIR__ . "/../models/Prontuario.php";
 
 class ConsultasController extends Controller
 {
@@ -15,28 +15,27 @@ public function __construct()
 $this->consultaModel = new Consulta();
 }
 
+
 /* ==========================
-   LISTAR AGENDA
+LISTAR AGENDA
 ========================== */
 
 public function index()
 {
 
 $modo = $_GET['modo'] ?? 'semana';
-
 $data = $_GET['data'] ?? date('Y-m-d');
-
 $dentista = $_GET['dentista'] ?? null;
 
-/* CONTROLE DE PERMISSÃO */
+/* PERMISSÃO */
 
 $nivel = $_SESSION['usuario_nivel'] ?? '';
 
 if($nivel == 'dentista'){
-
 $dentista = $_SESSION['usuario_id'];
-
 }
+
+/* DENTISTAS */
 
 $usuarioModel = new Usuario();
 $dentistas = $usuarioModel->listarDentistas();
@@ -47,24 +46,18 @@ $estatisticas = $this->consultaModel->estatisticasHoje($dentista);
 
 /* CONSULTAS */
 
-if($modo == 'dia'){
+switch($modo){
 
+case 'dia':
 $consultas = $this->consultaModel->listarPorData($data,$dentista);
+break;
 
-}
-elseif($modo == 'semana'){
-
-$consultas = $this->consultaModel->listarSemana($data,$dentista);
-
-}
-elseif($modo == 'mes'){
-
+case 'mes':
 $consultas = $this->consultaModel->listarMes($data,$dentista);
+break;
 
-}
-else{
-
-$consultas = $this->consultaModel->listarPorData($data,$dentista);
+default:
+$consultas = $this->consultaModel->listarSemana($data,$dentista);
 
 }
 
@@ -85,7 +78,7 @@ $this->view("consultas/index",[
 
 
 /* ==========================
-   FORM NOVA CONSULTA
+FORM NOVA CONSULTA
 ========================== */
 
 public function criar()
@@ -115,7 +108,7 @@ $this->view("consultas/criar",[
 
 
 /* ==========================
-   SALVAR CONSULTA
+SALVAR CONSULTA
 ========================== */
 
 public function salvar()
@@ -161,7 +154,7 @@ exit;
 
 
 /* ==========================
-   EDITAR CONSULTA
+EDITAR CONSULTA
 ========================== */
 
 public function editar($id)
@@ -187,7 +180,7 @@ $this->view("consultas/editar",[
 
 
 /* ==========================
-   ATUALIZAR CONSULTA
+ATUALIZAR CONSULTA
 ========================== */
 
 public function atualizar($id)
@@ -214,7 +207,7 @@ exit;
 
 
 /* ==========================
-   INICIAR CONSULTA
+INICIAR CONSULTA
 ========================== */
 
 public function iniciar($id)
@@ -233,7 +226,7 @@ exit;
 
 $this->consultaModel->atualizarStatus($id,'atendimento');
 
-/* registrar no prontuário */
+/* registrar prontuário */
 
 $prontuarioModel = new Prontuario();
 $prontuarioModel->registrarConsulta($consulta);
@@ -247,8 +240,9 @@ exit;
 
 
 /* ==========================
-   FINALIZAR CONSULTA
+FINALIZAR CONSULTA
 ========================== */
+
 
 public function finalizar($id)
 {
@@ -262,7 +256,7 @@ exit;
 
 
 /* ==========================
-   ALTERAR STATUS VIA AJAX
+ALTERAR STATUS (AJAX)
 ========================== */
 
 public function status()
@@ -289,7 +283,7 @@ exit;
 
 
 /* ==========================
-   MOVER CONSULTA (DRAG)
+MOVER CONSULTA (DRAG)
 ========================== */
 
 public function mover()
