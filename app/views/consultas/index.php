@@ -8,10 +8,10 @@
 
 <option value="">Todos os dentistas</option>
 
-<?php foreach($dentistas as $d): ?>
+<?php foreach($dentistas ?? [] as $d): ?>
 
 <option value="<?= $d['id'] ?>"
-<?= ($dentistaSelecionado == $d['id']) ? 'selected' : '' ?>>
+<?= ($dentistaSelecionado ?? '') == $d['id'] ? 'selected' : '' ?>>
 
 <?= htmlspecialchars($d['nome']) ?>
 
@@ -35,7 +35,7 @@ Filtrar
 
 
 <!-- ===============================
-   ESTATÍSTICAS DA AGENDA
+ESTATÍSTICAS DA AGENDA
 ================================ -->
 
 <div class="row mb-3">
@@ -80,7 +80,7 @@ Filtrar
 
 
 <!-- ===============================
-   CALENDÁRIO
+CALENDÁRIO
 ================================ -->
 
 <div class="card shadow-sm">
@@ -110,33 +110,29 @@ locale: 'pt-br',
 height: "auto",
 
 headerToolbar: {
-
 left: 'prev,next today',
 center: 'title',
 right: 'dayGridMonth,timeGridWeek,timeGridDay'
-
 },
 
-buttonText: {
-
-today: 'Hoje',
-month: 'Mês',
-week: 'Semana',
-day: 'Dia'
-
+buttonText:{
+today:'Hoje',
+month:'Mês',
+week:'Semana',
+day:'Dia'
 },
 
-slotMinTime: "08:00:00",
-slotMaxTime: "19:00:00",
+slotMinTime:"08:00:00",
+slotMaxTime:"19:00:00",
 
-editable: true,
+editable:true,
 
 
 /* ===============================
-   CRIAR CONSULTA
+CRIAR CONSULTA
 ================================ */
 
-dateClick: function(info){
+dateClick:function(info){
 
 let data = info.dateStr.substring(0,10);
 let hora = info.dateStr.substring(11,16);
@@ -148,16 +144,16 @@ window.location =
 
 
 /* ===============================
-   CLICAR NA CONSULTA
+CLICAR NA CONSULTA
 ================================ */
 
-eventClick: function(info){
+eventClick:function(info){
 
 let id = info.event.id;
 
 let paciente = info.event.title;
-let procedimento = info.event.extendedProps.procedimento ?? '';
-let dentista = info.event.extendedProps.dentista ?? '';
+let procedimento = info.event.extendedProps.procedimento || '';
+let dentista = info.event.extendedProps.dentista || '';
 
 Swal.fire({
 
@@ -171,16 +167,35 @@ html: `
 showCancelButton:true,
 showDenyButton:true,
 
+<?php if($_SESSION['usuario_nivel']=='recepcionista'){ ?>
+
+confirmButtonText:'Editar Consulta',
+denyButtonText:'Paciente Chegou',
+cancelButtonText:'Faltou'
+
+<?php } else { ?>
+
 confirmButtonText:'Iniciar Atendimento',
 denyButtonText:'Finalizar',
 cancelButtonText:'Faltou'
 
-}).then((result) => {
+<?php } ?>
+
+}).then((result)=>{
 
 if(result.isConfirmed){
 
+<?php if($_SESSION['usuario_nivel']=='recepcionista'){ ?>
+
+window.location =
+"<?= BASE_URL ?>/consultas/editar/"+id;
+
+<?php } else { ?>
+
 window.location =
 "<?= BASE_URL ?>/consultas/iniciar/"+id;
+
+<?php } ?>
 
 }
 
@@ -200,11 +215,12 @@ alterarStatus(id,'faltou');
 
 },
 
+
 /* ===============================
-   MOVER CONSULTA
+MOVER CONSULTA
 ================================ */
 
-eventDrop: function(info){
+eventDrop:function(info){
 
 let id = info.event.id;
 
@@ -222,17 +238,14 @@ headers:{
 },
 
 body: JSON.stringify({
-
 id:id,
 data:data,
 hora:hora
-
 })
 
 })
 
 .then(res=>res.json())
-
 .then(data=>{
 
 if(!data.success){
@@ -249,67 +262,68 @@ info.revert();
 
 
 /* ===============================
-   EVENTOS DO BANCO
+EVENTOS DO BANCO
 ================================ */
 
-events: [
+events:[
+
+<?php if(!empty($consultas)): ?>
 
 <?php foreach($consultas as $c):
 
-$cor = $c['cor'] ?? "#6ea8fe";
+$cor = "#6ea8fe";
 
 if(isset($c['status'])){
 
-if($c['status'] == 'atendimento'){
-$cor = "#f9c74f";
+if($c['status']=='atendimento'){
+$cor="#f9c74f";
 }
 
-elseif($c['status'] == 'finalizado'){
-$cor = "#90db9a";
+elseif($c['status']=='finalizado'){
+$cor="#90db9a";
 }
 
-elseif($c['status'] == 'faltou'){
-$cor = "#f28482";
+elseif($c['status']=='faltou'){
+$cor="#f28482";
 }
 
 }
-
 ?>
 
 {
 
-id: "<?= $c['id'] ?>",
+id:"<?= $c['id'] ?>",
 
-title: "<?= addslashes($c['paciente']) ?>",
+title:"<?= addslashes($c['paciente']) ?>",
 
-start: "<?= $c['data'] ?>T<?= $c['hora'] ?>",
-end: "<?= date('Y-m-d\TH:i', strtotime($c['data'].' '.$c['hora'].' +'.($c['duracao'] ?? 30).' minutes')) ?>",
+start:"<?= $c['data'] ?>T<?= $c['hora'] ?>",
 
-color: "<?= $cor ?>",
+end:"<?= date('Y-m-d\TH:i', strtotime($c['data'].' '.$c['hora'].' +'.($c['duracao'] ?? 30).' minutes')) ?>",
 
-extendedProps: {
+color:"<?= $cor ?>",
 
-procedimento: "<?= addslashes($c['procedimento']) ?>",
-
-dentista: "<?= addslashes($c['dentista']) ?>"
-
+extendedProps:{
+procedimento:"<?= addslashes($c['procedimento'] ?? '') ?>",
+dentista:"<?= addslashes($c['dentista'] ?? '') ?>"
 }
 
 },
 
 <?php endforeach; ?>
 
+<?php endif; ?>
+
 ],
 
 
 /* ===============================
-   VISUAL DO EVENTO
+VISUAL DO EVENTO
 ================================ */
 
-eventContent: function(arg){
+eventContent:function(arg){
 
-let procedimento = arg.event.extendedProps.procedimento ?? '';
-let dentista = arg.event.extendedProps.dentista ?? '';
+let procedimento = arg.event.extendedProps.procedimento || '';
+let dentista = arg.event.extendedProps.dentista || '';
 
 let html = `
 <div style="font-size:12px">
@@ -323,7 +337,7 @@ let html = `
 </div>
 `;
 
-return { html: html };
+return {html:html};
 
 }
 
@@ -335,7 +349,7 @@ calendar.render();
 
 
 /* ===============================
-   ALTERAR STATUS
+ALTERAR STATUS
 ================================ */
 
 function alterarStatus(id,status){
@@ -349,16 +363,13 @@ headers:{
 },
 
 body: JSON.stringify({
-
 id:id,
 status:status
-
 })
 
 })
 
 .then(res=>res.json())
-
 .then(data=>{
 
 if(data.success){
