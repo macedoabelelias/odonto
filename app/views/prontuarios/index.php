@@ -61,29 +61,28 @@
 
 <!-- ODONTOGRAMA -->
 
-<div class="col-lg-9" style="border-radius:14px; ">
+<div class="col-lg-9" style="border-radius:14px;">
 
-<div class="card shadow-sm mb-4" style="margin-top: 98px;">
+<div class="card shadow-sm mb-4" style="margin-top:140px;">
 
 <div class="card-body text-center" style="box-shadow:0 2px 8px rgba(2,0,0,1.2)">
 
 <label><strong>Tipo de Dentição</strong></label>
 
 <select id="tipoDenticao" class="form-select mb-3" style="max-width:250px;margin:auto">
-
 <option value="permanente">Permanente</option>
 <option value="deciduo">Decíduo</option>
-
 </select>
 
-
-<div id="odontograma" class="odontograma">
+<div id="odontograma"
+style="position:relative;width:680px;height:320px;margin:auto;">
 
 <img id="imgOdontograma"
-class="odontograma-img permanente"
-src="<?= BASE_URL ?>/assets/img/dentesperm.png">
+src="<?= BASE_URL ?>/assets/img/odontograma/dentesperm.png"
+style="width:680px;height:auto;display:block;margin:auto;">
 
 </div>
+
 
 </div>
 
@@ -111,8 +110,7 @@ src="<?= BASE_URL ?>/assets/img/dentesperm.png">
 <option value="coroa">Coroa</option>
 <option value="implante">Implante</option>
 <option value="cirurgia">Cirurgia</option>
-<option value="extracao_indicada">Extração indicada</option>
-<option value="extracao_realizada">Extração realizada</option>
+<option value="extracao">Extração</option>
 
 </select>
 
@@ -128,6 +126,19 @@ src="<?= BASE_URL ?>/assets/img/dentesperm.png">
 
 <option value="planejado">A realizar</option>
 <option value="realizado">Realizado</option>
+
+</select>
+
+<label>Face do dente</label>
+
+<select id="faceSelecionada" class="form-control mb-2">
+
+<option value="">Dente inteiro</option>
+<option value="oclusal">Oclusal</option>
+<option value="mesial">Mesial</option>
+<option value="distal">Distal</option>
+<option value="vestibular">Vestibular</option>
+<option value="lingual">Lingual</option>
 
 </select>
 
@@ -179,136 +190,116 @@ Nenhuma radiografia
 
 </div>
 
+<style>
+
+.sigla-face{
+position:absolute;
+bottom:-10px;
+left:50%;
+transform:translateX(-50%);
+font-size:10px;
+font-weight:bold;
+color:#1e40af;
+background:white;
+padding:1px 3px;
+border-radius:4px;
+}
+
+</style>
+
+
 <script>
 
 let denteSelecionado = null;
 
-
-/* MAPA PERMANENTE */
+/* ================= MAPA PERMANENTE ================= */
 
 const mapaPermanente = {
 
-18:{x:138,y:210},
-17:{x:184,y:210},
-16:{x:232,y:210},
-15:{x:278,y:210},
-14:{x:314,y:210},
-13:{x:355,y:210},
-12:{x:390,y:210},
-11:{x:432,y:210},
+18:{x:22,y:106},17:{x:62,y:106},16:{x:110,y:106},15:{x:154,y:106},
+14:{x:190,y:106},13:{x:226,y:106},12:{x:262,y:106},11:{x:300,y:104},
 
-21:{x:490,y:210},
-22:{x:532,y:210},
-23:{x:570,y:210},
-24:{x:608,y:210},
-25:{x:646,y:210},
-26:{x:692,y:210},
-27:{x:740,y:210},
-28:{x:782,y:210},
+21:{x:358,y:104},22:{x:396,y:106},23:{x:432,y:106},24:{x:470,y:106},
+25:{x:506,y:106},26:{x:548,y:106},27:{x:594,y:106},28:{x:638,y:106},
 
-48:{x:146,y:260},
-47:{x:194,y:260},
-46:{x:248,y:260},
-45:{x:294,y:260},
-44:{x:334,y:260},
-43:{x:374,y:260},
-42:{x:408,y:260},
-41:{x:438,y:260},
+48:{x:26,y:154},47:{x:74,y:154},46:{x:126,y:154},45:{x:170,y:154},
+44:{x:208,y:154},43:{x:246,y:154},42:{x:278,y:154},41:{x:308,y:154},
 
-31:{x:486,y:260},
-32:{x:516,y:260},
-33:{x:550,y:260},
-34:{x:588,y:260},
-35:{x:628,y:260},
-36:{x:672,y:260},
-37:{x:726,y:260},
-38:{x:774,y:260}
+31:{x:352,y:154},32:{x:382,y:154},33:{x:413,y:154},34:{x:450,y:154},
+35:{x:488,y:154},36:{x:532,y:154},37:{x:582,y:154},38:{x:628,y:154}
 
 };
 
-
-/* MAPA DECIDUO */
+/* ================= MAPA DECÍDUO ================= */
 
 const mapaDeciduo = {
 
-55:{x:308,y:166},
-54:{x:348,y:166},
-53:{x:380,y:166},
-52:{x:408,y:166},
-51:{x:438,y:166},
+55:{x:104,y:108},54:{x:162,y:108},53:{x:210,y:110},52:{x:250,y:108},51:{x:292,y:108},
+61:{x:362,y:108},62:{x:406,y:108},63:{x:446,y:110},64:{x:495,y:108},65:{x:552,y:108},
 
-61:{x:480,y:166},
-62:{x:511,y:166},
-63:{x:538,y:166},
-64:{x:572,y:166},
-65:{x:612,y:166},
-
-85:{x:312,y:206},
-84:{x:356,y:206},
-83:{x:390,y:202},
-82:{x:416,y:206},
-81:{x:438,y:206},
-
-71:{x:476,y:206},
-72:{x:504,y:206},
-73:{x:530,y:202},
-74:{x:562,y:206},
-75:{x:608,y:206}
+85:{x:108,y:166},84:{x:172,y:166},83:{x:224,y:162},82:{x:262,y:162},81:{x:300,y:162},
+71:{x:354,y:162},72:{x:392,y:162},73:{x:430,y:162},74:{x:482,y:166},75:{x:548,y:162}
 
 };
 
-
-/* GERAR ODONTOGRAMA */
+/* ================= GERAR ODONTOGRAMA ================= */
 
 function gerarOdontograma(mapa){
 
 const container = document.getElementById("odontograma");
 
-// remove dentes antigos
 document.querySelectorAll(".tooth").forEach(el => el.remove());
 
 Object.keys(mapa).forEach(function(dente){
 
 const pos = mapa[dente];
 
-// cria o dente
 const tooth = document.createElement("div");
 
 tooth.className = "tooth";
 tooth.dataset.dente = dente;
 
-// posição
 tooth.style.position = "absolute";
 tooth.style.left = pos.x + "px";
 tooth.style.top = pos.y + "px";
-
-// tamanho clicável
 tooth.style.width = "28px";
 tooth.style.height = "28px";
 tooth.style.cursor = "pointer";
+tooth.style.zIndex = "5";
 
-// camada de procedimento
 const camada = document.createElement("div");
 camada.className = "proc-layer";
+
+const faces = ["O","M","D","V","L"];
+
+faces.forEach(face => {
+
+const faceDiv = document.createElement("div");
+
+faceDiv.className = "face face-"+face;
+faceDiv.dataset.face = face;
+
+camada.appendChild(faceDiv);
+
+});
+
+
+
 tooth.appendChild(camada);
 
-// evento clique
+/* clique */
+
 tooth.onclick = function(){
 
 denteSelecionado = this.dataset.dente;
 
-// preencher campos
 document.getElementById("denteSelecionado").value = denteSelecionado;
 document.getElementById("denteVisual").value = denteSelecionado;
 
-carregarHistorico(denteSelecionado);
-
-// remover seleção anterior
 document.querySelectorAll(".tooth").forEach(function(t){
 t.classList.remove("tooth-ativo");
 });
 
-// marcar atual
 this.classList.add("tooth-ativo");
 
 };
@@ -319,23 +310,24 @@ container.appendChild(tooth);
 
 }
 
-/* TROCAR DENTIÇÃO */
+/* ================= TROCAR DENTIÇÃO ================= */
 
 document.getElementById("tipoDenticao").addEventListener("change",function(){
 
 const tipo = this.value;
-
 const img = document.getElementById("imgOdontograma");
 
 if(tipo==="permanente"){
 
-img.src = "<?= BASE_URL ?>/assets/img/dentesperm.png";
+img.src = "<?= BASE_URL ?>/assets/img/odontograma/dentesperm.png";
+img.style.width = "680px";
 
 gerarOdontograma(mapaPermanente);
 
 }else{
 
-img.src = "<?= BASE_URL ?>/assets/img/dentesdec.png";
+img.src = "<?= BASE_URL ?>/assets/img/odontograma/dentesdec.png";
+img.style.width = "520px";
 
 gerarOdontograma(mapaDeciduo);
 
@@ -343,25 +335,9 @@ gerarOdontograma(mapaDeciduo);
 
 });
 
+/* ================= SALVAR REGISTRO ================= */
 
-/* INICIAR */
-
-document.addEventListener("DOMContentLoaded",function(){
-
-gerarOdontograma(mapaPermanente);
-
-setTimeout(function(){
-
-carregarProcedimentos();
-carregarHistoricoPaciente();
-
-},300);
-
-});
-
-/* SALVAR REGISTRO */
-
-// const btnSalvar = document.getElementById("salvarRegistro");
+const btnSalvar = document.getElementById("salvarRegistro");
 
 if(btnSalvar){
 
@@ -370,8 +346,14 @@ btnSalvar.addEventListener("click",function(){
 let paciente = document.getElementById("paciente_id").value;
 let dente = document.getElementById("denteSelecionado").value;
 let procedimento = document.getElementById("procedimento").value;
+let face = document.getElementById("faceSelecionada").value;
 let status = document.getElementById("statusProcedimento").value;
 let observacoes = document.getElementById("observacoes").value;
+
+if(!procedimento){
+alert("Selecione um procedimento");
+return;
+}
 
 if(!dente){
 alert("Selecione um dente primeiro");
@@ -387,7 +369,7 @@ headers:{
 },
 
 body:
-`paciente_id=${paciente}&dente=${dente}&procedimento=${procedimento}&status=${status}&observacoes=${observacoes}`
+`paciente_id=${paciente}&dente=${dente}&face=${face}&procedimento=${procedimento}&status=${status}&observacoes=${observacoes}`
 
 })
 .then(res=>res.json())
@@ -395,7 +377,7 @@ body:
 
 if(data.status==="ok"){
 
-pintarDente(dente,procedimento,status);
+pintarDente(dente,procedimento,status,face);
 carregarHistorico(dente);
 carregarHistoricoPaciente();
 
@@ -410,34 +392,17 @@ console.log("Erro:",error);
 
 }
 
+/* ================= PINTAR DENTE ================= */
 
+function pintarDente(dente,procedimento,status,face){
 
-
-/* PINTAR DENTE */
-
-function pintarDente(dente,procedimento,status){
-
-let tooth = document.querySelector(`.tooth[data-dente='${dente}']`);
+const tooth = document.querySelector(`.tooth[data-dente='${dente}']`);
 
 if(!tooth) return;
 
-let camada = tooth.querySelector(".proc-layer");
+const base = "<?= BASE_URL ?>/assets/img/odontograma/";
 
-if(!camada){
-
-camada = document.createElement("div");
-camada.className = "proc-layer";
-tooth.appendChild(camada);
-
-}
-
-/* caminho correto */
-
-let base = "<?= BASE_URL ?>/assets/img/odontograma/";
-
-/* escolher imagem */
-
-let icone = "";
+let icone="";
 
 if(status==="planejado"){
 icone = base + procedimento + "_a_realizar.png";
@@ -447,111 +412,81 @@ if(status==="realizado"){
 icone = base + procedimento + "_realizado.png";
 }
 
-camada.innerHTML = `<img src="${icone}" width="18">`;
+const camada = tooth.querySelector(".proc-layer");
+
+/* ícone central */
+
+const novoIcone = document.createElement("img");
+
+novoIcone.src = icone;
+novoIcone.className = "icone-procedimento";
+
+camada.appendChild(novoIcone);
+
+/* pintar faces */
+
+if(face){
+
+const letras = face.split("");
+
+letras.forEach(f => {
+
+const faceDiv = tooth.querySelector(".face-"+f);
+
+if(faceDiv){
+
+faceDiv.style.background="#2563eb";
 
 }
-
-/* mostrar ícone */
-
-camada.innerHTML = `
-<div style="
-display:flex;
-align-items:center;
-justify-content:center;
-width:100%;
-height:100%;
-">
-<img src="${icone}" width="18">
-</div>
-`;
-
-
-
-/* HISTÓRICO */
-
-function carregarHistorico(dente){
-
-fetch("<?= BASE_URL ?>/prontuarios/historicoDente",{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body: JSON.stringify({
-
-paciente: <?= $paciente['id'] ?>,
-dente: dente
-
-})
-
-})
-
-.then(res=>res.json())
-
-.then(data=>{
-
-let html='';
-
-if(data.length==0){
-
-html="Nenhum registro";
-
-}else{
-
-data.forEach(r=>{
-
-html+=`
-
-<div style="font-size:13px;margin-bottom:6px">
-
-<strong>${new Date(r.data).toLocaleDateString()}</strong><br>
-
-${r.procedimento}
-
-</div>
-
-`;
 
 });
 
 }
 
-/* inserir no card */
+}
 
-document.getElementById("historico_dente").innerHTML = html;
 
-})
 
-.catch(error => {
 
-console.log("Erro ao carregar histórico:", error);
+/* ================= CARREGAR PROCEDIMENTOS ================= */
+
+function carregarProcedimentos(){
+
+let paciente = document.getElementById("paciente_id").value;
+
+fetch("<?= BASE_URL ?>/prontuarios/registros/"+paciente)
+
+.then(response => response.json())
+
+.then(dados => {
+
+dados.forEach(function(item){
+
+pintarDente(item.dente,item.procedimento,item.status,item.face);
+
+});
 
 });
 
 }
 
-  document.querySelectorAll(".proc-geral").forEach(function(item){
+/* ================= INICIAR ================= */
 
-        item.addEventListener("click",function(){
+document.addEventListener("DOMContentLoaded",function(){
 
-        let procedimento = this.dataset.proc;
+gerarOdontograma(mapaPermanente);
+carregarProcedimentos();
 
-        document.getElementById("procedimento").value = procedimento;
-
-        });
-
-    });
-
-    
+});
 
 </script>
 
 
+
 <!-- ================= LEGENDA + RECOMENDAÇÕES ================= -->
 
-<div class="row mt-3">
+<div class="row g-3 mt-3">
+
 
     <div class="col-md-3">
 
@@ -721,47 +656,47 @@ Carregando...
                 <div class="procedimentos-gerais">
 
 <div class="proc-geral" data-proc="profilaxia">
-<img src="/odonto/public/assets/img/procedimentos/profilaxia.png" width="28">
+<img src="/odonto/public/assets/img/odontograma/profilaxia.png" width="28">
 <span>Profilaxia</span>
 </div>
 
 <div class="proc-geral" data-proc="fluor">
-<img src="/odonto/public/assets/img/procedimentos/fluor.png" width="28">
+<img src="/odonto/public/assets/img/odontograma/fluor.png" width="28">
 <span>Flúor</span>
 </div>
 
 <div class="proc-geral" data-proc="protese_total">
-<img src="/odonto/public/assets/img/procedimentos/protese_total.png" width="28">
+<img src="/odonto/public/assets/img/odontograma/protese_total.png" width="28">
 <span>Prótese Total</span>
 </div>
 
 <div class="proc-geral" data-proc="protese_parcial">
-<img src="/odonto/public/assets/img/procedimentos/protese_parcial.png" width="28">
+<img src="/odonto/public/assets/img/odontograma/protese_parcial.png" width="28">
 <span>Prótese Parcial</span>
 </div>
 
 <div class="proc-geral" data-proc="protocolo_implante">
-<img src="/odonto/public/assets/img/procedimentos/protocolo_implante.png" width="28">
+<img src="/odonto/public/assets/img/odontograma/protocolo_implante.png" width="28">
 <span>Protocolo</span>
 </div>
 
 <div class="proc-geral" data-proc="placa_bruxismo">
-<img src="/odonto/public/assets/img/procedimentos/placa_bruxismo.png" width="28">
+<img src="/odonto/public/assets/img/odontograma/placa_bruxismo.png" width="28">
 <span>Placa Bruxismo</span>
 </div>
 
 <div class="proc-geral" data-proc="manutencao_periodontal">
-<img src="/odonto/public/assets/img/procedimentos/manutencao_periodontal.png" width="28">
+<img src="/odonto/public/assets/img/odontograma/manutencao_periodontal.png" width="28">
 <span>Manutenção</span>
 </div>
 
 <div class="proc-geral" data-proc="urgencia">
-<img src="/odonto/public/assets/img/procedimentos/urgencia.png" width="28">
+<img src="/odonto/public/assets/img/odontograma/urgencia.png" width="28">
 <span>Urgência</span>
 </div>
 
 <div class="proc-geral" data-proc="raspagem">
-<img src="/odonto/public/assets/img/procedimentos/raspagem.png" width="28">
+<img src="/odonto/public/assets/img/odontograma/raspagem.png" width="28">
 <span>Raspagem</span>
 </div>
 
@@ -928,11 +863,22 @@ dados.forEach(function(item){
 
 pintarDente(item.dente,item.procedimento,item.status);
 
+
 });
 
 });
 
 }
+
+/* INICIAR */
+
+document.addEventListener("DOMContentLoaded",function(){
+
+gerarOdontograma(mapaPermanente);
+
+carregarProcedimentos();
+
+});
 
 </script>
 

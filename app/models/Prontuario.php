@@ -1,10 +1,8 @@
 <?php
 
-// require_once BASE_PATH . "/core/Model.php";
 require_once BASE_PATH . "/app/models/Consulta.php";
 require_once BASE_PATH . "/app/models/Paciente.php";
 require_once BASE_PATH . "/app/models/Usuario.php";
-require_once BASE_PATH . "/app/models/Prontuario.php";
 
 class Prontuario extends Model
 {
@@ -35,41 +33,42 @@ return $sql->fetchAll(PDO::FETCH_ASSOC);
    HISTÓRICO DO DENTE
 ========================== */
 
-public function getHistoricoDente($paciente_id,$dente)
+public function historicoDente($paciente_id,$dente)
 {
 
 $sql = $this->pdo->prepare("
-SELECT procedimento,status,data
+SELECT *
 FROM prontuarios_registros
-WHERE paciente_id = ?
-AND dente = ?
+WHERE paciente_id = :paciente
+AND dente = :dente
 ORDER BY data DESC
 ");
 
-$sql->execute([$paciente_id,$dente]);
+$sql->bindValue(":paciente",$paciente_id);
+$sql->bindValue(":dente",$dente);
+
+$sql->execute();
 
 return $sql->fetchAll(PDO::FETCH_ASSOC);
 
 }
 
+
 /* ==========================
    LISTAR REGISTROS DO PACIENTE
 ========================== */
 
-public function listarPorPaciente($paciente_id)
+public function buscarRegistrosPaciente($paciente)
 {
 
 $sql = $this->pdo->prepare("
-
-SELECT *
+SELECT dente, face, procedimento, status
 FROM prontuarios_registros
 WHERE paciente_id = :paciente
-ORDER BY data DESC
-
+AND dente IS NOT NULL
 ");
 
-$sql->bindValue(":paciente",$paciente_id);
-
+$sql->bindValue(":paciente",$paciente);
 $sql->execute();
 
 return $sql->fetchAll(PDO::FETCH_ASSOC);
@@ -86,14 +85,15 @@ public function salvarRegistro($dados)
 
 $sql = $this->pdo->prepare("
 INSERT INTO prontuarios_registros
-(paciente_id,dente,procedimento,status,observacoes,data)
-VALUES (?,?,?,?,?,NOW())
+(paciente_id,dente,face,procedimento,status,observacoes,data)
+VALUES (?,?,?,?,?,?,NOW())
 ");
 
 return $sql->execute([
 
 $dados["paciente_id"],
 $dados["dente"],
+$dados["face"],
 $dados["procedimento"],
 $dados["status"],
 $dados["observacoes"]
@@ -104,7 +104,7 @@ $dados["observacoes"]
 
 
 /* ==========================
-   BUSCAR REGISTRO DO DENTE
+   BUSCAR ÚLTIMO REGISTRO DO DENTE
 ========================== */
 
 public function buscarRegistroDente($paciente,$dente)
@@ -187,72 +187,4 @@ $sql->execute();
 
 }
 
-
-/* ==========================
-   LISTAR REGISTROS DO PACIENTE
-========================== */
-
-public function listarRegistrosPaciente($paciente_id)
-{
-
-$sql = $this->pdo->prepare("
-SELECT 
-prontuarios_registros.*,
-usuarios.nome AS dentista
-FROM prontuarios_registros
-LEFT JOIN usuarios
-ON usuarios.id = prontuarios_registros.usuario_id
-WHERE paciente_id = :paciente
-ORDER BY data DESC
-");
-
-$sql->bindValue(":paciente",$paciente_id);
-$sql->execute();
-
-return $sql->fetchAll(PDO::FETCH_ASSOC);
-
-}
-
-
-/* ==========================
-   HISTÓRICO DO DENTE
-========================== */
-
-public function historicoDente($paciente_id,$dente)
-{
-
-$sql = $this->pdo->prepare("
-SELECT *
-FROM prontuarios_registros
-WHERE paciente_id = :paciente
-AND dente = :dente
-ORDER BY data DESC
-");
-
-$sql->bindValue(":paciente",$paciente_id);
-$sql->bindValue(":dente",$dente);
-
-$sql->execute();
-
-return $sql->fetchAll(PDO::FETCH_ASSOC);
-
-}
-
-public function buscarRegistrosPaciente($paciente)
-{
-
-$sql = $this->pdo->prepare("
-SELECT dente, procedimento, status
-FROM prontuarios_registros
-WHERE paciente_id = :paciente
-AND dente IS NOT NULL
-");
-
-$sql->bindValue(":paciente",$paciente);
-
-$sql->execute();
-
-return $sql->fetchAll(PDO::FETCH_ASSOC);
-
-}
 }

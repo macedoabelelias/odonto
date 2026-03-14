@@ -50,7 +50,8 @@ exit;
 
 }
 
-$registros = $prontuarioModel->listarPorPaciente($paciente_id);
+$registros = $prontuarioModel->buscarRegistrosPaciente($paciente_id);
+
 
 $this->view("prontuarios/index",[
 
@@ -74,6 +75,8 @@ $dente = $_POST['dente'] ?? null;
 $procedimento = $_POST['procedimento'] ?? null;
 $status = $_POST['status'] ?? 'planejado';
 $observacoes = $_POST['observacoes'] ?? null;
+$face = $_POST['face'] ?? '';
+
 
 $usuario = $_SESSION['usuario_id'] ?? null;
 
@@ -123,12 +126,13 @@ echo json_encode(["status"=>"ok"]);
 public function registros($paciente_id)
 {
 
-$model = new Prontuario();
+$prontuario = new Prontuario();
 
-$dados = $model->listarPorPaciente($paciente_id);
+$dados = $prontuario->listarRegistrosPaciente($paciente_id);
+
+header("Content-Type: application/json");
 
 echo json_encode($dados);
-exit;
 
 }
 

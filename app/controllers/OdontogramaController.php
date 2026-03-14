@@ -1,16 +1,15 @@
 <?php
 
-require_once BASE_PATH . "/app/models/Odontograma.php";
-
 class OdontogramaController extends Controller
 {
-    public function salvar()
+
+    public function index($paciente_id = null)
     {
-        $dados = json_decode(file_get_contents("php://input"), true);
 
-        $model = new Odontograma();
-        $model->salvar($dados);
+        $dados = [];
 
-        echo "ok";
+        $this->view('odontograma/index', $dados);
+
     }
+
 }
