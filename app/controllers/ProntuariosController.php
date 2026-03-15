@@ -126,16 +126,15 @@ echo json_encode(["status"=>"ok"]);
 public function registros($paciente_id)
 {
 
-$prontuario = new Prontuario();
+$model = new Prontuario();
 
-$dados = $prontuario->listarRegistrosPaciente($paciente_id);
+$dados = $model->buscarRegistrosPaciente($paciente_id);
 
-header("Content-Type: application/json");
+header('Content-Type: application/json');
 
 echo json_encode($dados);
 
 }
-
 
 /* ==========================
    HISTÓRICO DO DENTE

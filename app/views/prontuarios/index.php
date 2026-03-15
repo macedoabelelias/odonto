@@ -134,12 +134,16 @@ style="width:680px;height:auto;display:block;margin:auto;">
 <select id="faceSelecionada" class="form-control mb-2">
 
 <option value="">Dente inteiro</option>
-<option value="oclusal">Oclusal</option>
-<option value="mesial">Mesial</option>
-<option value="distal">Distal</option>
-<option value="vestibular">Vestibular</option>
-<option value="lingual">Lingual</option>
-
+<option value="oclusal">O</option>
+<option value="mesial">M</option>
+<option value="distal">D</option>
+<option value="vestibular">V</option>
+<option value="lingual/palatino">L / P</option>
+<option value="ocluso-mesial">OM</option>
+<option value="ocluso-distal">OD</option>
+<option value="ocluso-mesio-distal">MOD</option>
+<option value="ocluso-vestibular">OV</option>
+<option value="ocluso-palatino">OP</option>
 </select>
 
 
@@ -270,26 +274,9 @@ tooth.style.zIndex = "5";
 const camada = document.createElement("div");
 camada.className = "proc-layer";
 
-const faces = ["O","M","D","V","L"];
-
-faces.forEach(face => {
-
-const faceDiv = document.createElement("div");
-
-faceDiv.className = "face face-"+face;
-faceDiv.dataset.face = face;
-
-camada.appendChild(faceDiv);
-
-});
-
-
-
 tooth.appendChild(camada);
 
-/* clique */
-
-tooth.onclick = function(){
+tooth.addEventListener("click", function(){
 
 denteSelecionado = this.dataset.dente;
 
@@ -302,7 +289,7 @@ t.classList.remove("tooth-ativo");
 
 this.classList.add("tooth-ativo");
 
-};
+});
 
 container.appendChild(tooth);
 
@@ -333,7 +320,92 @@ gerarOdontograma(mapaDeciduo);
 
 }
 
+setTimeout(carregarProcedimentos,200);
+
 });
+
+/* ================= PINTAR DENTE ================= */
+
+function pintarDente(dente,procedimento,status,face){
+
+const tooth = document.querySelector(".tooth[data-dente='"+dente+"']");
+
+if(!tooth) return;
+
+const base = "<?= BASE_URL ?>/assets/img/odontograma/";
+
+let icone="";
+
+if(status==="planejado"){
+icone = base + procedimento + "_a_realizar.png";
+}
+
+if(status==="realizado"){
+icone = base + procedimento + "_realizado.png";
+}
+
+const camada = tooth.querySelector(".proc-layer");
+
+if(!camada) return;
+
+const novoIcone = document.createElement("img");
+
+novoIcone.src = icone;
+novoIcone.className = "icone-procedimento";
+
+novoIcone.style.width = "60px";
+novoIcone.style.height = "45px";
+novoIcone.style.transform = "translate(-37%, -30%)";
+
+if(procedimento === "canal" || procedimento === "implante"){
+
+novoIcone.style.left = "-32px";
+novoIcone.style.top = "-22px";
+
+}
+else if(procedimento === "coroa"){
+
+novoIcone.style.left = "5px";
+novoIcone.style.top = "-2px";
+
+}
+else{
+
+novoIcone.style.left = "4px";
+novoIcone.style.top = "4px";
+
+}
+
+camada.appendChild(novoIcone);
+
+}
+
+/* ================= CARREGAR PROCEDIMENTOS ================= */
+
+function carregarProcedimentos(){
+
+let paciente = document.getElementById("paciente_id").value;
+
+fetch("<?= BASE_URL ?>/prontuarios/registros/"+paciente)
+
+.then(response => response.json())
+
+.then(dados => {
+
+dados.forEach(function(item){
+
+pintarDente(
+item.dente,
+item.procedimento,
+item.status,
+item.face
+);
+
+});
+
+});
+
+}
 
 /* ================= SALVAR REGISTRO ================= */
 
@@ -372,98 +444,24 @@ body:
 `paciente_id=${paciente}&dente=${dente}&face=${face}&procedimento=${procedimento}&status=${status}&observacoes=${observacoes}`
 
 })
-.then(res=>res.json())
-.then(data=>{
+.then(res => res.json())
 
-if(data.status==="ok"){
+.then(data => {
+
+if(data.status === "ok"){
 
 pintarDente(dente,procedimento,status,face);
+
 carregarHistorico(dente);
+
 carregarHistoricoPaciente();
 
 }
 
 })
+
 .catch(error=>{
 console.log("Erro:",error);
-});
-
-});
-
-}
-
-/* ================= PINTAR DENTE ================= */
-
-function pintarDente(dente,procedimento,status,face){
-
-const tooth = document.querySelector(`.tooth[data-dente='${dente}']`);
-
-if(!tooth) return;
-
-const base = "<?= BASE_URL ?>/assets/img/odontograma/";
-
-let icone="";
-
-if(status==="planejado"){
-icone = base + procedimento + "_a_realizar.png";
-}
-
-if(status==="realizado"){
-icone = base + procedimento + "_realizado.png";
-}
-
-const camada = tooth.querySelector(".proc-layer");
-
-/* ícone central */
-
-const novoIcone = document.createElement("img");
-
-novoIcone.src = icone;
-novoIcone.className = "icone-procedimento";
-
-camada.appendChild(novoIcone);
-
-/* pintar faces */
-
-if(face){
-
-const letras = face.split("");
-
-letras.forEach(f => {
-
-const faceDiv = tooth.querySelector(".face-"+f);
-
-if(faceDiv){
-
-faceDiv.style.background="#2563eb";
-
-}
-
-});
-
-}
-
-}
-
-
-
-
-/* ================= CARREGAR PROCEDIMENTOS ================= */
-
-function carregarProcedimentos(){
-
-let paciente = document.getElementById("paciente_id").value;
-
-fetch("<?= BASE_URL ?>/prontuarios/registros/"+paciente)
-
-.then(response => response.json())
-
-.then(dados => {
-
-dados.forEach(function(item){
-
-pintarDente(item.dente,item.procedimento,item.status,item.face);
-
 });
 
 });
@@ -475,11 +473,13 @@ pintarDente(item.dente,item.procedimento,item.status,item.face);
 document.addEventListener("DOMContentLoaded",function(){
 
 gerarOdontograma(mapaPermanente);
-carregarProcedimentos();
+
+setTimeout(carregarProcedimentos,200);
 
 });
 
 </script>
+
 
 
 

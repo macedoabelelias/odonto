@@ -1,32 +1,27 @@
 <h3 class="mb-4">🦷 Odontograma</h3>
 
-<div style="text-align:center">
+<!-- seus cards que já existem -->
+<div class="card">
+Conteúdo que você já tinha
+</div>
 
-<img src="/odonto/public/assets/img/odontograma/odontograma_permanente.png"
-     style="max-width:900px;">
+<div class="card">
+Outro conteúdo que você já tinha
+</div>
 
-<div id="dentes-container"></div>
+
+<!-- NOVO ODONTOGRAMA -->
+
+<div class="card">
+
+<div class="card-title">
+Odontograma
+</div>
+
+<div id="odontograma" class="odontograma"></div>
 
 </div>
 
-<style>
 
-#dentes-container{
-position:relative;
-margin-top:-260px;
-}
-
-.dente{
-position:absolute;
-width:35px;
-height:35px;
-border-radius:50%;
-cursor:pointer;
-}
-
-.dente:hover{
-background:rgba(0,150,255,0.3);
-}
-
-</style>
+<script src="/odonto/public/assets/js/odontograma.js"></script>
 
