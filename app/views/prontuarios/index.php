@@ -329,7 +329,6 @@ setTimeout(carregarProcedimentos,200);
 function pintarDente(dente,procedimento,status,face){
 
 const tooth = document.querySelector(".tooth[data-dente='"+dente+"']");
-
 if(!tooth) return;
 
 const base = "<?= BASE_URL ?>/assets/img/odontograma/";
@@ -345,7 +344,6 @@ icone = base + procedimento + "_realizado.png";
 }
 
 const camada = tooth.querySelector(".proc-layer");
-
 if(!camada) return;
 
 const novoIcone = document.createElement("img");
@@ -353,27 +351,49 @@ const novoIcone = document.createElement("img");
 novoIcone.src = icone;
 novoIcone.className = "icone-procedimento";
 
-novoIcone.style.width = "60px";
-novoIcone.style.height = "45px";
-novoIcone.style.transform = "translate(-37%, -30%)";
+novoIcone.style.width = "50px";
+novoIcone.style.height = "50px";
+novoIcone.style.position = "absolute";
 
-if(procedimento === "canal" || procedimento === "implante"){
+/* ================= IDENTIFICAR ARCADA ================= */
 
-novoIcone.style.left = "-32px";
-novoIcone.style.top = "-22px";
+const d = parseInt(dente);
+const inferior = (d >= 31 && d <= 48);
 
+/* ================= POSIÇÕES DOS PROCEDIMENTOS ================= */
+
+const posicoes = {
+
+canal:{left:13,sup:-12,inf:44},
+
+implante:{left:13,sup:-12,inf:44},
+
+coroa:{left:12,sup:4,inf:14},
+
+restauracao:{left:14,sup:8,inf:14},
+
+carie:{left:12,sup:8,inf:14},
+
+extracao:{left:12,sup:8,inf:16},
+
+cirurgia:{left:14,sup:6,inf:18},
+
+raspagem:{left:8,sup:6,inf:6}
+
+};
+
+let pos = posicoes[procedimento];
+
+if(!pos){
+pos = {left:8,sup:6,inf:6};
 }
-else if(procedimento === "coroa"){
 
-novoIcone.style.left = "5px";
-novoIcone.style.top = "-2px";
+novoIcone.style.left = pos.left + "px";
 
-}
-else{
-
-novoIcone.style.left = "4px";
-novoIcone.style.top = "4px";
-
+if(inferior){
+novoIcone.style.top = pos.inf + "px";
+}else{
+novoIcone.style.top = pos.sup + "px";
 }
 
 camada.appendChild(novoIcone);
@@ -381,7 +401,6 @@ camada.appendChild(novoIcone);
 }
 
 /* ================= CARREGAR PROCEDIMENTOS ================= */
-
 function carregarProcedimentos(){
 
 let paciente = document.getElementById("paciente_id").value;
@@ -392,7 +411,42 @@ fetch("<?= BASE_URL ?>/prontuarios/registros/"+paciente)
 
 .then(dados => {
 
-dados.forEach(function(item){
+const prioridade = {
+
+implante:1,
+coroa:2,
+canal:3,
+restauracao:4,
+carie:5,
+raspagem:6,
+cirurgia:7,
+extracao:8
+
+};
+
+let mapaDentes = {};
+
+dados.forEach(item => {
+
+let d = item.dente;
+
+if(!mapaDentes[d]){
+
+mapaDentes[d] = item;
+
+}else{
+
+if(prioridade[item.procedimento] < prioridade[mapaDentes[d].procedimento]){
+
+mapaDentes[d] = item;
+
+}
+
+}
+
+});
+
+Object.values(mapaDentes).forEach(item => {
 
 pintarDente(
 item.dente,
@@ -444,22 +498,18 @@ body:
 `paciente_id=${paciente}&dente=${dente}&face=${face}&procedimento=${procedimento}&status=${status}&observacoes=${observacoes}`
 
 })
-.then(res => res.json())
+.then(res=>res.json())
+.then(data=>{
 
-.then(data => {
+if(data.status==="ok"){
 
-if(data.status === "ok"){
-
-pintarDente(dente,procedimento,status,face);
-
+carregarProcedimentos();
 carregarHistorico(dente);
-
 carregarHistoricoPaciente();
 
 }
 
 })
-
 .catch(error=>{
 console.log("Erro:",error);
 });
@@ -467,6 +517,8 @@ console.log("Erro:",error);
 });
 
 }
+
+
 
 /* ================= INICIAR ================= */
 
