@@ -1,0 +1,17 @@
+RewriteEngine On
+
+RewriteBase /odonto/public/
+
+# 🔥 LIBERA IMAGENS E ARQUIVOS
+RewriteCond %{REQUEST_URI} \.(png|jpg|jpeg|gif|svg|webp)$ [NC]
+RewriteRule ^ - [L]
+
+# 🔥 LIBERA ASSETS
+RewriteCond %{REQUEST_URI} ^/odonto/public/assets/ [NC]
+RewriteRule ^ - [L]
+
+# 🔥 RESTANTE VAI PRO SISTEMA
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

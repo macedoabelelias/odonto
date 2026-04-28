@@ -1,0 +1,1047 @@
+/* =====================================================
+RESET BÁSICO
+===================================================== */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family: Arial, Helvetica, sans-serif;
+background:#f4f6f9;
+color:#333;
+}
+
+/* =====================================================
+LAYOUT GERAL
+===================================================== */
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#fff;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.6);
+padding:20px;
+margin-bottom:20px;
+}
+
+.card-title{
+font-size:18px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+/* =====================================================
+BOTÕES
+===================================================== */
+
+.btn{
+border-radius:6px;
+padding:10px 15px;
+cursor:pointer;
+border:none;
+text-decoration:none;
+display:inline-block;
+}
+
+.btn-primary{
+background:#0d6efd;
+color:#fff;
+}
+
+.btn-primary:hover{
+background:#0b5ed7;
+}
+
+.btn-success{
+background:#198754;
+color:#fff;
+}
+
+.btn-secondary{
+background:#6c757d;
+color:#fff;
+}
+
+.btn-danger{
+background:#dc3545;
+color:#fff;
+}
+
+.btn-danger:hover{
+background:#bb2d3b;
+}
+
+.btn-acao{
+    display:inline-block;
+    padding:6px 8px;
+    margin:0 2px;
+    border-radius:6px;
+    background:#e9ecef;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.btn-acao:hover{
+    background:#d6d8db;
+}
+
+.btn-editar{
+    background:#ffc107;
+}
+
+.btn-excluir{
+    background:#dc3545;
+    color:#fff;
+}
+
+
+
+.btn-editar:hover {
+    background: #15803d;
+}
+
+
+.btn-excluir:hover {
+    background: #b91c1c;
+}
+
+
+/* =====================================================
+FORMULÁRIOS (🔥 NOVO PADRÃO)
+===================================================== */
+
+.form-group{
+display:flex;
+flex-direction:column;
+margin-bottom:15px;
+}
+
+.form-group label{
+font-weight:600;
+margin-bottom:5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+width:100%;
+padding:10px;
+border:1px solid #ccc;
+border-radius:6px;
+transition:0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+border-color:#0d6efd;
+outline:none;
+box-shadow:0 0 0 2px rgba(13,110,253,0.1);
+}
+
+.form-row{
+display:flex;
+gap:15px;
+}
+
+.form-row .form-group{
+flex:1;
+}
+
+.form-actions{
+margin-top:20px;
+display:flex;
+gap:10px;
+}
+
+
+
+
+/* =====================================================
+ODONTOGRAMA
+===================================================== */
+
+.odontograma{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:8px;
+margin-top:20px;
+max-width:900px;
+margin-left:auto;
+margin-right:auto;
+}
+
+#odontograma svg {
+    margin-top: -20px;
+}
+
+/* =====================================================
+TOOTH (🔥 CORRIGIDO)
+===================================================== */
+
+.tooth {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    z-index: 10;
+    background: rgba(255,0,0,0);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* HOVER */
+.tooth:hover {
+    background: rgba(0,0,255,0.15);
+    border-radius: 50%;
+}
+
+/* DENTE ATIVO */
+.tooth-ativo {
+    background: rgba(34,197,94,0.25);
+    border: 2px solid #22c55e;
+    border-radius: 6px;
+}
+
+/* 🔥 CAMADA DOS ÍCONES */
+.proc-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* não bloqueia clique */
+}
+
+/* 🔥 ÍCONE DO PROCEDIMENTO */
+.proc-icon {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+}
+
+
+/* =====================================================
+DENTE
+===================================================== */
+
+.dente{
+width:42px;
+height:70px;
+position:relative;
+display:flex;
+flex-direction:column;
+align-items:center;
+cursor:pointer;
+transition:transform 0.15s;
+}
+
+.dente:hover{
+transform:scale(1.05);
+}
+
+.dente.ativo{
+outline:2px solid #3b82f6;
+border-radius:6px;
+}
+
+/* =====================================================
+COROA
+===================================================== */
+
+.coroa{
+width:36px;
+height:36px;
+border:2px solid #444;
+border-radius:6px;
+background:white;
+}
+
+/* =====================================================
+RAIZ
+===================================================== */
+
+.raiz{
+width:10px;
+height:22px;
+background:#ccc;
+margin-top:2px;
+border-radius:3px;
+}
+
+/* =====================================================
+CAMADA DE MARCAÇÕES
+===================================================== */
+
+.marcacoes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+
+/* =====================================================
+ÍCONES DE PROCEDIMENTO
+===================================================== */
+.icone-procedimento{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    z-index: 20;
+    font-size: 10px;
+    cursor: pointer;
+
+    /* 🔥 garante animação suave */
+    transition: transform 0.2s ease;
+}
+
+/* 🔵 COROA (parte de cima do dente) */
+.icone-coroa{
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 🟢 RAIZ (parte de baixo do dente) */
+.icone-raiz{
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 🟡 CENTRO */
+.icone-centro{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 🔽 DENTES INFERIORES (INVERTIDO) */
+
+/* COROA embaixo */
+.icone-coroa-inferior{
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* RAIZ em cima */
+.icone-raiz-inferior{
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.icone-procedimento:hover {
+    scale: 1.15;
+    z-index: 50;
+}
+
+/* ================= STATUS ================= */
+
+/* 🔴 A REALIZAR */
+.planejado {
+    filter: brightness(0) saturate(100%)
+            invert(20%) sepia(90%) saturate(6000%)
+            hue-rotate(350deg) brightness(95%) contrast(105%);
+}
+
+/* 🔵 REALIZADO */
+.realizado {
+    filter: brightness(0) saturate(100%)
+            invert(35%) sepia(95%) saturate(1500%)
+            hue-rotate(190deg) brightness(95%) contrast(105%);
+}
+
+/* ⚫ EXISTENTE (já presente na boca) */
+.existente {
+    filter: grayscale(100%) brightness(70%);
+}
+
+/* 🟡 EM ANDAMENTO */
+.andamento {
+    filter: brightness(0) saturate(100%)
+            invert(80%) sepia(90%) saturate(2000%)
+            hue-rotate(5deg) brightness(100%) contrast(105%);
+}
+
+/* 🟣 CANCELADO */
+.cancelado {
+    filter: brightness(0) saturate(100%)
+            invert(20%) sepia(80%) saturate(2000%)
+            hue-rotate(270deg) brightness(90%) contrast(110%);
+}
+
+.icone-procedimento:hover {
+    transform: scale(1.1);
+}
+
+
+/* =====================================================
+EXTRAÇÃO
+===================================================== */
+
+.extraido .coroa{
+background:#ffd4d4;
+border-color:#dc3545;
+} 
+
+/* =====================================================
+TOOLTIP
+===================================================== */
+
+
+.tooltip-dente{
+position:absolute;
+background:white;
+border:1px solid #ccc;
+padding:6px 8px;
+font-size:12px;
+border-radius:6px;
+display:none;
+box-shadow:0 2px 6px rgba(0,0,0,0.2);
+z-index:999;
+pointer-events:none;
+}
+
+.tooltip-odonto {
+    position: absolute;
+    background: #333;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    pointer-events: none;
+    transform: translate(-50%, -120%);
+}
+
+.dente:hover .tooltip-procedimento{
+display:block;
+} 
+
+/* =====================================================
+LEGENDA
+===================================================== */
+
+.legenda{
+display:flex;
+gap:15px;
+justify-content:center;
+margin-top:15px;
+flex-wrap:wrap;
+}
+
+.legenda-item{
+display:flex;
+align-items:center;
+gap:5px;
+font-size:14px;
+}
+
+.legenda-img{
+width:18px;
+height:18px;
+}
+
+/* =====================================================
+SIDEBAR FIXA
+===================================================== */
+
+.sidebar{
+width:240px;
+height:100vh;
+background:#1f2937;
+color:white;
+padding:20px 10px;
+position:fixed;
+left:0;
+top:0;
+overflow-y:auto;
+}
+
+.sidebar a{
+display:block;
+color:#e5e7eb;
+text-decoration:none;
+padding:10px 15px;
+border-radius:6px;
+margin-bottom:4px;
+font-size:14px;
+}
+
+.sidebar a:hover{
+background:#374151;
+color:white;
+}
+
+.sidebar .menu-section{
+margin-top:15px;
+margin-bottom:6px;
+font-size:12px;
+font-weight:bold;
+color:#9ca3af;
+padding-left:10px;
+}
+
+.logo-sidebar{
+width:160px;
+margin:auto;
+display:block;
+margin-bottom:20px;
+border-radius: 10px;
+}
+
+/* =====================================================
+AJUSTE DO CONTEÚDO
+===================================================== */
+
+.flex-grow-1{
+margin-left:240px;
+}
+
+/* =====================================================
+TOPBAR / NAVBAR
+===================================================== */
+
+.topbar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:white;
+padding:12px 20px;
+border-bottom:1px solid #e5e7eb;
+box-shadow:0 1px 4px rgba(0,0,0,0.05);
+}
+
+.topbar .user-info{
+display:flex;
+align-items:center;
+}
+
+.user-photo{
+width:36px;
+height:36px;
+border-radius:10%;
+object-fit:cover;
+}
+
+
+.user-avatar{
+width:36px;
+height:36px;
+border-radius:50%;
+background:#3b82f6;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+}
+
+.config-btn{
+background:none;
+border:none;
+font-size:20px;
+cursor:pointer;
+}
+
+.config-menu{
+position:absolute;
+right:0;
+top:40px;
+background:white;
+border:1px solid #e5e7eb;
+border-radius:8px;
+padding:10px;
+display:none;
+flex-direction:column;
+min-width:180px;
+z-index:1000;
+}
+
+.config-menu a{
+text-decoration:none;
+padding:6px 10px;
+display:block;
+color:#374151;
+}
+
+
+.card-compact {
+    min-height: auto;
+}
+
+
+.card-compact .card-title {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.card-compact .card-text {
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.proc-geral{
+    display:flex;
+    align-items:center;
+    gap:10px; /* 🔥 mais espaço pro ícone maior */
+    cursor:pointer;
+
+    padding:8px 10px; /* 🔥 melhora respiro */
+    border-radius:8px;
+
+    background:#f8fafc;
+    transition:all 0.2s ease;
+
+    font-size:12px;
+}
+
+/* TEXTO */
+.proc-geral span {
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+/* ÍCONE */
+.proc-geral img {
+    width:50px;   /* 🔥 maior */
+    height:50px;
+    object-fit:contain;
+}
+
+/* HOVER */
+.proc-geral:hover {
+    background: #e2e8f0;
+    transform: scale(1.05);
+}
+
+.indicador-rx{
+position:absolute;
+width:6px;
+height:6px;
+background:#ff3b3b;
+border-radius:50%;
+top:-2px;
+right:-2px;
+}
+
+.card-padrao {
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.card-padrao .card-body {
+    padding: 10px;
+}
+
+.card-padrao h6 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+
+
+.card-padrao .btn {
+    font-size: 12px;
+}
+
+.debug-odonto .tooth::after{
+    content: attr(data-dente);
+    position:absolute;
+    top:-12px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:10px;
+    color:black;
+}
+
+.proc-layer {
+    position: relative;
+}
+
+
+
+/* =========================================
+DASHBOARD MODERNO
+========================================= */
+
+/* 🔧 espaçamento menor */
+.row.g-3 {
+    --bs-gutter-y: 10px;
+}
+
+.row.g-2 {
+    --bs-gutter-y: 6px;
+}
+
+/* 🔥 CARD MODERNO */
+
+.card-modern {
+    background: #ffffff !important;
+    border-radius: 14px !important;
+    padding: 16px !important;
+
+    /* 🔥 FORÇA BORDA */
+    border: 1px solid rgba(0,0,0,0.08) !important;
+
+    /* 🔥 SOMBRA VISÍVEL */
+    box-shadow: 0 6px 18px rgba(0,0,0,1.2) !important;
+
+    transition: all 0.2s ease;
+}
+
+.card-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+
+
+/* =========================
+🔥 ÍCONES (GERAL)
+========================= */
+
+.icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+
+/* =========================
+📦 GRID ANTIGO (SE AINDA USAR)
+========================= */
+
+.seletor-icones {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.icone-item {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    background: #f9f9f9;
+}
+
+.icone-item:hover {
+    transform: scale(1.05);
+    border-color: #0d6efd;
+}
+
+.icone-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.icone-item input {
+    display: none;
+}
+
+.icone-item input:checked + img {
+    border: 2px solid #0d6efd;
+    border-radius: 8px;
+}
+
+
+/* =========================
+🔍 NOVA BUSCA (AUTOCOMPLETE)
+========================= */
+
+.sugestoes-box {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    display: none;
+    background: #fff;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+    margin-top: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* cada item da lista */
+.item-sugestao {
+    padding: 8px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+
+/* hover bonito */
+.item-sugestao:hover {
+    background: #f0f4ff;
+}
+
+/* ícone pequeno na busca */
+.item-sugestao img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+/* texto do item */
+.item-sugestao span {
+    font-size: 14px;
+    color: #333;
+}
+
+
+/* =========================
+🧠 AJUSTE IMPORTANTE
+========================= */
+
+/* evita problema com position absolute */
+.form-group {
+    position: relative;
+}
+
+/* 🎨 CORES SUAVES */
+.bg-blue { background: #e0edff; }
+.bg-green { background: #e6f7ee; }
+.bg-red { background: #ffeaea; }
+.bg-yellow { background: #fff6e0; }
+.bg-purple { background: #f3e8ff; }
+
+/* 🔥 COMPACTAÇÃO */
+.dashboard-card {
+    padding: 8px !important;
+    border-radius: 10px;
+}
+
+canvas {
+    height: 250px !important;
+}
+
+.fc-event-title {
+    white-space: normal !important;
+}
+
+@media (max-width: 900px) {
+
+    .row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .row-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+
+    .btn {
+    min-width: 80px;
+}
+}
+
+/* =========================================
+FORMULÁRIO COMPACTO (PRODUTOS)
+========================================= */
+
+.form-container {
+    max-width: 900px; /* antes devia estar pequeno */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* melhora espaçamento interno */
+.form-container .form-group{
+    margin-bottom: 12px;
+}
+
+/* inputs mais compactos */
+.form-container input,
+.form-container textarea,
+.form-container select{
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* título mais equilibrado */
+.titulo-form{
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+/* botões alinhados */
+.form-actions{
+    margin-top: 15px;
+}
+
+/* =========================================
+BADGES (estoque)
+========================================= */
+
+.badge{
+padding:5px 10px;
+border-radius:20px;
+font-size:12px;
+font-weight:600;
+}
+
+.badge-success{
+background:#d1fae5;
+color:#065f46;
+}
+
+.badge-danger{
+background:#fee2e2;
+color:#991b1b;
+}
+
+/* botões pequenos */
+.btn-sm{
+padding:5px 8px;
+font-size:12px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th {
+    text-align: left;
+    padding: 12px;
+    font-size: 13px;
+    color: #555;
+    border-bottom: 2px solid #ddd;
+}
+
+table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+table tr:hover {
+    background: #f9fafb;
+}
+
+.itens-compra select {
+    width: 100%;
+}
+
+.itens-compra input {
+    width: 100%;
+}
+
+.qtd {
+    max-width: 70px;
+    text-align: center;
+}
+
+.procedimento-geral-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    font-size: 13px; /* 🔽 diminui um pouco o texto */
+    padding: 6px 10px;
+
+    border-radius: 8px;
+}
+
+.procedimento-geral-btn img {
+    width: 22px;  /* 🔼 aumenta o ícone */
+    height: 22px;
+    object-fit: contain;
+}
+
+#areaProcedimentosGerais button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    font-size: 12px;
+    padding: 5px 10px;
+
+    border-radius: 8px;
+}
+
+#areaProcedimentosGerais button img {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+
+
+/* =====================================================
+RESPONSIVO
+===================================================== */
+
+@media(max-width:768px){
+
+.odontograma{
+gap:5px;
+}
+
+.dente{
+width:36px;
+height:60px;
+}
+
+.coroa{
+width:30px;
+height:30px;
+}
+
+}
+
+/* =====================================================
+RESPONSIVO GERAL
+===================================================== */
+
+@media (max-width: 900px) {
+
+.row {
+grid-template-columns: 1fr !important;
+}
+
+.row-2 {
+grid-template-columns: 1fr !important;
+}
+
+.actions {
+flex-direction: column;
+}
+
+.btn {
+min-width: 80px;
+}
+}
+
