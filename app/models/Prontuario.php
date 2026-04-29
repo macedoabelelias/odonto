@@ -38,39 +38,63 @@ return $sql->fetchAll(PDO::FETCH_ASSOC);
 
 public function buscarRegistrosPaciente($paciente)
 {
-
     $sql = $this->pdo->prepare("
 
+    -- 🔥 PRIORIDADE: ORÇAMENTO (status real)
+    SELECT 
+        oi.dente,
+        NULL as face,
+        oi.procedimento as procedimento,
+        oi.status,
+        NULL as icone
+    FROM orcamentos_itens oi
+    LEFT JOIN orcamentos o ON o.id = oi.orcamento_id
+    WHERE o.paciente_id = :paciente
+
+    UNION
+
+    -- 🔥 HISTÓRICO (somente se não existir no orçamento)
     SELECT 
         dente,
         face,
         procedimento,
-        status
-    FROM prontuarios_registros
-    WHERE paciente_id = :paciente
+        status,
+        NULL as icone
+    FROM prontuarios_registros pr
+    WHERE pr.paciente_id = :paciente
+    AND pr.dente NOT IN (
+        SELECT oi.dente
+        FROM orcamentos_itens oi
+        LEFT JOIN orcamentos o ON o.id = oi.orcamento_id
+        WHERE o.paciente_id = :paciente
+    )
 
-    UNION ALL
+    UNION
 
+    -- 🔥 AVULSOS (somente se não existir no orçamento)
     SELECT 
         pp.dente,
         NULL as face,
         p.nome as procedimento,
-        pp.status
+        pp.status,
+        p.icone
     FROM prontuario_procedimentos pp
     LEFT JOIN procedimentos p ON p.id = pp.procedimento_id
     WHERE pp.paciente_id = :paciente
+    AND pp.dente NOT IN (
+        SELECT oi.dente
+        FROM orcamentos_itens oi
+        LEFT JOIN orcamentos o ON o.id = oi.orcamento_id
+        WHERE o.paciente_id = :paciente
+    )
 
     ");
 
     $sql->bindValue(":paciente",$paciente);
-
     $sql->execute();
 
     return $sql->fetchAll(PDO::FETCH_ASSOC);
-
 }
-
-
 /* ==========================
    SALVAR PROCEDIMENTO
 ========================== */

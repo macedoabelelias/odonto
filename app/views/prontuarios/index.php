@@ -1249,30 +1249,7 @@ novoIcone.addEventListener("click", function(e){
 
 });
 
-// 🔥 BOTÃO DIREITO = CANCELAR
-novoIcone.addEventListener("contextmenu", function(e){
 
-    e.preventDefault();
-
-    if(!confirm("Cancelar procedimento?")) return;
-
-    this.classList.remove("planejado","andamento","realizado","existente");
-    this.classList.add("cancelado");
-
-    if(this.dataset.id){
-        fetch("<?= BASE_URL ?>/procedimentos/atualizarStatus", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                id: this.dataset.id,
-                status: "cancelado"
-            })
-        });
-    }
-
-});
 
 // 🔥 ERRO DE IMAGEM
 novoIcone.onerror = function(){
@@ -1361,55 +1338,6 @@ let isInferior =
     camada.appendChild(novoIcone);
 }
 
-// ================= NOVO CÓDIGO (COLE AQUI) =================
-
-// 1. BLOQUEAR MENU PADRÃO
-document.addEventListener("contextmenu", function(e){
-    e.preventDefault();
-});
-
-// 2. CLIQUE DIREITO NO DENTE
-document.addEventListener("contextmenu", function(e){
-
-    const tooth = e.target.closest(".tooth");
-    if(!tooth) return;
-
-    const dente = tooth.dataset.dente;
-
-    abrirMenuStatus(e.pageX, e.pageY, dente);
-});
-
-// 3. MENU
-function abrirMenuStatus(x, y, dente){
-
-    let menu = document.getElementById("menuStatus");
-
-    if(!menu){
-        menu = document.createElement("div");
-        menu.id = "menuStatus";
-
-        menu.style.position = "absolute";
-        menu.style.background = "#fff";
-        menu.style.border = "1px solid #ccc";
-        menu.style.borderRadius = "6px";
-        menu.style.padding = "6px";
-        menu.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
-        menu.style.zIndex = "9999";
-
-        document.body.appendChild(menu);
-    }
-
-    menu.style.left = x + "px";
-    menu.style.top = y + "px";
-
-    menu.innerHTML = `
-    <div style="cursor:pointer;padding:4px;" onclick="mudarStatus('${dente}','planejado')">🔴 A realizar</div>
-    <div style="cursor:pointer;padding:4px;" onclick="mudarStatus('${dente}','andamento')">🟡 Em andamento</div>
-    <div style="cursor:pointer;padding:4px;" onclick="mudarStatus('${dente}','realizado')">🔵 Realizado</div>
-    <div style="cursor:pointer;padding:4px;" onclick="mudarStatus('${dente}','existente')">⚫ Existente</div>
-    <div style="cursor:pointer;padding:4px;" onclick="mudarStatus('${dente}','cancelado')">🟣 Cancelado</div>
-`;
-}
 
 // 4. MUDAR STATUS
 function mudarStatus(dente, status){
@@ -1854,13 +1782,14 @@ function salvarOrcamentoAuto(){
         })
 
     })
-    .then(res=>res.text())
-    .then(txt=>{
-        console.log("RESPOSTA RAW:", txt);
-    })
-    .then(resp => {
+    .then(res => res.text())
+    .then(txt => {
 
+        console.log("RESPOSTA RAW:", txt);
         console.log("Orçamento atualizado automaticamente");
+
+        // 🔥 AQUI RESOLVE SEU PROBLEMA
+        location.reload();
 
     })
     .catch(err => {
@@ -2225,80 +2154,85 @@ document.addEventListener("click", function(e){
 
 /* ================= ATUALIZAR UI ================= */
 
-function atualizarOrcamento(){
+function atualizarOrcamento() {
 
-    let lista = document.getElementById("listaOrcamento");
-    let totalEl = document.getElementById("totalOrcamento");
+    const lista = document.getElementById("listaOrcamento");
+    const totalEl = document.getElementById("totalOrcamento");
 
-    if(!lista || !totalEl) return;
+    if (!lista || !totalEl) {
+        console.warn("Elementos do orçamento não encontrados");
+        return;
+    }
 
     let total = 0;
 
-    if(!Array.isArray(orcamento) || orcamento.length === 0){
-        lista.innerHTML = "Nenhum item";
+    if (!Array.isArray(orcamento) || orcamento.length === 0) {
+        lista.innerHTML = "<em>Nenhum item</em>";
         totalEl.innerText = "0,00";
         return;
     }
 
     let html = "";
 
-orcamento.forEach(function(item, index){
+    orcamento.forEach((item, index) => {
 
-    if(!item) return;
+        if (!item) return;
 
-    let nome =
-        item.nome ||
-        item.procedimento_nome ||
-        item.procedimento ||
-        item.descricao ||
-        "Procedimento";
-    let valor = parseFloat(item.valor) || 0;
-    let quantidade = parseInt(item.quantidade) || 1;
+        const nome =
+            item.nome ||
+            item.procedimento_nome ||
+            item.procedimento ||
+            item.descricao ||
+            "Procedimento";
 
-    // 🔥 DECLARA PRIMEIRO
-    let status = String(item.status || "planejado").toLowerCase().trim();
+        const valor = parseFloat(item.valor) || 0;
+        const quantidade = parseInt(item.quantidade) || 1;
 
-    // 🔥 AGORA PODE USAR
-    console.log("STATUS ITEM:", status);
+        const status = String(item.status || "planejado")
+            .toLowerCase()
+            .trim();
 
-    let subtotal = valor * quantidade;
+        console.log("STATUS ITEM:", status);
 
-    // 🔥 NÃO SOMA SE FOR EXISTENTE
-    if(status !== "existente"){
-        total += subtotal;
-    }
+        const subtotal = valor * quantidade;
 
-    html += '<div style="margin-bottom:6px;border-bottom:1px solid #eee;padding-bottom:4px;position:relative;">';
+        // 🔥 Soma apenas se NÃO for existente
+        if (status !== "existente") {
+            total += subtotal;
+        }
 
-    html += '<strong>' + nome + '</strong><br>';
+        html += `
+            <div style="margin-bottom:6px;border-bottom:1px solid #eee;padding-bottom:4px;position:relative;">
+                
+                <strong>${nome}</strong><br>
 
-    html += '<small>';
+                <small>
+                    ${item.dente ? `Dente ${item.dente} - ` : ""}
+                    Qtd: ${quantidade}
+                    ${
+                        status !== "existente"
+                            ? ` - R$ ${subtotal.toFixed(2)}`
+                            : ` - <span style="color:#9e9e9e;">(Existente)</span>`
+                    }
+                </small>
 
-    html += (item.dente ? 'Dente ' + item.dente + ' - ' : '');
+                <div style="position:absolute; right:0; top:0; display:flex; gap:4px;">
+                    <button onclick="editarItem(${index})"
+                        style="background:#f59e0b;color:white;border:none;border-radius:4px;font-size:11px;padding:3px 6px;cursor:pointer;">
+                        ✏️
+                    </button>
 
-    html += 'Qtd: ' + quantidade;
+                    <button onclick="removerItem(${index})"
+                        style="background:#ef4444;color:white;border:none;border-radius:4px;font-size:11px;padding:3px 6px;cursor:pointer;">
+                        🗑️
+                    </button>
+                </div>
 
-    if(status !== "existente"){
-        html += ' - R$ ' + subtotal.toFixed(2);
-    } else {
-        html += ' - <span style="color:#9e9e9e;">(Existente)</span>';
-    }
+            </div>
+        `;
+    });
 
-    html += '</small>';
-
-    html += '<div style="position:absolute; right:0; top:0; display:flex; gap:4px;">';
-
-    html += '<button onclick="editarItem(' + index + ')" style="background:#f59e0b;color:white;border:none;border-radius:4px;font-size:11px;padding:3px 6px;cursor:pointer;">✏️</button>';
-
-    html += '<button onclick="removerItem(' + index + ')" style="background:#ef4444;color:white;border:none;border-radius:4px;font-size:11px;padding:3px 6px;cursor:pointer;">🗑️</button>';
-
-    html += '</div>';
-
-    html += '</div>';
-
-});
-
-    // 🔥 AGORA SIM FORA DO LOOP
+    // 🔥 Atualiza DOM uma única vez (melhor performance)
     lista.innerHTML = html;
 
     totalEl.innerText = total.toLocaleString('pt-BR', {
@@ -2306,8 +2240,10 @@ orcamento.forEach(function(item, index){
         maximumFractionDigits: 2
     });
 
-    // 🔥 NOVO (NÃO QUEBRA NADA)
-    atualizarPlanoTratamento();
+    // 🔥 GARANTE que não quebre se a função não existir
+    if (typeof atualizarPlanoTratamento === "function") {
+        atualizarPlanoTratamento();
+    }
 }
 
 /* ================= ATUALIZAR PLANO DE TRATAMENTO ================= */
