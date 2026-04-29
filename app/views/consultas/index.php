@@ -37,28 +37,28 @@
 <div class="row mb-3">
 
 <div class="col-md-3">
-<div class="card border-primary shadow-sm text-center">
+<div class="card border-primary shadow-sm text-center p-2">
 <h6>Consultas Hoje</h6>
 <h3><?= $estatisticas['total'] ?? 0 ?></h3>
 </div>
 </div>
 
 <div class="col-md-3">
-<div class="card border-warning shadow-sm text-center">
+<div class="card border-warning shadow-sm text-center p-2">
 <h6>Em Atendimento</h6>
 <h3><?= $estatisticas['atendimento'] ?? 0 ?></h3>
 </div>
 </div>
 
 <div class="col-md-3">
-<div class="card border-success shadow-sm text-center">
+<div class="card border-success shadow-sm text-center p-2">
 <h6>Finalizadas</h6>
 <h3><?= $estatisticas['finalizado'] ?? 0 ?></h3>
 </div>
 </div>
 
 <div class="col-md-3">
-<div class="card border-danger shadow-sm text-center">
+<div class="card border-danger shadow-sm text-center p-2">
 <h6>Faltaram</h6>
 <h3><?= $estatisticas['faltou'] ?? 0 ?></h3>
 </div>
@@ -88,6 +88,10 @@
 
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+
+<!-- 🔥 ESSENCIAL PARA TRADUÇÃO -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/locales-all.global.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
@@ -105,7 +109,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const calendar = new FullCalendar.Calendar(calendarEl, {
 
         initialView: 'timeGridWeek',
+
+        // 🔥 TRADUÇÃO
         locale: 'pt-br',
+
+        // 🔥 GARANTE BOTÕES EM PT-BR
+        buttonText: {
+            today: 'Hoje',
+            month: 'Mês',
+            week: 'Semana',
+            day: 'Dia'
+        },
+
         height: "auto",
 
         headerToolbar: {

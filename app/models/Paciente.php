@@ -5,18 +5,29 @@ require_once BASE_PATH . "/core/Model.php";
 class Paciente extends Model
 {
 
-    /* ==========================
-       LISTAR
-    ========================== */
+/* ==========================
+   LISTAR
+========================== */
 
 public function listar($usuario_id = null)
 {
     if($usuario_id){
-        $sql = "SELECT * FROM pacientes WHERE usuario_id = :usuario_id ORDER BY nome";
+        $sql = "
+            SELECT p.*, u.nome AS dentista_nome
+            FROM pacientes p
+            LEFT JOIN usuarios u ON u.id = p.usuario_id
+            WHERE p.usuario_id = :usuario_id
+            ORDER BY p.nome
+        ";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':usuario_id', $usuario_id);
     } else {
-        $sql = "SELECT * FROM pacientes ORDER BY nome";
+        $sql = "
+            SELECT p.*, u.nome AS dentista_nome
+            FROM pacientes p
+            LEFT JOIN usuarios u ON u.id = p.usuario_id
+            ORDER BY p.nome
+        ";
         $stmt = $this->pdo->prepare($sql);
     }
 
@@ -28,66 +39,65 @@ public function listarTodos()
 {
     $sql = "
         SELECT 
-            pacientes.*, 
-            usuarios.nome AS usuario_nome
-        FROM pacientes
-        LEFT JOIN usuarios 
-            ON usuarios.id = pacientes.usuario_id
-        WHERE pacientes.status = 'ativo'
-        ORDER BY pacientes.id DESC
+            p.*, 
+            u.nome AS dentista_nome
+        FROM pacientes p
+        LEFT JOIN usuarios u ON u.id = p.usuario_id
+        WHERE p.status = 'ativo'
+        ORDER BY p.id DESC
     ";
 
     $stmt = $this->pdo->query($sql);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+/* ==========================
+   BUSCAR
+========================== */
 
-    /* ==========================
-       BUSCAR (Nome ou CPF)
-    ========================== */
-    public function buscar($termo)
-    {
-        $sql = $this->pdo->prepare("
-            SELECT * FROM pacientes
-            WHERE nome LIKE :termo
-            OR cpf LIKE :termo
-            ORDER BY id DESC
-        ");
-
-        $sql->bindValue(":termo", "%" . $termo . "%");
-        $sql->execute();
-
-        return $sql->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-
-    /* ==========================
-       BUSCAR POR ID
-    ========================== */
-public function buscarPorId($id)
+public function buscar($termo)
 {
     $sql = $this->pdo->prepare("
-        SELECT * 
-        FROM pacientes
-        WHERE id = :id
-        LIMIT 1
+        SELECT p.*, u.nome AS dentista_nome
+        FROM pacientes p
+        LEFT JOIN usuarios u ON u.id = p.usuario_id
+        WHERE p.nome LIKE :termo
+        OR p.cpf LIKE :termo
+        ORDER BY p.id DESC
     ");
 
-    $sql->bindValue(":id", (int)$id, PDO::PARAM_INT); // 🔥 garante inteiro
+    $sql->bindValue(":termo", "%" . $termo . "%");
     $sql->execute();
 
-    $resultado = $sql->fetch(PDO::FETCH_ASSOC);
-    return $resultado ? $resultado : []; // 🔥 evita null
-}   
+    return $sql->fetchAll(PDO::FETCH_ASSOC);
+}
 
-
-    public function buscarPorUsuario($termo, $usuario_id)
+public function buscarAtivos($termo)
 {
     $sql = $this->pdo->prepare("
-        SELECT * FROM pacientes
-        WHERE usuario_id = :usuario_id
-        AND (nome LIKE :termo OR cpf LIKE :termo)
-        ORDER BY id DESC
+        SELECT p.*, u.nome AS dentista_nome
+        FROM pacientes p
+        LEFT JOIN usuarios u ON u.id = p.usuario_id
+        WHERE p.status = 'ativo'
+        AND (p.nome LIKE :termo OR p.cpf LIKE :termo)
+        ORDER BY p.id DESC
+    ");
+
+    $sql->bindValue(":termo", "%" . $termo . "%");
+    $sql->execute();
+
+    return $sql->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function buscarPorUsuario($termo, $usuario_id)
+{
+    $sql = $this->pdo->prepare("
+        SELECT p.*, u.nome AS dentista_nome
+        FROM pacientes p
+        LEFT JOIN usuarios u ON u.id = p.usuario_id
+        WHERE p.usuario_id = :usuario_id
+        AND (p.nome LIKE :termo OR p.cpf LIKE :termo)
+        ORDER BY p.id DESC
     ");
 
     $sql->bindValue(":usuario_id", $usuario_id);
@@ -97,90 +107,72 @@ public function buscarPorId($id)
     return $sql->fetchAll(PDO::FETCH_ASSOC);
 }
 
-    /* ==========================
-       VERIFICAR CPF EXISTENTE
-    ========================== */
-    public function cpfExiste($cpf, $ignorarId = null)
-    {
-        $sql = "SELECT id FROM pacientes WHERE cpf = :cpf";
+/* ==========================
+   BUSCAR POR ID
+========================== */
 
-        if ($ignorarId) {
-            $sql .= " AND id != :id";
-        }
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(":cpf", $cpf);
-
-        if ($ignorarId) {
-            $stmt->bindValue(":id", $ignorarId);
-        }
-
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-
-    /* ==========================
-       SALVAR
-    ========================== */
-    public function salvar($dados)
+public function buscarPorId($id)
 {
-
     $sql = $this->pdo->prepare("
-
-    INSERT INTO pacientes (
-
-    usuario_id,
-
-    nome,
-    cpf,
-    data_nascimento,
-    genero,
-    estado_civil,
-    escolaridade,
-    profissao,
-    tipo_sanguineo,
-
-    telefone,
-    whatsapp,
-    email,
-    instagram,
-
-    cep,
-    endereco,
-    bairro,
-    cidade,
-    estado,
-    convenio,
-
-    responsavel_nome,
-    responsavel_telefone,
-    responsavel_cpf,
-    responsavel_email,
-
-    alergias,
-    medicamentos,
-    observacoes,
-    foto
-
-    ) VALUES (
-
-    ?,
-    ?,?,?,?,?,?,?,?,
-    ?,?,?,?,
-    ?,?,?,?,?,?,
-    ?,?,?,?,
-    ?,?,?,?
-
-    )
-
+        SELECT p.*, u.nome AS dentista_nome
+        FROM pacientes p
+        LEFT JOIN usuarios u ON u.id = p.usuario_id
+        WHERE p.id = :id
+        LIMIT 1
     ");
 
+    $sql->bindValue(":id", (int)$id, PDO::PARAM_INT);
+    $sql->execute();
+
+    return $sql->fetch(PDO::FETCH_ASSOC) ?: [];
+}
+
+/* ==========================
+   CPF
+========================== */
+
+public function cpfExiste($cpf, $ignorarId = null)
+{
+    $sql = "SELECT id FROM pacientes WHERE cpf = :cpf";
+
+    if ($ignorarId) {
+        $sql .= " AND id != :id";
+    }
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindValue(":cpf", $cpf);
+
+    if ($ignorarId) {
+        $stmt->bindValue(":id", $ignorarId);
+    }
+
+    $stmt->execute();
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+/* ==========================
+   SALVAR (mantido)
+========================== */
+
+public function salvar($dados)
+{
+    $sql = $this->pdo->prepare("INSERT INTO pacientes (
+        usuario_id,nome,cpf,data_nascimento,genero,estado_civil,escolaridade,profissao,tipo_sanguineo,
+        telefone,whatsapp,email,instagram,
+        cep,endereco,bairro,cidade,estado,convenio,
+        responsavel_nome,responsavel_telefone,responsavel_cpf,responsavel_email,
+        alergias,medicamentos,observacoes,foto
+    ) VALUES (
+        ?,?,?,?,?,?,?,?,?,
+        ?,?,?,?,
+        ?,?,?,?,?,?,
+        ?,?,?,?,
+        ?,?,?,?
+    )");
+
     return $sql->execute([
-
         $dados['usuario_id'] ?? null,
-
         $dados['nome'] ?? null,
         $dados['cpf'] ?? null,
         $dados['data_nascimento'] ?? null,
@@ -189,24 +181,20 @@ public function buscarPorId($id)
         $dados['escolaridade'] ?? null,
         $dados['profissao'] ?? null,
         $dados['tipo_sanguineo'] ?? null,
-
         $dados['telefone'] ?? null,
         $dados['whatsapp'] ?? null,
         $dados['email'] ?? null,
         $dados['instagram'] ?? null,
-
         $dados['cep'] ?? null,
         $dados['endereco'] ?? null,
         $dados['bairro'] ?? null,
         $dados['cidade'] ?? null,
         $dados['estado'] ?? null,
         $dados['convenio'] ?? null,
-
         $dados['responsavel_nome'] ?? null,
         $dados['responsavel_telefone'] ?? null,
         $dados['responsavel_cpf'] ?? null,
         $dados['responsavel_email'] ?? null,
-
         $dados['alergias'] ?? null,
         $dados['medicamentos'] ?? null,
         $dados['observacoes'] ?? null,
@@ -214,6 +202,21 @@ public function buscarPorId($id)
     ]);
 }
 
+/* ==========================
+   RESTANTE (mantido)
+========================== */
+
+public function listarTodosComStatus()
+{
+    $sql = "
+        SELECT p.*, u.nome AS dentista_nome
+        FROM pacientes p
+        LEFT JOIN usuarios u ON u.id = p.usuario_id
+        ORDER BY p.id DESC
+    ";
+
+    return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
 
     /* ==========================
        ATUALIZAR
@@ -366,37 +369,6 @@ public function reativar($id)
 
     $sql->bindValue(":id", $id);
     return $sql->execute();
-}
-
-public function listarTodosComStatus()
-{
-    $sql = "
-        SELECT 
-            pacientes.*, 
-            usuarios.nome AS usuario_nome
-        FROM pacientes
-        LEFT JOIN usuarios 
-            ON usuarios.id = pacientes.usuario_id
-        ORDER BY pacientes.id DESC
-    ";
-
-    $stmt = $this->pdo->query($sql);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-public function buscarAtivos($termo)
-{
-    $sql = $this->pdo->prepare("
-        SELECT * FROM pacientes
-        WHERE status = 'ativo'
-        AND (nome LIKE :termo OR cpf LIKE :termo)
-        ORDER BY id DESC
-    ");
-
-    $sql->bindValue(":termo", "%" . $termo . "%");
-    $sql->execute();
-
-    return $sql->fetchAll(PDO::FETCH_ASSOC);
 }
 
 }

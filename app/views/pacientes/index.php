@@ -156,7 +156,7 @@ Sem Foto
 <td><?= htmlspecialchars($p['convenio']) ?></td>
 
 <!-- DENTISTA -->
-<td><?= htmlspecialchars($p['profissional'] ?? '-') ?></td>
+<td><?= htmlspecialchars($p['dentista_nome'] ?? '-') ?></td>
 
 <!-- STATUS -->
 <td>

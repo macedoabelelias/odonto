@@ -94,12 +94,12 @@ public function salvar(){
         exit;
     }
 
-     // 🔥 Nível 
+    // 🔥 Nível 
     if(empty($_POST['nivel_id'])){
-    $_SESSION['erro'] = "Selecione um nível.";
-    header("Location: " . BASE_URL . "/usuarios/criar");
-    exit;
-}
+        $_SESSION['erro'] = "Selecione um nível.";
+        header("Location: " . BASE_URL . "/usuarios/criar");
+        exit;
+    }
 
     // 🔥 SENHA
     if(empty($_POST['senha'])){
@@ -135,7 +135,7 @@ public function salvar(){
             :cpf_cnpj, :data_nascimento, :telefone,
             :cep, :endereco, :numero, :bairro, :cidade, :estado,
             :especialidade, :registro_conselho,
-            :cargo, :forma_pagamento_id, :chave_pix, :foto
+            :cargo, :forma_recebimento, :forma_pagamento_id, :chave_pix, :foto
         )
     ");
 
@@ -156,7 +156,7 @@ public function salvar(){
         ':especialidade' => $_POST['especialidade'] ?? null,
         ':registro_conselho' => $_POST['registro_conselho'] ?? null,
         ':cargo' => $_POST['cargo'] ?? null,
-        ':forma_recebimento' => $_POST['forma_recebimento'] ?? null,
+        ':forma_recebimento' => $_POST['forma_recebimento'] ?? null, // ✅ CORRETO
         ':forma_pagamento_id' => $_POST['forma_pagamento_id'] ?? null,
         ':chave_pix' => $_POST['chave_pix'] ?? null,
         ':foto' => $foto
