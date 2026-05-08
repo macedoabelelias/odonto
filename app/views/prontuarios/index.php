@@ -280,44 +280,99 @@ pointer-events:none;
 <div class="card card-compact shadow-sm">
 <div class="card-body">
 
-<h6 class="card-title">💰 Orçamento</h6>
-<hr>
+<div class="d-flex justify-content-between align-items-center">
 
-<div id="listaOrcamento" style="max-height:150px; overflow:auto; font-size:13px;">
-    Nenhum item
+    <h6 class="card-title mb-0">
+        💰 Orçamento
+    </h6>   
+
 </div>
+<hr>
 
 <div class="mt-2">
 
+    <!-- 🔥 ALERTA HISTÓRICO -->
+    <div
+        id="modoHistorico"
+        class="alert alert-warning py-1 px-2 mb-2"
+        style="display:none;font-size:12px;">
+
+        📂 Visualizando orçamento histórico
+
+    </div>
+
     <!-- 🔥 LINHA 1 -->
     <div class="d-flex gap-1 mb-1">
-        <button type="button" id="salvarOrcamento" class="btn btn-success w-50">
+
+        <button
+            type="button"
+            id="salvarOrcamento"
+            class="btn btn-success w-50">
+
             💾 Salvar
+
         </button>
 
-        <button onclick="aprovarOrcamento()" class="btn btn-primary w-50">
+        <button
+            type="button"
+            onclick="aprovarOrcamento()"
+            class="btn btn-primary w-50">
+
             ✅ Aprovar
+
         </button>
+
     </div>
 
     <!-- 🔥 LINHA 2 -->
     <div class="d-flex gap-1 mb-1">
-        <button id="editarOrcamento" class="btn btn-warning w-50">
+
+        <button
+            type="button"
+            id="editarOrcamento"
+            class="btn btn-warning w-50">
+
             ✏️ Editar
+
         </button>
 
-        <button id="novoOrcamento" class="btn btn-secondary w-50">
+        <button
+            type="button"
+            id="novoOrcamento"
+            class="btn btn-secondary w-50">
+
             🆕 Novo
+
         </button>
+
     </div>
 
     <!-- 🔥 LINHA 3 -->
-    <button id="limparOrcamento" class="btn btn-danger w-100">
-        🗑️ Limpar Orçamento
-    </button>
+    <div class="d-flex gap-1 mb-1">
+
+        <button
+            type="button"
+            id="limparOrcamento"
+            class="btn btn-danger w-50">
+
+            🗑️ Limpar
+
+        </button>
+
+        <button
+            type="button"
+            id="btnVoltarAtual"
+            class="btn btn-warning w-50"
+            style="display:none;"
+            onclick="voltarParaOrcamentoAtual()">
+
+            ↩ Atual
+
+        </button>
+
+    </div>
 
 </div>
-
 <hr>
 
 <strong>Total: R$ <span id="totalOrcamento">0.00</span></strong>
@@ -632,46 +687,36 @@ padding:0;
             </small>
 
             <!-- 🔥 STATUS -->
-            <form method="POST"
-                  action="<?= BASE_URL ?>/index.php?url=plano/atualizarStatus">
+<select
+    class="form-select form-select-sm mt-1"
+    onchange="alterarStatusPlano(<?= $p['id'] ?>, this.value)">
 
-                <input type="hidden"
-                       name="id"
-                       value="<?= $p['id'] ?>">
+    <option value="planejado"
+        <?= $statusAtual == 'planejado' ? 'selected' : '' ?>>
+        Planejado
+    </option>
 
-                <select name="status"
-                        onchange="this.form.submit()"
-                        class="form-select form-select-sm mt-1">
+    <option value="andamento"
+        <?= $statusAtual == 'andamento' ? 'selected' : '' ?>>
+        Em andamento
+    </option>
 
-                    <option value="planejado"
-                        <?= $statusAtual == 'planejado' ? 'selected' : '' ?>>
-                        Planejado
-                    </option>
+    <option value="realizado"
+        <?= $statusAtual == 'realizado' ? 'selected' : '' ?>>
+        Realizado
+    </option>
 
-                    <option value="andamento"
-                        <?= $statusAtual == 'andamento' ? 'selected' : '' ?>>
-                        Em andamento
-                    </option>
+    <option value="existente"
+        <?= $statusAtual == 'existente' ? 'selected' : '' ?>>
+        Existente
+    </option>
 
-                    <option value="realizado"
-                        <?= $statusAtual == 'realizado' ? 'selected' : '' ?>>
-                        Realizado
-                    </option>
+    <option value="cancelado"
+        <?= $statusAtual == 'cancelado' ? 'selected' : '' ?>>
+        Cancelado
+    </option>
 
-                    <option value="existente"
-                        <?= $statusAtual == 'existente' ? 'selected' : '' ?>>
-                        Existente
-                    </option>
-
-                    <option value="cancelado"
-                        <?= $statusAtual == 'cancelado' ? 'selected' : '' ?>>
-                        Cancelado
-                    </option>
-
-                </select>
-
-            </form>
-
+</select>
         </div>
 
     <?php endforeach; ?>
@@ -940,7 +985,7 @@ padding:0;
 
 <hr>
 
-<!-- FORMULÁRIO -->
+<!-- 🔥 FORMULÁRIO -->
 <form method="POST"
       action="<?= BASE_URL ?>/orientacoes/salvar"
       enctype="multipart/form-data">
@@ -950,48 +995,113 @@ padding:0;
     name="paciente_id"
     value="<?= $paciente['id'] ?>">
 
-<!-- TÍTULO -->
+<!-- 🔥 MODELOS -->
+<select
+    id="modeloOrientacao"
+    class="form-control form-control-sm mb-2">
+
+    <option value="">
+        📂 Selecionar modelo
+    </option>
+
+    <option value="extracao">
+        Pós-extração
+    </option>
+
+    <option value="implante">
+        Pós-implante
+    </option>
+
+    <option value="canal">
+        Pós-endodontia
+    </option>
+
+    <option value="clareamento">
+        Clareamento dental
+    </option>
+
+    <option value="profilaxia">
+        Profilaxia / limpeza
+    </option>
+
+    <option value="protese">
+        Prótese removível
+    </option>
+
+</select>
+
+<!-- 🔥 TÍTULO -->
 <input
     type="text"
+    id="tituloOrientacao"
     name="titulo"
     class="form-control form-control-sm mb-2"
     placeholder="Título da orientação">
 
-<!-- TEXTO -->
+<!-- 🔥 TEXTO -->
 <textarea
+    id="textoOrientacao"
     name="texto"
     class="form-control form-control-sm mb-2"
-    rows="4"
+    rows="5"
     placeholder="Orientações clínicas, cuidados pós-operatórios, recomendações..."></textarea>
 
-<!-- IMAGEM -->
+<!-- 🔥 IMAGEM PRINCIPAL -->
 <input
     type="file"
     name="imagem"
     class="form-control form-control-sm mb-2">
 
-<!-- BOTÃO -->
-<button class="btn btn-primary btn-sm w-100 mb-2">
+<!-- 🔥 ANEXOS CLÍNICOS -->
+<label class="small text-muted mb-1">
 
-    Salvar Orientação
+    📎 Anexos Clínicos
 
-</button>
+</label>
+
+<input
+    type="file"
+    name="anexos[]"
+    multiple
+    class="form-control form-control-sm mb-2">
+
+<!-- 🔥 BOTÕES -->
+<div class="d-flex gap-1">
+
+    <button
+        type="submit"
+        class="btn btn-primary btn-sm w-50">
+
+        💾 Salvar
+
+    </button>
+
+    <button
+        type="button"
+        onclick="gerarPDFOrientacao()"
+        class="btn btn-danger btn-sm w-50">
+
+        📄 PDF
+
+    </button>
+
+</div>
 
 </form>
 
 <hr>
 
-<!-- ORIENTAÇÃO SALVA -->
+<!-- 🔥 ORIENTAÇÃO SALVA -->
 <?php if(!empty($orientacao)): ?>
 
     <div
         class="border rounded p-2 bg-light"
         style="
-            max-height:250px;
+            max-height:260px;
             overflow-y:auto;
         ">
 
-        <!-- TÍTULO -->
+        <!-- 🔥 TÍTULO -->
         <?php if(!empty($orientacao['titulo'])): ?>
 
             <strong style="font-size:13px;">
@@ -1004,7 +1114,7 @@ padding:0;
 
         <?php endif; ?>
 
-        <!-- IMAGEM -->
+        <!-- 🔥 IMAGEM -->
         <?php if(!empty($orientacao['imagem'])): ?>
 
             <img
@@ -1013,12 +1123,13 @@ padding:0;
                     width:100%;
                     border-radius:8px;
                     margin-bottom:10px;
+                    object-fit:cover;
                 ">
 
         <?php endif; ?>
 
-        <!-- TEXTO -->
-        <div style="font-size:13px;">
+        <!-- 🔥 TEXTO -->
+        <div style="font-size:13px; line-height:1.5;">
 
             <?= nl2br(htmlspecialchars($orientacao['texto'] ?? '')) ?>
 
@@ -1038,7 +1149,7 @@ padding:0;
 
 <hr>
 
-<!-- AGENDAR RETORNO -->
+<!-- 🔥 AGENDAR RETORNO -->
 <a href="<?= BASE_URL ?>/consultas/criar?paciente=<?= $paciente['id'] ?>"
 class="btn btn-outline-primary btn-sm w-100">
 
@@ -1050,6 +1161,90 @@ class="btn btn-outline-primary btn-sm w-100">
 </div>
 </div>
 
+<!-- 🔥 PDF ORIENTAÇÃO -->
+<div
+    id="pdfOrientacaoArea"
+    data-tipo="offscreen"
+    style="
+        position:fixed;
+        top:0;
+        left:0;
+        width:800px;
+        background:white;
+        padding:30px;
+        z-index:-1;
+        opacity:0;
+        pointer-events:none;
+        font-family:Arial;
+        color:#000;
+    ">
+
+    <h2 style="text-align:center;margin-bottom:20px;">
+        🩺 Orientação ao Paciente
+    </h2>
+
+    <hr>
+
+    <p>
+        <strong>Paciente:</strong>
+        <?= htmlspecialchars($paciente['nome'] ?? '') ?>
+    </p>
+
+    <p>
+        <strong>Data:</strong>
+        <?= date('d/m/Y') ?>
+    </p>
+
+    <hr>
+
+    <!-- 🔥 TÍTULO -->
+    <h3 id="pdfOrientacaoTitulo"></h3>
+
+    <!-- 🔥 IMAGEM -->
+    <div id="pdfOrientacaoImagem"></div>
+
+    <!-- 🔥 TEXTO -->
+    <div
+        id="pdfOrientacaoTexto"
+        style="
+            margin-top:20px;
+            line-height:1.6;
+            font-size:14px;
+            white-space:pre-line;
+        ">
+
+    </div>
+
+    <div
+        style="
+            display:flex;
+            justify-content:space-between;
+            margin-top:80px;
+        ">
+
+        <div style="width:45%; text-align:center;">
+
+            <div style="border-bottom:1px solid #000;height:40px;"></div>
+
+            <p>
+                Assinatura do Paciente
+            </p>
+
+        </div>
+
+        <div style="width:45%; text-align:center;">
+
+            <div style="border-bottom:1px solid #000;height:40px;"></div>
+
+            <p>
+                Cirurgião-Dentista
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 <div class="col-md-3">
@@ -1160,6 +1355,9 @@ function getPacienteId(){
 
 let denteSelecionado = null;
 let modoEdicao = false;
+let orcamentoAtualId = null;
+let orcamentoOriginalId = null;
+let visualizandoHistorico = false;
 
 /* ================= MAPA PERMANENTE ================= */
 
@@ -2100,6 +2298,29 @@ function carregarProcedimentos(){
 
 function visualizarOrcamentoAnterior(id){
 
+    // 🔥 MODO HISTÓRICO
+    visualizandoHistorico = true;
+
+    orcamentoAtualId = id;
+
+    if(!orcamentoOriginalId){
+        orcamentoOriginalId = id;
+    }
+
+    // 🔥 MOSTRA BOTÃO
+    let btn = document.getElementById("btnVoltarAtual");
+
+    if(btn){
+        btn.style.display = "inline-block";
+    }
+
+    // 🔥 ALERTA
+    let alerta = document.getElementById("modoHistorico");
+
+    if(alerta){
+        alerta.style.display = "block";
+    }
+
     fetch(BASE + "/orcamentos/visualizar/" + id)
 
     .then(res => res.json())
@@ -2110,27 +2331,21 @@ function visualizarOrcamentoAnterior(id){
 
         // 🔥 LIMPA ODONTOGRAMA
         document.querySelectorAll(".proc-layer").forEach(layer => {
-
             layer.innerHTML = "";
-
         });
 
         // 🔥 LIMPA PROCEDIMENTOS GERAIS
-        let gerais = document.getElementById("procedimentosGerais");
+        let gerais = document.getElementById("areaProcedimentosGerais");
 
         if(gerais){
-
             gerais.innerHTML = "";
-
         }
 
-        // 🔥 ÁREA VISUAL
+        // 🔥 LIMPA ÁREA VISUAL
         let area = document.getElementById("visualizacaoOrcamentoAnterior");
 
         if(area){
-
             area.innerHTML = "";
-
         }
 
         // 🔥 SEM ITENS
@@ -2143,20 +2358,14 @@ function visualizarOrcamentoAnterior(id){
                         Nenhum item encontrado.
                     </div>
                 `;
-
             }
 
             return;
-
         }
 
-        // 🔥 RENDERIZA
         itens.forEach(item => {
 
-            // =====================================
-            // ODONTOGRAMA
-            // =====================================
-
+            // 🔥 ODONTOGRAMA
             if(item.dente){
 
                 pintarDente(
@@ -2169,13 +2378,8 @@ function visualizarOrcamentoAnterior(id){
 
             }
 
-            // =====================================
-            // PROCEDIMENTOS GERAIS
-            // =====================================
-
+            // 🔥 PROCEDIMENTOS GERAIS
             else{
-
-                let gerais = document.getElementById("procedimentosGerais");
 
                 if(gerais){
 
@@ -2189,17 +2393,12 @@ function visualizarOrcamentoAnterior(id){
                     badge.style.borderRadius = "6px";
                     badge.style.padding = "4px 8px";
                     badge.style.fontSize = "9px";
-                    badge.style.boxShadow =
-                        "0 1px 2px rgba(0,0,0,0.08)";
 
-                    // 🔥 ÍCONE
                     let icone =
                         getIconeProcedimento(item.procedimento);
 
                     if(!icone){
-
                         icone = "default.png";
-
                     }
 
                     let img = document.createElement("img");
@@ -2215,7 +2414,6 @@ function visualizarOrcamentoAnterior(id){
 
                     badge.appendChild(img);
 
-                    // 🔥 TEXTO
                     let texto = document.createElement("span");
 
                     texto.innerText =
@@ -2229,10 +2427,7 @@ function visualizarOrcamentoAnterior(id){
 
             }
 
-            // =====================================
-            // VISUALIZAÇÃO CARD
-            // =====================================
-
+            // 🔥 CARD VISUAL
             if(area){
 
                 let div = document.createElement("div");
@@ -2343,6 +2538,91 @@ function alterarStatusHistorico(id, status){
 
 }
 
+function alterarStatusPlano(id, status){
+
+    let form = new FormData();
+
+    form.append("id", id);
+    form.append("status", status);
+
+    fetch(BASE + "/plano/atualizarStatus", {
+
+        method: "POST",
+
+        body: form
+
+    })
+
+    .then(res => res.json())
+
+    .then(resp => {
+
+        console.log("✔ Status atualizado:", resp);
+
+    })
+
+    .catch(err => {
+
+        console.error(
+            "Erro ao atualizar status:",
+            err
+        );
+
+    });
+
+}
+
+function voltarParaOrcamentoAtual(){
+
+    visualizandoHistorico = false;
+
+    // 🔥 ESCONDE BOTÃO
+    let btn = document.getElementById("btnVoltarAtual");
+
+    if(btn){
+        btn.style.display = "none";
+    }
+
+    // 🔥 ESCONDE ALERTA
+    let alerta = document.getElementById("modoHistorico");
+
+    if(alerta){
+        alerta.style.display = "none";
+    }
+
+    // 🔥 LIMPA ODONTOGRAMA
+    document.querySelectorAll(".proc-layer").forEach(layer => {
+        layer.innerHTML = "";
+    });
+
+    // 🔥 LIMPA PROCEDIMENTOS GERAIS
+    let gerais = document.getElementById("areaProcedimentosGerais");
+
+    if(gerais){
+        gerais.innerHTML = "";
+    }
+
+    // 🔥 LIMPA VISUALIZAÇÃO
+    let area = document.getElementById("visualizacaoOrcamentoAnterior");
+
+    if(area){
+
+        area.innerHTML = `
+            <div class="text-muted small">
+                Selecione um orçamento anterior para visualizar.
+            </div>
+        `;
+    }
+
+    // 🔥 RECARREGA SISTEMA
+    carregarProcedimentos();
+
+    abrirOrcamento();
+
+    console.log("✔ Voltou para orçamento atual");
+
+}
+
 /* ================= INICIAR SISTEMA ================= */
 
 // 🔥 GARANTE QUE OS ELEMENTOS EXISTEM
@@ -2356,6 +2636,16 @@ if(btnAdd){
     btnAdd.addEventListener("click", function(e){
 
         e.preventDefault();
+        
+        if(visualizandoHistorico){
+
+            alert("Você está visualizando um orçamento histórico.");
+
+            return;
+
+        }
+
+        
 
         // 🔥 PEGA STATUS CORRETO DO SELECT
         let status = document.getElementById("statusProcedimento")?.value || "planejado";
@@ -3789,24 +4079,57 @@ function gerarPDFProntuario(){
 function gerarPDFfinal(area){
 
     let opt = {
+
         margin: 10,
+
         filename: 'documento.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+
+        image: {
+            type: 'jpeg',
+            quality: 0.98
+        },
+
+        html2canvas: {
+            scale: 2
+        },
+
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        }
+
     };
 
     html2pdf()
         .set(opt)
         .from(area)
         .save()
+
         .then(() => {
-            area.style.display = "none"; // 🔥 ESCONDE DE NOVO
+
+            // 🔥 PDFs antigos
+            if(area.dataset.tipo !== "offscreen"){
+
+                area.style.display = "none";
+
+            }
+
         })
+
         .catch(err => {
+
             console.error("Erro PDF:", err);
-            area.style.display = "none";
+
+            // 🔥 PDFs antigos
+            if(area.dataset.tipo !== "offscreen"){
+
+                area.style.display = "none";
+
+            }
+
         });
+
 }
 
 window.aprovarOrcamento = function(){
@@ -3900,14 +4223,134 @@ document.addEventListener("DOMContentLoaded", function(){
 
 }); 
 
+document.addEventListener("DOMContentLoaded", function(){
 
+    const modelo = document.getElementById("modeloOrientacao");
 
+    if(!modelo) return;
 
-// ===============================
-// PROCEDIMENTOS GERAIS
-// ===============================
+    modelo.addEventListener("change", function(){
 
+        let titulo = document.getElementById("tituloOrientacao");
+        let texto = document.getElementById("textoOrientacao");
 
+        switch(this.value){
+
+            // 🔥 EXTRAÇÃO
+            case "extracao":
+
+                titulo.value = "Orientações Pós-Extração";
+
+                texto.value =
+`• Não cuspir nas primeiras 24h.
+• Evitar alimentos quentes.
+• Aplicar gelo nas primeiras horas.
+• Não fumar.
+• Em caso de sangramento excessivo, entrar em contato.`;
+
+            break;
+
+            // 🔥 IMPLANTE
+            case "implante":
+
+                titulo.value = "Orientações Pós-Implante";
+
+                texto.value =
+`• Evitar mastigação no local.
+• Utilizar medicação prescrita.
+• Higienização suave.
+• Evitar esforço físico nas primeiras 48h.
+• Retornar em caso de dor intensa ou sangramento.`;
+
+            break;
+
+            // 🔥 CANAL
+            case "canal":
+
+                titulo.value = "Orientações Pós-Endodontia";
+
+                texto.value =
+`• Evitar mastigar até cessar anestesia.
+• Sensibilidade leve pode ocorrer.
+• Manter higiene bucal adequada.
+• Retornar para conclusão do tratamento restaurador.`;
+
+            break;
+
+            // 🔥 CLAREAMENTO
+            case "clareamento":
+
+                titulo.value = "Orientações Clareamento Dental";
+
+                texto.value =
+`• Evitar alimentos com corantes.
+• Não fumar.
+• Utilizar moldeiras conforme orientação.
+• Pode ocorrer sensibilidade temporária.`;
+
+            break;
+
+            // 🔥 PROFILAXIA
+            case "profilaxia":
+
+                titulo.value = "Orientações Pós-Profilaxia";
+
+                texto.value =
+`• Manter higiene bucal adequada.
+• Utilizar fio dental diariamente.
+• Retorno preventivo em 6 meses.`;
+
+            break;
+
+            // 🔥 PRÓTESE
+            case "protese":
+
+                titulo.value = "Orientações Prótese Removível";
+
+                texto.value =
+`• Higienizar após refeições.
+• Não dormir com a prótese.
+• Armazenar em recipiente limpo.
+• Retornar em caso de feridas ou desconforto.`;
+
+            break;
+
+            default:
+
+                titulo.value = "";
+                texto.value = "";
+
+        }
+
+    });
+
+});
+
+function gerarPDFOrientacao(){
+
+    let paciente_id =
+        document.getElementById("paciente_id").value;
+
+    if(!paciente_id){
+
+        alert("Paciente não encontrado");
+
+        return;
+    }
+
+    let base =
+        window.location.origin + "/odonto/public";
+
+    window.open(
+
+        base +
+        "/orientacoes/pdf?paciente_id=" +
+        paciente_id,
+
+        "_blank"
+    );
+
+}
 
 
 </script>

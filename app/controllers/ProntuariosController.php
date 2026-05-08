@@ -80,7 +80,7 @@ public function index($paciente_id = null)
     $evolucaoModel = new EvolucaoClinica();
     $evolucoes = $evolucaoModel->listarPorPaciente($paciente_id);
     $orientacaoModel = new OrientacaoPaciente();
-$orientacao = $orientacaoModel->ultima($paciente_id);
+    $orientacao = $orientacaoModel->buscarUltima($paciente_id);
 
     $this->view("prontuarios/index", [
         "paciente" => $paciente,

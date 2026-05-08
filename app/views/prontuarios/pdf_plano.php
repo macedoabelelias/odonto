@@ -112,7 +112,7 @@ hr {
 <div style="text-align:center; margin-bottom:10px;">
 
     <img src="<?= BASE_URL ?>/assets/img/logo9.png" 
-        <img src="<?= BASE_URL ?>/assets/img/logo.png" 
+        
      style="
         height:80px;
         border-radius:12px;
