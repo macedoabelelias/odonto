@@ -1,4 +1,4 @@
-<h4 class="mb-4">Novo Paciente</h4>
+<h4 class="mb-1">Novo Paciente</h4>
 
 <?php if(!empty($_SESSION['erro'])): ?>
     <div class="alert alert-danger">
@@ -13,10 +13,10 @@
 <!-- ==========================
      FOTO
 ========================== -->
-<div class="card mb-4">
+<div class="card mb-2">
 <div class="card-body">
 
-<h5 class="mb-3">📸 Foto do Paciente</h5>
+<h5 class="mb-1">📸 Foto do Paciente</h5>
 
 <div class="row">
     <div class="col-md-4 mb-3">
@@ -31,10 +31,10 @@
 <!-- ==========================
      DADOS PESSOAIS
 ========================== -->
-<div class="card mb-4">
+<div class="card mb-2">
 <div class="card-body">
 
-<h5 class="mb-3">📌 Dados Pessoais</h5>
+<h5 class="mb-1">📌 Dados Pessoais</h5>
 
 <div class="row">
     <div class="col-md-5 mb-3">
@@ -111,10 +111,10 @@
 <!-- ==========================
      CONTATO
 ========================== -->
-<div class="card mb-4">
+<div class="card mb-2">
 <div class="card-body">
 
-<h5 class="mb-3">📞 Contato</h5>
+<h5 class="mb-1">📞 Contato</h5>
 
 <div class="row">
     <div class="col-md-3 mb-3">
@@ -145,10 +145,10 @@
 <!-- ==========================
      ENDEREÇO
 ========================== -->
-<div class="card mb-4">
+<div class="card mb-2">
 <div class="card-body">
 
-<h5 class="mb-3">🏠 Endereço</h5>
+<h5 class="mb-1">🏠 Endereço</h5>
 
 <div class="row">
     <div class="col-md-3 mb-3">
@@ -195,19 +195,19 @@
 </div>
 </div>
 
-<div class="card mb-4">
+<div class="card mb-2">
 <div class="card-body">
 
-<h5 class="mb-3">🩺 Informações Médicas</h5>
+<h5 class="mb-1">🩺 Informações Médicas</h5>
 
 <div class="row">
 
-<div class="col-md-6 mb-3">
+<div class="col-md-6 mb-1">
 <label>Alergias</label>
 <textarea name="alergias" class="form-control" rows="3"></textarea>
 </div>
 
-<div class="col-md-6 mb-3">
+<div class="col-md-6 mb-1">
 <label>Medicamentos em uso</label>
 <textarea name="medicamentos" class="form-control" rows="3"></textarea>
 </div>
@@ -221,10 +221,10 @@
 <!-- ==========================
      RESPONSÁVEL
 ========================== -->
-<div class="card mb-4">
+<div class="card mb-2">
 <div class="card-body">
 
-<h5 class="mb-3">👨‍👩‍👧 Responsável</h5>
+<h5 class="mb-1 ">👨‍👩‍👧 Responsável</h5>
 
 <div class="row">
     <div class="col-md-6 mb-3">
@@ -257,10 +257,10 @@
 <!-- ==========================
      OBSERVAÇÕES
 ========================== -->
-<div class="card mb-4">
+<div class="card mb-1">
 <div class="card-body">
 
-<h5 class="mb-3">📝 Observações</h5>
+<h5 class="mb-1">📝 Observações</h5>
 
 <textarea name="observacoes" class="form-control" rows="4"></textarea>
 

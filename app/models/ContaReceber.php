@@ -57,46 +57,79 @@ class ContaReceber extends Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
     /* ==========================
        CRIAR
     ========================== */
-    public function criar($dados)
-    {
-        $sql = "INSERT INTO contas_receber 
-        (
-            paciente_id,
-            descricao,
-            valor,
-            data_vencimento,
-            status,
-            profissional_id,
-            convenio_id
-        )
-        VALUES
-        (
-            :paciente_id,
-            :descricao,
-            :valor,
-            :data_vencimento,
-            :status,
-            :profissional_id,
-            :convenio_id
-        )";
+   public function criar($dados)
+{
+    $sql = "INSERT INTO contas_receber 
+    (
+        paciente_id,
+        orcamento_id,
+        descricao,
+        valor,
+        data_vencimento,
+        status,
+        profissional_id,
+        convenio_id,
+        parcela,
+        total_parcelas,
+        grupo_parcelamento
+    )
+    VALUES
+    (
+        :paciente_id,
+        :orcamento_id,
+        :descricao,
+        :valor,
+        :data_vencimento,
+        :status,
+        :profissional_id,
+        :convenio_id,
+        :parcela,
+        :total_parcelas,
+        :grupo_parcelamento
+    )";
 
-        $stmt = $this->pdo->prepare($sql);
+    $stmt = $this->pdo->prepare($sql);
 
-        return $stmt->execute([
-            ':paciente_id'     => $dados['paciente_id'],
-            ':descricao'       => $dados['descricao'],
-            ':valor'           => str_replace(',', '.', $dados['valor']),
-            ':data_vencimento' => $dados['data_vencimento'],
-            ':status'          => 'pendente',
-            ':profissional_id' => $dados['profissional_id'],
-            ':convenio_id'     => $dados['convenio_id'] ?? null
-        ]);
-    }
+    return $stmt->execute([
 
+        ':paciente_id' =>
+            $dados['paciente_id'],
+
+        ':orcamento_id' =>
+            $dados['orcamento_id'] ?? null,
+
+        ':descricao' =>
+            $dados['descricao'],
+
+        ':valor' =>
+            str_replace(',', '.', $dados['valor']),
+
+        ':data_vencimento' =>
+            $dados['data_vencimento'],
+
+        ':status' =>
+            'pendente',
+
+        ':profissional_id' =>
+            $dados['profissional_id'],
+
+        ':convenio_id' =>
+            $dados['convenio_id'] ?? null,
+
+        ':parcela' =>
+            $dados['parcela'] ?? 1,
+
+        ':total_parcelas' =>
+            $dados['total_parcelas'] ?? 1,
+
+        ':grupo_parcelamento' =>
+            $dados['grupo_parcelamento'] ?? null
+
+    ]);
+}
 
     /* ==========================
        MARCAR COMO PAGO
@@ -232,4 +265,28 @@ class ContaReceber extends Model
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    /* ==========================
+       EVITAR DUPLICIDADE
+    ========================== */
+  public function existePorOrcamento($orcamento_id)
+{
+    $sql = $this->pdo->prepare("
+
+        SELECT id
+        FROM contas_receber
+        WHERE orcamento_id = :orcamento
+        LIMIT 1
+
+    ");
+
+    $sql->execute([
+
+        ':orcamento' => $orcamento_id
+
+    ]);
+
+    return $sql->fetch(PDO::FETCH_ASSOC);
+}
+    
 }

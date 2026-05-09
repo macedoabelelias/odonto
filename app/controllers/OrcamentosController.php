@@ -105,62 +105,254 @@ public function aprovar()
     header('Content-Type: application/json');
 
     $data = json_decode(file_get_contents("php://input"), true);
+
     $paciente_id = $data['paciente_id'] ?? null;
 
     if(!$paciente_id){
+
         echo json_encode([
+
             "status" => "erro",
             "msg" => "Paciente não enviado"
+
         ]);
+
         exit;
     }
 
     require_once BASE_PATH . "/app/models/Orcamento.php";
     require_once BASE_PATH . "/app/models/Prontuario.php";
+    require_once BASE_PATH . "/app/models/ContaReceber.php";
 
     $orcModel = new Orcamento();
     $prontuarioModel = new Prontuario();
+    $contaModel = new ContaReceber();
 
-    // 🔥 pega último orçamento
+    // 🔥 PEGA ÚLTIMO ORÇAMENTO
     $orcamentos = $orcModel->listarPorPaciente($paciente_id);
 
     if(empty($orcamentos)){
+
         echo json_encode([
+
             "status" => "erro",
             "msg" => "Nenhum orçamento encontrado"
+
         ]);
+
         exit;
     }
 
     $orcamento = $orcamentos[0];
 
-    // 🔥 aprova orçamento
+    // 🔥 APROVA ORÇAMENTO
     $orcModel->aprovar($orcamento['id']);
 
-    // 🔥 pega itens CORRETAMENTE
-    $itens = $orcModel->itensDoOrcamento($orcamento['id']);
+    // =====================================================
+    // 🔥 FINANCEIRO AUTOMÁTICO
+    // =====================================================
+
+   // 🔥 DADOS FINANCEIROS
+$forma_pagamento =
+    $data['forma_pagamento'] ?? 'pix';
+
+$entrada =
+    floatval($data['entrada'] ?? 0);
+
+$parcelas =
+    intval($data['parcelas'] ?? 1);
+
+$vencimento =
+    $data['vencimento'] ?? date('Y-m-d');
+
+// 🔥 EVITA DUPLICIDADE
+$jaExiste = $contaModel->existePorOrcamento(
+    $orcamento['id']
+);
+
+if(!$jaExiste){
+
+    // 🔥 PEGA ITENS
+    $itensFinanceiro =
+        $orcModel->itensDoOrcamento($orcamento['id']);
+
+    // 🔥 CALCULA TOTAL
+    $valorTotal = 0;
+
+    foreach($itensFinanceiro as $item){
+
+        $status =
+            strtolower($item['status'] ?? '');
+
+        if(
+            $status === 'existente' ||
+            $status === 'cancelado'
+        ){
+            continue;
+        }
+
+        $valorTotal +=
+            floatval($item['valor'] ?? 0);
+
+    }
+
+    // 🔥 GRUPO FINANCEIRO
+    $grupo =
+        uniqid('orc_');
+
+    // =========================================
+    // 🔥 ENTRADA
+    // =========================================
+
+    if($entrada > 0){
+
+        $contaModel->criar([
+
+            'paciente_id' => $paciente_id,
+
+            'orcamento_id' => $orcamento['id'],
+
+            'descricao' =>
+                'Entrada orçamento odontológico',
+
+            'valor' => $entrada,
+
+            'data_vencimento' =>
+                date('Y-m-d'),
+
+            'profissional_id' =>
+                $_SESSION['usuario_id'] ?? null,
+
+            'parcela' => 0,
+
+            'total_parcelas' => $parcelas,
+
+            'grupo_parcelamento' => $grupo
+
+        ]);
+
+    }
+
+    // =========================================
+    // 🔥 PARCELAS
+    // =========================================
+
+    $saldo =
+        $valorTotal - $entrada;
+
+    if($saldo < 0){
+        $saldo = 0;
+    }
+
+    $valorParcela =
+        $parcelas > 0
+        ? ($saldo / $parcelas)
+        : $saldo;
+
+    for($i = 1; $i <= $parcelas; $i++){
+
+        $dataParcela = date(
+
+            'Y-m-d',
+
+            strtotime(
+                "+" . ($i - 1) . " month",
+                strtotime($vencimento)
+            )
+
+        );
+
+        $contaModel->criar([
+
+            'paciente_id' => $paciente_id,
+
+            'orcamento_id' => $orcamento['id'],
+
+            'descricao' =>
+                'Parcela ' .
+                $i .
+                '/' .
+                $parcelas .
+                ' - Orçamento odontológico',
+
+            'valor' =>
+                number_format(
+                    $valorParcela,
+                    2,
+                    '.',
+                    ''
+                ),
+
+            'data_vencimento' =>
+                $dataParcela,
+
+            'profissional_id' =>
+                $_SESSION['usuario_id'] ?? null,
+
+            'parcela' => $i,
+
+            'total_parcelas' =>
+                $parcelas,
+
+            'grupo_parcelamento' =>
+                $grupo
+
+        ]);
+
+    }
+
+}
+    // =====================================================
+    // 🔥 PRONTUÁRIO
+    // =====================================================
+
+    $itens = $orcModel->itensDoOrcamento(
+        $orcamento['id']
+    );
 
     foreach($itens as $item){
 
-        // 🔥 SOMENTE PROCEDIMENTOS GERAIS (SEM DENTE)
+        // 🔥 SOMENTE PROCEDIMENTOS GERAIS
         if(empty($item['dente'])){
 
             $dados = [
+
                 "paciente_id" => $paciente_id,
-                "usuario_id" => $_SESSION['usuario_id'] ?? null,
+
+                "usuario_id" =>
+                    $_SESSION['usuario_id'] ?? null,
+
                 "tipo" => "procedimento",
+
                 "dente" => null,
+
                 "face" => null,
-                "procedimento" => $item['procedimento'] ?? 'Procedimento',
-                "status" => $item['status'] ?? "realizado",
-                "observacoes" => "Aprovado via orçamento"
+
+                "procedimento" =>
+                    $item['procedimento']
+                    ?? 'Procedimento',
+
+                "status" =>
+                    $item['status']
+                    ?? "realizado",
+
+                "observacoes" =>
+                    "Aprovado via orçamento"
+
             ];
 
             $prontuarioModel->salvarRegistro($dados);
+
         }
+
     }
 
-    echo json_encode(["status" => "ok"]);
+    echo json_encode([
+
+        "status" => "ok"
+
+    ]);
+
     exit;
 }
     

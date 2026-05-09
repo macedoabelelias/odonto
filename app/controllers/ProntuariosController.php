@@ -419,7 +419,21 @@ public function pdfPlano($id)
     $paciente = $modelPaciente->buscarPorId($id);
 
     $modelOrcamento = new Orcamento();
-    $orcamento = $modelOrcamento->ultimo($id);
+
+    // 🔥 PEGA ORÇAMENTO SELECIONADO
+    $orcamento_id = $_GET['orcamento_id'] ?? null;
+
+    // 🔥 SE VEIO ORÇAMENTO ESPECÍFICO
+    if($orcamento_id){
+
+        $orcamento = $modelOrcamento->buscarPorId($orcamento_id);
+
+    }else{
+
+        // 🔥 FALLBACK = ÚLTIMO ORÇAMENTO
+        $orcamento = $modelOrcamento->ultimo($id);
+
+    }
 
     require __DIR__ . '/../views/prontuarios/pdf_plano.php';
 }

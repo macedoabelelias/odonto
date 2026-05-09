@@ -105,7 +105,7 @@
 
 <div class="col-lg-9" style="border-radius:14px;">
 
-<div class="card shadow-sm mb-4" style="margin-top:20px;">
+<div class="card shadow-sm mb-4" style="margin-top:60px;">
 
 <div class="card-body text-center" style="box-shadow:0 2px 8px rgba(2,0,0,1.2)">
 
@@ -276,117 +276,136 @@ pointer-events:none;
 <div class="row g-3 mt-3 linha-cards">
 
 <!-- ORÇAMENTO -->
-<div class="col-md-3">
-<div class="card card-compact shadow-sm">
-<div class="card-body">
+<div class="col-md-3 d-flex">
 
-<div class="d-flex justify-content-between align-items-center">
+    <div class="card card-compact shadow-sm w-100">
 
-    <h6 class="card-title mb-0">
-        💰 Orçamento
-    </h6>   
+        <div class="card-body p-2">
 
-</div>
-<hr>
+            <h6 class="card-title">
+                💰 Orçamento
+            </h6>
 
-<div class="mt-2">
+            <hr>
 
-    <!-- 🔥 ALERTA HISTÓRICO -->
-    <div
-        id="modoHistorico"
-        class="alert alert-warning py-1 px-2 mb-2"
-        style="display:none;font-size:12px;">
+            <!-- 🔥 ÁREA COM SCROLL -->
+            <div class="card-scroll">
 
-        📂 Visualizando orçamento histórico
+                <!-- 🔥 ALERTA -->
+                <div
+                    id="modoHistorico"
+                    class="alert alert-warning py-1 px-2 mb-2"
+                    style="display:none;font-size:12px;">
+
+                    📂 Visualizando orçamento histórico
+
+                </div>
+
+                <!-- 🔥 LISTA -->
+                <div id="listaOrcamento"></div>
+
+                <hr>
+
+                <!-- 🔥 BOTÕES -->
+                <div class="mt-2">
+
+                    <div class="d-flex gap-1 mb-1">
+
+                        <button
+                            type="button"
+                            id="salvarOrcamento"
+                            class="btn btn-success w-50">
+
+                            💾 Salvar
+
+                        </button>
+
+                        <button
+                            type="button"
+                            onclick="abrirModalFinanceiro()"
+                            class="btn btn-primary w-50">
+
+                            ✅ Aprovar
+
+                        </button>
+
+                    </div>
+
+                    <div class="d-flex gap-1 mb-1">
+
+                        <button
+                            type="button"
+                            id="editarOrcamento"
+                            class="btn btn-warning w-50">
+
+                            ✏️ Editar
+
+                        </button>
+
+                        <button
+                            type="button"
+                            id="novoOrcamento"
+                            class="btn btn-secondary w-50">
+
+                            🆕 Novo
+
+                        </button>
+
+                    </div>
+
+                    <div class="d-flex gap-1 mb-1">
+
+                        <button
+                            type="button"
+                            id="limparOrcamento"
+                            class="btn btn-danger w-50">
+
+                            🗑️ Limpar
+
+                        </button>
+
+                        <button
+                            type="button"
+                            id="btnVoltarAtual"
+                            class="btn btn-warning w-50"
+                            style="display:none;"
+                            onclick="voltarParaOrcamentoAtual()">
+
+                            ↩ Atual
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- 🔥 TOTAL FIXO -->
+            <hr>
+
+            <strong>
+
+                Total: R$
+                <span id="totalOrcamento">
+
+                    0.00
+
+                </span>
+
+            </strong>
+
+        </div>
 
     </div>
 
-    <!-- 🔥 LINHA 1 -->
-    <div class="d-flex gap-1 mb-1">
-
-        <button
-            type="button"
-            id="salvarOrcamento"
-            class="btn btn-success w-50">
-
-            💾 Salvar
-
-        </button>
-
-        <button
-            type="button"
-            onclick="aprovarOrcamento()"
-            class="btn btn-primary w-50">
-
-            ✅ Aprovar
-
-        </button>
-
-    </div>
-
-    <!-- 🔥 LINHA 2 -->
-    <div class="d-flex gap-1 mb-1">
-
-        <button
-            type="button"
-            id="editarOrcamento"
-            class="btn btn-warning w-50">
-
-            ✏️ Editar
-
-        </button>
-
-        <button
-            type="button"
-            id="novoOrcamento"
-            class="btn btn-secondary w-50">
-
-            🆕 Novo
-
-        </button>
-
-    </div>
-
-    <!-- 🔥 LINHA 3 -->
-    <div class="d-flex gap-1 mb-1">
-
-        <button
-            type="button"
-            id="limparOrcamento"
-            class="btn btn-danger w-50">
-
-            🗑️ Limpar
-
-        </button>
-
-        <button
-            type="button"
-            id="btnVoltarAtual"
-            class="btn btn-warning w-50"
-            style="display:none;"
-            onclick="voltarParaOrcamentoAtual()">
-
-            ↩ Atual
-
-        </button>
-
-    </div>
-
 </div>
-<hr>
-
-<strong>Total: R$ <span id="totalOrcamento">0.00</span></strong>
-
-</div>
-</div>
-</div>
-
 
 <!-- DOCUMENTOS -->
 
-<div class="col-md-3">
+<div class="col-md-3 d-flex">
 
-<div class="card shadow-sm card-compacto h-100">
+<div class="card card-compact shadow-sm w-100">
 
 <div class="card-body p-2">
 
@@ -497,8 +516,8 @@ Nenhum documento
 
 
 <!-- RADIOGRAFIAS -->
-<div class="col-md-3">
-<div class="card shadow-sm card-compacto h-100">
+<div class="col-md-3 d-flex">
+<div class="card card-compact shadow-sm w-100">
 <div class="card-body p-2">
 
 <h6>📸 Radiografias</h6>
@@ -566,8 +585,8 @@ padding:0;
 
 
 <!-- LEGENDA -->
-<div class="col-md-3">
-    <div class="card card-padrao h-100">
+<div class="col-md-3 d-flex">
+<div class="card card-compact shadow-sm w-100">
         <div class="card-body p-2">
 
             <h6 class="mb-2">🦷 Legenda do Odontograma</h6>
@@ -652,7 +671,7 @@ padding:0;
 <div class="row g-3 mt-3 linha-cards">
 
 <!-- PLANO DE TRATAMENTO -->
-<div class="col-md-3">
+<div class="col-md-3 d-flex">
 
 <div class="card shadow-sm">
 
@@ -881,7 +900,7 @@ padding:0;
 </div>
 
 <!-- EVOLUÇÃO CLÍNICA -->
-<div class="col-md-3">
+<div class="col-md-3 d-flex">
 
 <div class="card shadow-sm">
 
@@ -973,9 +992,9 @@ padding:0;
 </div>
 
 <!-- ORIENTAÇÕES AO PACIENTE -->
-<div class="col-md-3">
+<div class="col-md-3 d-flex">
 
-<div class="card shadow-sm card-compacto h-100">
+<div class="card card-compact shadow-sm w-100">
 
 <div class="card-body p-2">
 
@@ -1247,8 +1266,8 @@ class="btn btn-outline-primary btn-sm w-100">
 </div>
 
 
-<div class="col-md-3">
-<div class="card shadow-sm card-compacto h-100">
+<div class="col-md-3 d-flex">
+<div class="card card-compact shadow-sm w-100">
 <div class="card-body p-2">
 
 <h6>📁 Orçamentos Anteriores</h6>
@@ -1331,6 +1350,143 @@ border-radius:4px;
         <div style="text-align:center;">
             _______________________________<br>
             Cirurgião-Dentista
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================================
+     MODAL APROVAÇÃO FINANCEIRA
+========================================= -->
+
+<div class="modal fade" id="modalFinanceiro" tabindex="-1">
+
+    <div class="modal-dialog modal-md">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    💰 Aprovação Financeira
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <!-- TOTAL -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Valor total
+                    </label>
+
+                    <input
+                        type="text"
+                        id="financeiro_total"
+                        class="form-control"
+                        readonly>
+
+                </div>
+
+                <!-- FORMA -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Forma de pagamento
+                    </label>
+
+                    <select
+                        id="financeiro_forma"
+                        class="form-select">
+
+                        <option value="pix">PIX</option>
+                        <option value="dinheiro">Dinheiro</option>
+                        <option value="cartao">Cartão</option>
+                        <option value="boleto">Boleto</option>
+
+                    </select>
+
+                </div>
+
+                <!-- ENTRADA -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Entrada
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.01"
+                        value="0"
+                        id="financeiro_entrada"
+                        class="form-control">
+
+                </div>
+
+                <!-- PARCELAS -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Parcelas
+                    </label>
+
+                    <input
+                        type="number"
+                        value="1"
+                        min="1"
+                        id="financeiro_parcelas"
+                        class="form-control">
+
+                </div>
+
+                <!-- VENCIMENTO -->
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Primeiro vencimento
+                    </label>
+
+                    <input
+                        type="date"
+                        id="financeiro_vencimento"
+                        class="form-control">
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-success"
+                    onclick="confirmarAprovacaoFinanceira()">
+
+                    ✅ Confirmar Aprovação
+
+                </button>
+
+            </div>
+
         </div>
 
     </div>
@@ -2301,7 +2457,8 @@ function visualizarOrcamentoAnterior(id){
     // 🔥 MODO HISTÓRICO
     visualizandoHistorico = true;
 
-    orcamentoAtualId = id;
+     // 🔥 GUARDA ORÇAMENTO GLOBAL
+    window.orcamentoAtualId = id;
 
     if(!orcamentoOriginalId){
         orcamentoOriginalId = id;
@@ -4056,14 +4213,33 @@ function gerarPDFPlano(){
     let paciente_id = document.getElementById("paciente_id").value;
 
     if(!paciente_id){
+
         alert("Paciente não encontrado");
         return;
+
     }
 
-    // 🔥 pega a base da URL automaticamente
+    // 🔥 BASE
     let base = window.location.origin + "/odonto/public";
 
-    window.open(base + "/prontuarios/pdfPlano/" + paciente_id, "_blank");
+    // 🔥 PEGA ORÇAMENTO HISTÓRICO SELECIONADO
+    let orcamento_id = window.orcamentoAtualId || 0;
+
+    console.log("PDF ORÇAMENTO:", orcamento_id);
+
+    // 🔥 ABRE PDF COM ORÇAMENTO CORRETO
+    window.open(
+
+        base +
+        "/prontuarios/pdfPlano/" +
+        paciente_id +
+        "?orcamento_id=" +
+        orcamento_id,
+
+        "_blank"
+
+    );
+
 }
 
 function gerarPDFProntuario(){
@@ -4071,6 +4247,8 @@ function gerarPDFProntuario(){
     let paciente_id = document.getElementById("paciente_id").value;
 
     let base = window.location.origin + "/odonto/public";
+
+    let orcamento_id = window.orcamentoAtualId || 0;
 
     window.open(base + "/prontuarios/pdfProntuario/" + paciente_id, "_blank");
 }
@@ -4179,6 +4357,122 @@ window.aprovarOrcamento = function(){
 
 };
 
+function abrirModalFinanceiro(){
+
+    let total =
+        document.getElementById("totalOrcamento")
+        ?.innerText
+        ?.replace(",", ".");
+
+    // 🔥 preenche total
+    document.getElementById("financeiro_total").value =
+        total || "0.00";
+
+    // 🔥 vencimento hoje
+    document.getElementById("financeiro_vencimento").value =
+        new Date().toISOString().split('T')[0];
+
+    // 🔥 abre modal
+    let modal = new bootstrap.Modal(
+
+        document.getElementById("modalFinanceiro")
+
+    );
+
+    modal.show();
+
+}
+
+function confirmarAprovacaoFinanceira(){
+
+    let paciente =
+        document.getElementById("paciente_id")?.value;
+
+    if(!paciente){
+
+        alert("Paciente não encontrado");
+        return;
+
+    }
+
+    let forma =
+        document.getElementById("financeiro_forma").value;
+
+    let entrada =
+        parseFloat(
+            document.getElementById("financeiro_entrada").value || 0
+        );
+
+    let parcelas =
+        parseInt(
+            document.getElementById("financeiro_parcelas").value || 1
+        );
+
+    let vencimento =
+        document.getElementById("financeiro_vencimento").value;
+
+    fetch(BASE + "/orcamentos/aprovar", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            paciente_id: paciente,
+
+            forma_pagamento: forma,
+
+            entrada: entrada,
+
+            parcelas: parcelas,
+
+            vencimento: vencimento
+
+        })
+
+    })
+
+    .then(r => r.json())
+
+    .then(res => {
+
+        console.log("RESPOSTA:", res);
+
+        if(res.status === "ok"){
+
+            alert("Orçamento aprovado!");
+
+            // 🔥 FECHA MODAL
+            bootstrap.Modal.getInstance(
+                document.getElementById("modalFinanceiro")
+            ).hide();
+
+            carregarOrcamento?.();
+            carregarProcedimentos?.();
+            carregarHistoricoPaciente?.();
+
+        }else{
+
+            alert(
+                "Erro: " + (res.msg || "")
+            );
+
+        }
+
+    })
+
+    .catch(err => {
+
+        console.error(err);
+
+        alert("Erro na requisição");
+
+    });
+
+}
 
 
 // 🔥 CONTROLE DE SALVAMENTO

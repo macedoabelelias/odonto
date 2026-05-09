@@ -311,5 +311,34 @@ public function limparPorPaciente($paciente_id)
         ':paciente' => $paciente_id
     ]);
 }
+
+public function buscarPorId($id)
+{
+    $sql = $this->pdo->prepare("
+        SELECT *
+        FROM orcamentos
+        WHERE id = ?
+    ");
+
+    $sql->execute([$id]);
+
+    $orcamento = $sql->fetch(PDO::FETCH_ASSOC);
+
+    if(!$orcamento){
+        return [];
+    }
+
+    $sqlItens = $this->pdo->prepare("
+        SELECT *
+        FROM orcamentos_itens
+        WHERE orcamento_id = ?
+    ");
+
+    $sqlItens->execute([$id]);
+
+    $orcamento['itens'] = $sqlItens->fetchAll(PDO::FETCH_ASSOC);
+
+    return $orcamento;
+}
     
 }
