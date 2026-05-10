@@ -74,4 +74,91 @@ class Caixa extends Model
             'saldo' => $entradas - $saidas
         ];
     }
+
+ /* ==========================
+   MOVIMENTOS POR PERÍODO
+========================== */
+public function movimentoPeriodo($inicio, $fim)
+{
+    $sql = "
+        SELECT 
+            'entrada' as tipo,
+            descricao,
+            valor,
+            data_pagamento as data
+        FROM contas_receber
+        WHERE DATE(data_pagamento) BETWEEN :inicio AND :fim
+        AND status = 'pago'
+
+        UNION ALL
+
+        SELECT 
+            'saida' as tipo,
+            descricao,
+            valor,
+            data_pagamento as data
+        FROM contas_pagar
+        WHERE DATE(data_pagamento) BETWEEN :inicio AND :fim
+        AND status = 'pago'
+
+        ORDER BY data DESC
+    ";
+
+    $stmt = $this->pdo->prepare($sql);
+
+    $stmt->bindValue(':inicio', $inicio);
+    $stmt->bindValue(':fim', $fim);
+
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+/* ==========================
+   RESUMO POR PERÍODO
+========================== */
+public function resumoPeriodo($inicio, $fim)
+{
+    $sql = "
+        SELECT 
+
+        -- ENTRADAS
+        (
+            SELECT SUM(valor)
+            FROM contas_receber
+            WHERE DATE(data_pagamento)
+            BETWEEN :inicio AND :fim
+            AND status='pago'
+        ) as entradas,
+
+        -- SAÍDAS
+        (
+            SELECT SUM(valor)
+            FROM contas_pagar
+            WHERE DATE(data_pagamento)
+            BETWEEN :inicio AND :fim
+            AND status='pago'
+        ) as saidas
+    ";
+
+    $stmt = $this->pdo->prepare($sql);
+
+    $stmt->bindValue(':inicio', $inicio);
+    $stmt->bindValue(':fim', $fim);
+
+    $stmt->execute();
+
+    $r = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $entradas = (float)($r['entradas'] ?? 0);
+    $saidas   = (float)($r['saidas'] ?? 0);
+
+    return [
+        'entradas' => $entradas,
+        'saidas'   => $saidas,
+        'saldo'    => $entradas - $saidas
+    ];
+}
+   
 }

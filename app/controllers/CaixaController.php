@@ -7,12 +7,13 @@ class CaixaController extends Controller
 
     public function index()
     {
-        $data = $_GET['data'] ?? date('Y-m-d');
+        $inicio = $_GET['inicio'] ?? date('Y-m-01');
+        $fim    = $_GET['fim'] ?? date('Y-m-d');
 
         $model = new Caixa();
 
-        $movimentos = $model->movimentoDia($data);
-        $resumo = $model->resumoDia($data);
+        $movimentos = $model->movimentoPeriodo($inicio, $fim);
+        $resumo     = $model->resumoPeriodo($inicio, $fim);
 
         require BASE_PATH . "/app/views/layout/header.php";
         require BASE_PATH . "/app/views/financeiro/caixa.php";

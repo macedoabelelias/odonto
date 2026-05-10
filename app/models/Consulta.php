@@ -13,6 +13,7 @@ class Consulta extends Model
         $sql = "
         SELECT consultas.*, 
         pacientes.nome AS paciente,
+        pacientes.telefone AS telefone,
         usuarios.nome AS dentista
         FROM consultas
         LEFT JOIN pacientes ON pacientes.id = consultas.paciente_id
@@ -80,6 +81,7 @@ class Consulta extends Model
     $sql = "
     SELECT consultas.*, 
            pacientes.nome AS paciente,
+           pacientes.telefone AS telefone,
            usuarios.nome AS dentista
     FROM consultas
     LEFT JOIN pacientes ON pacientes.id = consultas.paciente_id
@@ -211,6 +213,7 @@ public function buscarPorId($id)
     $sql = "
         SELECT consultas.*, 
                pacientes.nome AS paciente,
+               pacientes.telefone AS telefone,
                usuarios.nome AS dentista
         FROM consultas
         LEFT JOIN pacientes ON pacientes.id = consultas.paciente_id

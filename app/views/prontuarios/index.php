@@ -288,94 +288,94 @@ pointer-events:none;
 
             <hr>
 
+            <!-- 🔥 ALERTA -->
+            <div
+                id="modoHistorico"
+                class="alert alert-warning py-1 px-2 mb-2"
+                style="display:none;font-size:12px;">
+
+                📂 Visualizando orçamento histórico
+
+            </div>
+
             <!-- 🔥 ÁREA COM SCROLL -->
             <div class="card-scroll">
-
-                <!-- 🔥 ALERTA -->
-                <div
-                    id="modoHistorico"
-                    class="alert alert-warning py-1 px-2 mb-2"
-                    style="display:none;font-size:12px;">
-
-                    📂 Visualizando orçamento histórico
-
-                </div>
 
                 <!-- 🔥 LISTA -->
                 <div id="listaOrcamento"></div>
 
-                <hr>
+            </div>
 
-                <!-- 🔥 BOTÕES -->
-                <div class="mt-2">
+            <hr>
 
-                    <div class="d-flex gap-1 mb-1">
+            <!-- 🔥 BOTÕES -->
+            <div class="mt-2">
 
-                        <button
-                            type="button"
-                            id="salvarOrcamento"
-                            class="btn btn-success w-50">
+                <div class="d-flex gap-1 mb-1">
 
-                            💾 Salvar
+                    <button
+                        type="button"
+                        id="salvarOrcamento"
+                        class="btn btn-success w-50">
 
-                        </button>
+                        💾 Salvar
 
-                        <button
-                            type="button"
-                            onclick="abrirModalFinanceiro()"
-                            class="btn btn-primary w-50">
+                    </button>
 
-                            ✅ Aprovar
+                    <button
+                        type="button"
+                        onclick="abrirModalFinanceiro()"
+                        class="btn btn-primary w-50">
 
-                        </button>
+                        ✅ Aprovar
 
-                    </div>
+                    </button>
 
-                    <div class="d-flex gap-1 mb-1">
+                </div>
 
-                        <button
-                            type="button"
-                            id="editarOrcamento"
-                            class="btn btn-warning w-50">
+                <div class="d-flex gap-1 mb-1">
 
-                            ✏️ Editar
+                    <button
+                        type="button"
+                        id="editarOrcamento"
+                        class="btn btn-warning w-50">
 
-                        </button>
+                        ✏️ Editar
 
-                        <button
-                            type="button"
-                            id="novoOrcamento"
-                            class="btn btn-secondary w-50">
+                    </button>
 
-                            🆕 Novo
+                    <button
+                        type="button"
+                        id="novoOrcamento"
+                        class="btn btn-secondary w-50">
 
-                        </button>
+                        🆕 Novo
 
-                    </div>
+                    </button>
 
-                    <div class="d-flex gap-1 mb-1">
+                </div>
 
-                        <button
-                            type="button"
-                            id="limparOrcamento"
-                            class="btn btn-danger w-50">
+                <div class="d-flex gap-1 mb-1">
 
-                            🗑️ Limpar
+                    <button
+                        type="button"
+                        id="limparOrcamento"
+                        class="btn btn-danger w-50">
 
-                        </button>
+                        🗑️ Limpar
 
-                        <button
-                            type="button"
-                            id="btnVoltarAtual"
-                            class="btn btn-warning w-50"
-                            style="display:none;"
-                            onclick="voltarParaOrcamentoAtual()">
+                    </button>
 
-                            ↩ Atual
+                    <button
+                        type="button"
+                        id="btnVoltarAtual"
+                        class="btn btn-warning w-50"
+                        style="display:none;"
+                        onclick="voltarParaOrcamentoAtual()">
 
-                        </button>
+                        ↩ Atual
 
-                    </div>
+                    </button>
 
                 </div>
 
@@ -2397,7 +2397,7 @@ function carregarProcedimentos(){
                     item.dente,
                     item.procedimento,
                     item.status,
-                    item.icone,
+                    item.icone || getIconeProcedimento(item.procedimento),
                     item.id
                 );
 
@@ -2817,7 +2817,9 @@ if(btnAdd){
         }
 
         let paciente = document.getElementById("paciente_id").value;
-        let nome = option.text;
+        let nome =
+            option.dataset.nome ||
+            option.textContent.trim();
         let valor = parseFloat(option.dataset.valor || inputValor.value || 0);
         let dente = document.getElementById("denteSelecionado")?.value || "";
 
@@ -2896,13 +2898,27 @@ if(!dente || dente == "" || dente == 0){
         .then(res=>res.json())
         .then(resp=>{
 
-            if(resp.status === "ok"){
-                console.log("Salvo no prontuário");
+           if(resp.status === "ok"){
 
-                // 🔥 ATUALIZA ODONTOGRAMA
-                carregarProcedimentos();
+            console.log("Salvo no prontuário");
+
+            // 🔥 PINTA IMEDIATAMENTE NO ODONTOGRAMA
+            if(dente && dente !== "" && dente !== "0"){
+
+                pintarDente(
+                    dente,
+                    nome,
+                    status,
+                    getIconeProcedimento(nome),
+                    Date.now()
+                );
+
+                }               
+
             }else{
+
                 console.warn("Erro ao salvar prontuário");
+
             }
 
         });

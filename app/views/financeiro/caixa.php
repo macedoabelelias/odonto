@@ -1,10 +1,33 @@
 <div class="container mt-4">
 
-<h4>💰 Caixa do Dia</h4>
+<h4>💰 Caixa</h4>
 
-<form method="GET" class="mb-3">
-    <input type="date" name="data" value="<?= $data ?>" class="form-control w-auto d-inline">
-    <button class="btn btn-primary btn-sm">Filtrar</button>
+<form method="GET" class="row g-3 mb-4 align-items-end">
+
+    <div class="col-md-3">
+        <label class="form-label">Data Inicial</label>
+
+        <input type="date"
+               name="inicio"
+               value="<?= $inicio ?>"
+               class="form-control">
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Data Final</label>
+
+        <input type="date"
+               name="fim"
+               value="<?= $fim ?>"
+               class="form-control">
+    </div>
+
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100">
+            Filtrar
+        </button>
+    </div>
+
 </form>
 
 

@@ -18,6 +18,12 @@ class ContaReceber extends Model
                 cr.valor,
                 cr.data_vencimento,
                 cr.status,
+
+                    DATEDIFF(
+                        CURDATE(),
+                        cr.data_vencimento
+                    ) AS dias_atraso,
+
                 cr.profissional_id,
                 cr.convenio_id,
                 p.nome AS paciente,
@@ -287,6 +293,38 @@ class ContaReceber extends Model
     ]);
 
     return $sql->fetch(PDO::FETCH_ASSOC);
+}
+
+/* ==========================
+   INADIMPLÊNCIA
+========================== */
+public function inadimplencia()
+{
+    $sql = "
+        SELECT
+            cr.*,
+
+            p.nome AS paciente,
+
+            DATEDIFF(
+                CURDATE(),
+                cr.data_vencimento
+            ) AS dias_atraso
+
+        FROM contas_receber cr
+
+        LEFT JOIN pacientes p
+            ON p.id = cr.paciente_id
+
+        WHERE cr.status = 'pendente'
+        AND cr.data_vencimento < CURDATE()
+
+        ORDER BY cr.data_vencimento ASC
+    ";
+
+    $stmt = $this->pdo->query($sql);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
     
 }

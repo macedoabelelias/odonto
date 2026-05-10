@@ -112,8 +112,9 @@ R$ <?= number_format($resumo['vencidas'] ?? 0,2,',','.') ?>
     <th>Tipo</th>
     <th>Valor</th>
     <th>Vencimento</th>
+    <th>Atraso</th>
     <th>Status</th>
-    <th>Ações</th> <!-- 🔥 CORRIGIDO -->
+<th>Ações</th>
 </tr>
 </thead>
 
@@ -173,6 +174,38 @@ if(($c['status'] ?? '') == 'pendente' && $vencimento < $hoje){
 </td>
 
 <td><?= date('d/m/Y', strtotime($vencimento)) ?></td>
+
+<td>
+
+<?php if(($c['dias_atraso'] ?? 0) > 0): ?>
+
+    <?php if($c['dias_atraso'] <= 7): ?>
+
+        <span class="badge bg-warning text-dark">
+            <?= (int)$c['dias_atraso'] ?> dias
+        </span>
+
+    <?php elseif($c['dias_atraso'] <= 30): ?>
+
+        <span class="badge bg-danger">
+            <?= (int)$c['dias_atraso'] ?> dias
+        </span>
+
+    <?php else: ?>
+
+        <span class="badge bg-dark">
+            <?= (int)$c['dias_atraso'] ?> dias
+        </span>
+
+    <?php endif; ?>
+
+<?php else: ?>
+
+    <span class="text-muted">—</span>
+
+<?php endif; ?>
+
+</td>
 
 <td>
 <?php if(($c['status'] ?? '') == 'pendente'): ?>
