@@ -5,6 +5,8 @@
 </a>
 
 <div style="overflow-x:auto;">
+
+<div class="table-responsive">
    
 <table class="table" style="width:100%; border-collapse: collapse;">
 

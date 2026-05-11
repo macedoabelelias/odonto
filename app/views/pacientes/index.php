@@ -17,7 +17,7 @@ $inativos = $total - $ativos;
 
 <div class="row mb-3">
 
-    <div class="col-md-4">
+    <div class="col-12 col-md-4 mb-2">
         <div class="card border-success shadow-sm">
             <div class="card-body text-center">
                 <h6 class="text-success mb-1">Ativos</h6>
@@ -26,7 +26,7 @@ $inativos = $total - $ativos;
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-12 col-md-4 mb-2">
         <div class="card border-danger shadow-sm">
             <div class="card-body text-center">
                 <h6 class="text-danger mb-1">Inativos</h6>
@@ -35,7 +35,7 @@ $inativos = $total - $ativos;
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-12 col-md-4 mb-2">
         <div class="card border-primary shadow-sm">
             <div class="card-body text-center">
                 <h6 class="text-primary mb-1">Total</h6>
@@ -51,7 +51,7 @@ $inativos = $total - $ativos;
 ========================== -->
 <form method="GET" action="<?= BASE_URL ?>/pacientes" class="row mb-3">
 
-<div class="col-md-4">
+<div class="col-12 col-md-4 mb-2">
 <input type="text"
 name="busca"
 class="form-control"
@@ -59,12 +59,12 @@ placeholder="Buscar por nome ou CPF"
 value="<?= htmlspecialchars($_GET['busca'] ?? '') ?>">
 </div>
 
-<div class="col-md-3">
+<div class="col-12 col-md-3 mb-2">
 <button type="submit" class="btn btn-primary">Buscar</button>
 <a href="<?= BASE_URL ?>/pacientes" class="btn btn-secondary">Limpar</a>
 </div>
 
-<div class="col-md-5 text-end">
+<div class="col-12 col-md-5 text-md-end">
 <a href="<?= BASE_URL ?>/pacientes/criar" class="btn btn-success">
 Novo Paciente
 </a>
@@ -81,7 +81,7 @@ Novo Paciente
 <!-- ==========================
      TABELA DE PACIENTES
 ========================== -->
-
+<div class="table-responsive">
 <table class="table table-bordered table-striped align-middle">
 
 <thead class="table-light">
@@ -168,8 +168,9 @@ Sem Foto
 </td>
 
 <!-- AÇÕES -->
-<td>
+<td class="d-flex flex-column gap-1">
 
+<!-- PRONTUÁRIO -->
 <?php if($nivel == 'dentista' || $nivel == 'administrador' || $nivel == 'admin'): ?>
 
 <a href="<?= BASE_URL ?>/prontuarios/index/<?= $p['id'] ?>"
@@ -177,15 +178,15 @@ class="btn btn-info btn-sm">
 Prontuário
 </a>
 
-<?php else: ?>
+<?php endif; ?>
 
+<!-- AGENDAR -->
 <a href="<?= BASE_URL ?>/consultas/criar?paciente=<?= $p['id'] ?>"
 class="btn btn-success btn-sm">
 Agendar
 </a>
 
-<?php endif; ?>
-
+<!-- EDITAR -->
 <a href="<?= BASE_URL ?>/pacientes/editar/<?= $p['id'] ?>"
 class="btn btn-warning btn-sm">
 Editar
@@ -214,7 +215,6 @@ Editar
 <?php endif; ?>
 
 </td>
-
 </tr>
 
 <?php endforeach; ?>

@@ -4,6 +4,7 @@
     + Novo Convênio
 </a>
 
+<div class="table-responsive">
 <table class="table table-bordered">
 
 <tr>
@@ -27,3 +28,4 @@
 <?php endforeach; ?>
 
 </table>
+</div>

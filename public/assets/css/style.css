@@ -671,7 +671,7 @@ right:-2px;
 }
 
 .card-padrao {
-    border-radius: 10px;
+    border-radius: 18px;
     border: 1px solid #e5e7eb;
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
@@ -1073,5 +1073,80 @@ flex-direction: column;
 .btn {
 min-width: 80px;
 }
+
+/* =====================================================
+RESPONSIVO GERAL
+===================================================== */
+
+@media (max-width: 900px) {
+
+.row {
+grid-template-columns: 1fr !important;
+}
+
+.row-2 {
+grid-template-columns: 1fr !important;
+}
+
+.actions {
+flex-direction: column;
+}
+
+.btn {
+min-width: 80px;
+}
+
+}
+
+
+/* =========================================
+   SIDEBAR MOBILE
+========================================= */
+
+@media(max-width:768px){
+
+    .sidebar{
+
+        position: fixed;
+        top: 0;
+        left: -260px;
+        width: 250px;
+        height: 100%;
+        z-index: 9999;
+        transition: .3s ease;
+        overflow-y: auto;
+
+    }
+
+    .sidebar.ativo{
+        left: 0;
+    }
+
+    .flex-grow-1{
+        margin-left: 0 !important;
+        width:100%;
+    }
+
+    .page-wrapper{
+        padding:10px;
+    }
+
+}
+
+/* =========================================
+   ODONTOGRAMA MOBILE
+========================================= */
+
+@media(max-width:768px){
+
+    #odontograma{
+        overflow-x:auto;
+        width:100%;
+    }
+
+}
+
+
+
 }
 

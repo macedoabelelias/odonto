@@ -103,7 +103,7 @@
 
 <!-- ODONTOGRAMA -->
 
-<div class="col-lg-9" style="border-radius:14px;">
+<div class="col-12 col-lg-9" style="border-radius:14px;">
 
 <div class="card shadow-sm mb-4" style="margin-top:60px;">
 
@@ -117,7 +117,7 @@
 </select>
 
 <div id="odontograma"
-    style="position:relative;margin:auto;display:inline-block;">
+style="position:relative;margin:auto;display:inline-block;">
 
 
         <img id="imgOdontograma"
@@ -671,9 +671,9 @@ padding:0;
 <div class="row g-3 mt-3 linha-cards">
 
 <!-- PLANO DE TRATAMENTO -->
-<div class="col-md-3 d-flex">
+<div class="col-12 col-md-3 d-flex">
 
-<div class="card shadow-sm">
+<div class="card shadow-sm w-100">
 
 <div class="card-body p-2">
 
@@ -900,9 +900,9 @@ padding:0;
 </div>
 
 <!-- EVOLUÇÃO CLÍNICA -->
-<div class="col-md-3 d-flex">
+<div class="col-12 col-md-3 d-flex">
 
-<div class="card shadow-sm">
+<div class="card shadow-sm w-100">
 
 <div class="card-body p-2">
 
@@ -4664,3 +4664,4 @@ function gerarPDFOrientacao(){
 
 
 </script>
+

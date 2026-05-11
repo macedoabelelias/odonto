@@ -2,6 +2,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+
 <script>
 
 document.addEventListener("DOMContentLoaded", function(){
@@ -270,6 +271,44 @@ buscarCEP()
 
 <script>
 lucide.createIcons();
+</script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+    const botao = document.getElementById('btnMenuMobile');
+    const sidebar = document.getElementById('sidebarMobile');
+
+    if(botao && sidebar){
+
+        // ABRIR
+        botao.addEventListener('click', function(e){
+
+            e.stopPropagation();
+
+            sidebar.classList.toggle('ativo');
+
+        });
+
+        // NÃO FECHAR AO CLICAR DENTRO
+        sidebar.addEventListener('click', function(e){
+
+            e.stopPropagation();
+
+        });
+
+        // FECHAR AO CLICAR FORA
+        document.addEventListener('click', function(){
+
+            sidebar.classList.remove('ativo');
+
+        });
+
+    }
+
+});
+
 </script>
 
 </body>

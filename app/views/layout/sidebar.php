@@ -14,7 +14,7 @@ $configSistema = $modelConfig->get();
 
 ?>
 
-<div class="sidebar">
+<div class="sidebar" id="sidebarMobile">
 
     <!-- LOGO -->
     <div class="logo-area">

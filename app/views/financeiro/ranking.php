@@ -11,6 +11,8 @@
 <div class="card shadow-sm">
 <div class="card-body">
 
+<div class="table-responsive">
+
 <table class="table table-sm table-striped align-middle">
 
 <thead>

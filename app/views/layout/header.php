@@ -45,6 +45,13 @@ $fotoPath = !empty($fotoUsuario)
     <?php require BASE_PATH . "/app/views/layout/sidebar.php"; ?>
 
     <div class="flex-grow-1">
+    <!-- BOTÃO MOBILE -->
+    <button class="btn btn-primary d-md-none m-2"
+            id="btnMenuMobile">
+
+        ☰ Menu
+
+    </button>
 
         <!-- NAVBAR -->
         <?php require BASE_PATH . "/app/views/layout/navbar.php"; ?>
